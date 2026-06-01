@@ -306,7 +306,7 @@
                 checked
                 onchange="toggleUserTypeFields()"
               />
-              <label for="type-local" class="radio-label">🏡 คนในชุมชน</label>
+              <label for="type-local" class="radio-label">🏡 คนในคุ้งบางกะเจ้า</label>
             </div>
             <div class="radio-box">
               <input
@@ -511,10 +511,10 @@
     </div>
 
     <script>
-      // 🚀 ยัดเลข LIFF ID สำหรับหน้าลงทะเบียนตรงนี้ครับพี่แฟง
-      const LIFF_REGISTER_ID = "XXXXX-XXXXX";
+      // 🚀 ยัดเลข LIFF ID สำหรับหน้าลงทะเบียนตรงนี้ครับ
+      const LIFF_REGISTER_ID = "2010255862-LZnK22cW";
 
-      if (typeof liff !== "undefined" && LIFF_REGISTER_ID !== "XXXXX-XXXXX") {
+      if (typeof liff !== "undefined" && LIFF_REGISTER_ID !== "2010255862-LZnK22cW") {
         liff
           .init({ liffId: LIFF_REGISTER_ID })
           .then(() => {
@@ -593,7 +593,7 @@
         }
 
         // 🚨 นำลิงก์ Web App URL จาก Google Sheets หน้าใบรายชื่ออาสาสมัครของพี่มาแปะตรงนี้ครับ
-        const scriptUrl = "URL_จาก_ขั้นตอนที่_1_ที่นี่";
+        const scriptUrl = "https://docs.google.com/spreadsheets/d/1viweN7QdoNf8PbknCXg1MOgzbXCNHZYcqu2wHPwmAgc/edit?gid=0#gid=0";
 
         const payload = {
           userId: userId,
@@ -608,11 +608,11 @@
           tambon: tambonValue,
         };
 
-        if (scriptUrl === "URL_จาก_ขั้นตอนที่_1_ที่นี่") {
+        if (scriptUrl === "https://docs.google.com/spreadsheets/d/1viweN7QdoNf8PbknCXg1MOgzbXCNHZYcqu2wHPwmAgc/edit?gid=0#gid=0") {
           setTimeout(() => {
             console.log("บันทึกสำเร็จ (Demo Mode):", payload);
             alert(
-              "✨ ลงทะเบียนสำเร็จ! (รันโหมดจำลองดีไซน์เขียวพรีเมียมเสร็จสมบูรณ์แล้วค่ะพี่แฟง)"
+              "✨ ลงทะเบียนสำเร็จ! (รันโหมดจำลองดีไซน์เขียวพรีเมียมเสร็จสมบูรณ์แล้วค่ะ)"
             );
             document.getElementById("registerForm").reset();
             toggleUserTypeFields();
