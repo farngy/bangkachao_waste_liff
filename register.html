@@ -331,7 +331,6 @@
 </div>
 
 <script>
-    // เลข LIFF ID ของพี่แฟง
     const LIFF_REGISTER_ID = "2010255862-LZnK22cW";
 
     if (typeof liff !== 'undefined' && LIFF_REGISTER_ID !== "") {
@@ -372,35 +371,58 @@
 
     function submitRegistration() {
         const btn = document.getElementById('submitBtn');
-        btn.innerText = "⏳ กำลังบันทึกข้อมูล...";
-        btn.disabled = true;
 
-        const userType = document.querySelector('input[name="user_type"]:checked').value;
-        const fullname = document.getElementById('fullname').value;
-        const gender = document.querySelector('input[name="gender"]:checked').value;
-        const ageRange = document.querySelector('input[name="age_range"]:checked').value;
-        const phone = document.getElementById('phone').value;
-        const career = document.getElementById('career').value;
+        // 🚨 1. ระบบบังคับตรวจเช็คข้อมูลให้ครบทุกช่องก่อนส่ง
+        const userTypeRadio = document.querySelector('input[name="user_type"]:checked');
+        const genderRadio = document.querySelector('input[name="gender"]:checked');
+        const ageRadio = document.querySelector('input[name="age_range"]:checked');
+        const fullnameInput = document.getElementById('fullname');
+        const phoneInput = document.getElementById('phone');
+        const careerSelect = document.getElementById('career');
+
+        // ตรวจเช็คค่า Input หลัก
+        if (!fullnameInput.value.trim() || !phoneInput.value.trim() || !genderRadio || !ageRadio || !careerSelect.value) {
+            alert("⚠️ กรุณากรอกข้อมูลส่วนตัวและเลือกปุ่มตัวเลือกให้ครบถ้วนด้วยค่ะ");
+            return;
+        }
+
+        const userType = userTypeRadio.value;
+        const fullname = fullnameInput.value;
+        const gender = genderRadio.value;
+        const ageRange = ageRadio.value;
+        const phone = phoneInput.value;
+        const career = careerSelect.value;
         
         let addressNo = "";
         let mooValue = "";
         let tambonValue = "ภายนอกคุ้งบางกะเจ้า";
 
+        // ตรวจเช็คเพิ่มเฉพาะกลุ่มคนในชุมชน
         if(userType === "คนในชุมชน") {
-            addressNo = document.getElementById('address_no').value;
-            mooValue = document.getElementById('moo').value;
-            tambonValue = document.getElementById('tambon').value;
+            const addr = document.getElementById('address_no').value.trim();
+            const moo = document.getElementById('moo').value.trim();
+            const tam = document.getElementById('tambon').value;
+            
+            if(!addr || !moo || !tam) {
+                alert("⚠️ สำหรับคนในชุมชน กรุณากรอกบ้านเลขที่ หมู่ที่ และตำบลให้ครบด้วยค่ะ");
+                return;
+            }
+            addressNo = addr;
+            mooValue = moo;
+            tambonValue = tam;
         }
+
+        // เริ่มต้นกระบวนการส่งข้อมูล
+        btn.innerText = "⏳ กำลังบันทึกข้อมูล...";
+        btn.disabled = true;
 
         let userId = "MOCK_USER_REG_123";
         if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
             userId = liff.getContext()?.userId || userId;
         }
 
-        // ลิงก์ยิงตรงเข้าสู่ระบบกูเกิลชีตที่พี่แฟงส่งให้
         const scriptUrl = "https://script.google.com/macros/s/AKfycbzcEN_Dkv9EUfAIeCKHL7QxW61elqdimdCr7WJDtnb5hCVd4aeeA6y7gWgL7cUfKz_u/exec";
 
-        // ท่อส่งข้อมูล URLSearchParams เพื่อแมตช์ลงช่อง Apps Script
         const formParams = new URLSearchParams();
         formParams.append('userId', userId);
         formParams.append('userType', userType);
@@ -420,12 +442,14 @@
             body: formParams.toString()
         })
         .then(() => {
+            // 🚨 2. แจ้งเตือนเมื่อบันทึกข้อมูลเสร็จเรียบร้อย
+            alert("🎉 บันทึกข้อมูลอาสาสมัครเข้าสู่ระบบเรียบร้อยแล้วค่ะ!");
+            
+            // 🚨 3. สั่งปิดหน้าต่าง LIFF ทันทีเพื่อเด้งกลับหน้าแชท LINE ปกติ
             if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-                liff.sendMessages([
-                    { type: 'text', text: `🎉 ยินดีต้อนรับคุณพี่ ${fullname} เข้าสู่ระบบบัญชีขยะดิจิทัลสำเร็จเรียบร้อยแล้วค่ะ!` }
-                ]).then(() => liff.closeWindow());
+                liff.closeWindow();
             } else {
-                alert("🎉 ลงทะเบียนข้อมูลอาสาสมัครเข้าสู่ระบบเรียบร้อยแล้วค่ะ!");
+                // เผื่อกรณีเทสอบนบราวเซอร์คอมพิวเตอร์
                 document.getElementById('registerForm').reset();
                 toggleUserTypeFields();
                 toggleSubmitButton();
@@ -435,7 +459,7 @@
         })
         .catch(err => {
             console.error(err);
-            alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
+            alert("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้งค่ะ");
             btn.disabled = false;
             btn.innerText = "💾 ลงทะเบียนข้อมูล";
         });
