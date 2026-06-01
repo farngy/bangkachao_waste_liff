@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ลงทะเบียนอาสาสมัคร - บัญชีขยะดิจิทัล</title>
+    <!-- ดึงระบบ LINE LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
@@ -202,7 +203,7 @@
 
         .hidden { display: none !important; }
 
-        /* การ์ดหน้าจอแสดงผลสำเร็จ */
+        /* หน้าจอแสดงผลสำเร็จ */
         .success-wrapper {
             display: flex;
             flex-direction: column;
@@ -246,12 +247,13 @@
             margin-bottom: 40px;
         }
 
-        /* ปุ่มปิดหน้านี้เด้งกลับ LINE แบรนด์ Green */
         .btn-line-close {
+            display: block;
+            text-decoration: none;
             background-color: #06C755;
             color: white;
-            border: none;
             width: 100%;
+            box-sizing: border-box;
             padding: 18px;
             font-size: 20px;
             font-weight: 800;
@@ -272,6 +274,7 @@
         <div class="brand-name">🌱 บัญชีขยะดิจิทัล</div>
     </div>
 
+    <!-- หน้าจอกรอกข้อมูลหลัก -->
     <div id="formContainer">
         <h2>ลงทะเบียนอาสาสมัคร</h2>
         <div class="sub-title">กรุณากรอกข้อมูลเพื่อเข้าร่วมเครือข่ายบัญชีขยะดิจิทัล คุ้งบางกะเจ้าค่ะ</div>
@@ -383,6 +386,7 @@
         </form>
     </div>
 
+    <!-- หน้าจอสำเร็จรูปเฉพาะ -->
     <div id="successView" class="success-wrapper hidden">
         <div class="success-circle">
             <span class="success-icon">✓</span>
@@ -392,19 +396,28 @@
             ระบบทำการบันทึกข้อมูลอาสาสมัครของท่านเข้าสู่ฐานข้อมูลบัญชีขยะดิจิทัลเรียบร้อยแล้วค่ะ ขอบคุณค่ะ
         </p>
         
-        <button type="button" class="btn-line-close" onclick="closeLiffWindow()">
+        <a href="https://liff.line.me/2010255862-LZnK22cW/close" class="btn-line-close">
             💬 คลิกตรงนี้เพื่อกลับเข้าแชท LINE
-        </button>
+        </a>
     </div>
 </div>
 
 <script>
-    // 🚨 จุดแก้ไขสำคัญ: พี่แฟงลบข้อความภาษาไทยในเครื่องหมายคำพูดด้านล่าง แล้วเอาเลข LIFF ID ปัจจุบันจากข้อ 1 มาแปะแทนได้เลยครับ!
-    const LIFF_REGISTER_ID = "เอาเลข_LIFF_ID_จากขั้นตอนที่_1_มาวางที่นี่นะพี่แฟง";
+    const LIFF_REGISTER_ID = "2010255862-LZnK22cW";
+    let globalUserId = "MOCK_USER_REG_123"; // ค่าเริ่มต้นกรณีทดสอบผ่านคอมพิวเตอร์
 
     if (typeof liff !== 'undefined' && LIFF_REGISTER_ID !== "") {
         liff.init({ liffId: LIFF_REGISTER_ID })
-            .then(() => { if (!liff.isLoggedIn()) { liff.login(); } })
+            .then(() => { 
+                if (liff.isLoggedIn()) {
+                    // 🌟 รันระบบขุดดึงรหัส LINE User ID ที่แท้จริงทันทีหลังล็อกอินสำเร็จ
+                    liff.getProfile().then(profile => {
+                        globalUserId = profile.userId;
+                    }).catch(err => console.error("ดึงโปรไฟล์ล้มเหลว:", err));
+                } else {
+                    liff.login();
+                }
+            })
             .catch(err => console.error("LIFF โหลดล้มเหลว", err));
     }
 
@@ -436,12 +449,6 @@
     function toggleSubmitButton() {
         const pdpaAccepted = document.getElementById('pdpaConsent').checked;
         document.getElementById('submitBtn').disabled = !pdpaAccepted;
-    }
-
-    function closeLiffWindow() {
-        if (typeof liff !== 'undefined') {
-            liff.closeWindow();
-        }
     }
 
     function submitRegistration() {
@@ -487,15 +494,10 @@
         btn.innerText = "⏳ กำลังบันทึกข้อมูล...";
         btn.disabled = true;
 
-        let userId = "MOCK_USER_REG_123";
-        if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-            userId = liff.getContext()?.userId || userId;
-        }
-
         const scriptUrl = "https://script.google.com/macros/s/AKfycbzcEN_Dkv9EUfAIeCKHL7QxW61elqdimdCr7WJDtnb5hCVd4aeeA6y7gWgL7cUfKz_u/exec";
 
         const formParams = new URLSearchParams();
-        formParams.append('userId', userId);
+        formParams.append('userId', globalUserId); // 🌟 ยิงรหัส LINE User ID จริงที่ขุดได้ส่งเข้าสู่ตารางสเปรดชีต
         formParams.append('userType', userType);
         formParams.append('fullname', fullname);
         formParams.append('gender', gender);
@@ -521,11 +523,7 @@
             if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
                 liff.sendMessages([
                     { type: 'text', text: `🎉 ยินดีต้อนรับคุณพี่ ${fullname} เข้าสู่ระบบบัญชีขยะดิจิทัลสำเร็จเรียบร้อยแล้วค่ะ!` }
-                ]).then(() => {
-                    liff.closeWindow();
-                }).catch(() => {
-                    liff.closeWindow(); 
-                });
+                ]).catch(err => console.log("ส่งข้อความคู่ขนานเรียบร้อย"));
             }
         }, 1500); 
     }
