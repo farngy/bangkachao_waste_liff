@@ -593,7 +593,7 @@
         }
 
         // 🚨 นำลิงก์ Web App URL จาก Google Sheets หน้าใบรายชื่ออาสาสมัครของพี่มาแปะตรงนี้ครับ
-        const scriptUrl = "https://docs.google.com/spreadsheets/d/1viweN7QdoNf8PbknCXg1MOgzbXCNHZYcqu2wHPwmAgc/edit?gid=0#gid=0";
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbzcEN_Dkv9EUfAIeCKHL7QxW61elqdimdCr7WJDtnb5hCVd4aeeA6y7gWgL7cUfKz_u/exec";
 
         const payload = {
           userId: userId,
@@ -608,7 +608,7 @@
           tambon: tambonValue,
         };
 
-        if (scriptUrl === "https://docs.google.com/spreadsheets/d/1viweN7QdoNf8PbknCXg1MOgzbXCNHZYcqu2wHPwmAgc/edit?gid=0#gid=0") {
+        if (scriptUrl === "https://script.google.com/macros/s/AKfycbzcEN_Dkv9EUfAIeCKHL7QxW61elqdimdCr7WJDtnb5hCVd4aeeA6y7gWgL7cUfKz_u/exec") {
           setTimeout(() => {
             console.log("บันทึกสำเร็จ (Demo Mode):", payload);
             alert(
