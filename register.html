@@ -302,11 +302,11 @@
                 type="radio"
                 id="type-local"
                 name="user_type"
-                value="คนในคุ้งบางกะเจ้า"
+                value="คนในชุมชน"
                 checked
                 onchange="toggleUserTypeFields()"
               />
-              <label for="type-local" class="radio-label">🏡 คนในคุ้งบางกะเจ้า</label>
+              <label for="type-local" class="radio-label">🏡 คนในชุมชน</label>
             </div>
             <div class="radio-box">
               <input
@@ -580,7 +580,7 @@
         let fullAddress = "นักท่องเที่ยว (ภายนอก)";
         let tambonValue = "ภายนอกคุ้งบางกะเจ้า";
 
-        if (userType === "คนในคุ้งบางกะเจ้า") {
+        if (userType === "คนในชุมชน") {
           const addressNo = document.getElementById("address_no").value;
           const moo = document.getElementById("moo").value;
           tambonValue = document.getElementById("tambon").value;
