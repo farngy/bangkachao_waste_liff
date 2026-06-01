@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ลงทะเบียนอาสาสมัคร - บัญชีขยะดิจิทัล</title>
+    <!-- ดึงระบบ LINE LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
@@ -215,6 +216,7 @@
 
     <form id="registerForm" onsubmit="event.preventDefault(); submitRegistration();">
         
+        <!-- 1. เลือกประเภทผู้ใช้งาน -->
         <div class="form-group">
             <label class="form-label">👤 ประเภทผู้ใช้งาน</label>
             <div class="radio-grid-2">
@@ -229,11 +231,13 @@
             </div>
         </div>
 
+        <!-- 2. ชื่อ-นามสกุล -->
         <div class="form-group">
             <label class="form-label" for="fullname">✍️ ชื่อ - นามสกุล</label>
             <input type="text" id="fullname" class="form-input" placeholder="เช่น นายสมหวัง ใจดี" required>
         </div>
 
+        <!-- 3. เพศ -->
         <div class="form-group">
             <label class="form-label">👫 เพศ</label>
             <div class="radio-grid-4">
@@ -244,6 +248,7 @@
             </div>
         </div>
 
+        <!-- 4. ช่วงอายุ -->
         <div class="form-group">
             <label class="form-label">🎂 ช่วงอายุของคุณ</label>
             <div class="radio-grid-2">
@@ -254,11 +259,13 @@
             </div>
         </div>
 
+        <!-- 5. เบอร์โทรศัพท์ -->
         <div class="form-group">
             <label class="form-label" for="phone">📞 เบอร์โทรศัพท์</label>
             <input type="tel" id="phone" class="form-input" pattern="[0-9]{9,10}" placeholder="เช่น 0812345678" required>
         </div>
 
+        <!-- 6. หมวดหมู่จำแนกตามอาชีพ -->
         <div class="form-group">
             <label class="form-label" for="career">💼 อาชีพปัจจุบัน / อดีต</label>
             <select id="career" class="form-select" required>
@@ -274,6 +281,7 @@
             </select>
         </div>
 
+        <!-- โซนที่อยู่สำหรับ "คนในชุมชน" -->
         <div id="local-address-section">
             <div class="form-group">
                 <div class="address-row">
@@ -302,6 +310,7 @@
             </div>
         </div>
 
+        <!-- 🔒 นโยบาย PDPA -->
         <div class="pdpa-container">
             <div class="pdpa-title">🔒 นโยบายคุ้มครองข้อมูลส่วนบุคคล</div>
             <div class="pdpa-content">
@@ -316,12 +325,13 @@
             </div>
         </div>
 
+        <!-- ปุ่มยืนยัน -->
         <button type="submit" class="btn-submit" id="submitBtn" disabled>💾 ลงทะเบียนข้อมูล</button>
     </form>
 </div>
 
 <script>
-    // 🚀 เลข LIFF ID ของพี่แฟง
+    // เลข LIFF ID ของพี่แฟง
     const LIFF_REGISTER_ID = "2010255862-LZnK22cW";
 
     if (typeof liff !== 'undefined' && LIFF_REGISTER_ID !== "") {
@@ -387,5 +397,49 @@
             userId = liff.getContext()?.userId || userId;
         }
 
-        // 🚨 ดึงลิงก์ตัวที่เทสผ่านล่าสุดของพี่แฟงมาใส่ตรงนี้ได้เลยครับ 🚨
-        const scriptUrl =
+        // ลิงก์ยิงตรงเข้าสู่ระบบกูเกิลชีตที่พี่แฟงส่งให้
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbzcEN_Dkv9EUfAIeCKHL7QxW61elqdimdCr7WJDtnb5hCVd4aeeA6y7gWgL7cUfKz_u/exec";
+
+        // ท่อส่งข้อมูล URLSearchParams เพื่อแมตช์ลงช่อง Apps Script
+        const formParams = new URLSearchParams();
+        formParams.append('userId', userId);
+        formParams.append('userType', userType);
+        formParams.append('fullname', fullname);
+        formParams.append('gender', gender);
+        formParams.append('ageRange', ageRange);
+        formParams.append('phone', phone);
+        formParams.append('career', career);
+        formParams.append('addressNo', addressNo);
+        formParams.append('moo', mooValue);
+        formParams.append('tambon', tambonValue);
+
+        fetch(scriptUrl, {
+            method: "POST",
+            mode: "no-cors", 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formParams.toString()
+        })
+        .then(() => {
+            if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
+                liff.sendMessages([
+                    { type: 'text', text: `🎉 ยินดีต้อนรับคุณพี่ ${fullname} เข้าสู่ระบบบัญชีขยะดิจิทัลสำเร็จเรียบร้อยแล้วค่ะ!` }
+                ]).then(() => liff.closeWindow());
+            } else {
+                alert("🎉 ลงทะเบียนข้อมูลอาสาสมัครเข้าสู่ระบบเรียบร้อยแล้วค่ะ!");
+                document.getElementById('registerForm').reset();
+                toggleUserTypeFields();
+                toggleSubmitButton();
+                btn.innerText = "💾 ลงทะเบียนข้อมูล";
+                btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert("เกิดข้อผิดพลาดในการส่งข้อมูล");
+            btn.disabled = false;
+            btn.innerText = "💾 ลงทะเบียนข้อมูล";
+        });
+    }
+</script>
+</body>
+</html>
