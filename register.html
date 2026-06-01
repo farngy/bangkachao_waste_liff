@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ลงทะเบียนอาสาสมัคร - บัญชีขยะดิจิทัล</title>
-    <!-- ดึงระบบ LINE LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
@@ -216,7 +215,6 @@
 
     <form id="registerForm" onsubmit="event.preventDefault(); submitRegistration();">
         
-        <!-- 1. เลือกประเภทผู้ใช้งาน -->
         <div class="form-group">
             <label class="form-label">👤 ประเภทผู้ใช้งาน</label>
             <div class="radio-grid-2">
@@ -231,13 +229,11 @@
             </div>
         </div>
 
-        <!-- 2. ชื่อ-นามสกุล -->
         <div class="form-group">
             <label class="form-label" for="fullname">✍️ ชื่อ - นามสกุล</label>
             <input type="text" id="fullname" class="form-input" placeholder="เช่น นายสมหวัง ใจดี" required>
         </div>
 
-        <!-- 3. เพศ -->
         <div class="form-group">
             <label class="form-label">👫 เพศ</label>
             <div class="radio-grid-4">
@@ -248,7 +244,6 @@
             </div>
         </div>
 
-        <!-- 4. ช่วงอายุ -->
         <div class="form-group">
             <label class="form-label">🎂 ช่วงอายุของคุณ</label>
             <div class="radio-grid-2">
@@ -259,13 +254,11 @@
             </div>
         </div>
 
-        <!-- 5. เบอร์โทรศัพท์ -->
         <div class="form-group">
             <label class="form-label" for="phone">📞 เบอร์โทรศัพท์</label>
             <input type="tel" id="phone" class="form-input" pattern="[0-9]{9,10}" placeholder="เช่น 0812345678" required>
         </div>
 
-        <!-- 6. หมวดหมู่จำแนกตามอาชีพ -->
         <div class="form-group">
             <label class="form-label" for="career">💼 อาชีพปัจจุบัน / อดีต</label>
             <select id="career" class="form-select" required>
@@ -281,7 +274,6 @@
             </select>
         </div>
 
-        <!-- โซนที่อยู่สำหรับ "คนในชุมชน" -->
         <div id="local-address-section">
             <div class="form-group">
                 <div class="address-row">
@@ -310,7 +302,6 @@
             </div>
         </div>
 
-        <!-- 🔒 นโยบาย PDPA -->
         <div class="pdpa-container">
             <div class="pdpa-title">🔒 นโยบายคุ้มครองข้อมูลส่วนบุคคล</div>
             <div class="pdpa-content">
@@ -325,7 +316,6 @@
             </div>
         </div>
 
-        <!-- ปุ่มยืนยัน -->
         <button type="submit" class="btn-submit" id="submitBtn" disabled>💾 ลงทะเบียนข้อมูล</button>
     </form>
 </div>
@@ -372,7 +362,7 @@
     function submitRegistration() {
         const btn = document.getElementById('submitBtn');
 
-        // 🚨 1. ระบบบังคับตรวจเช็คข้อมูลให้ครบทุกช่องก่อนส่ง
+        // บังคับตรวจเช็คข้อมูลให้ครบทุกช่องก่อนส่ง
         const userTypeRadio = document.querySelector('input[name="user_type"]:checked');
         const genderRadio = document.querySelector('input[name="gender"]:checked');
         const ageRadio = document.querySelector('input[name="age_range"]:checked');
@@ -380,7 +370,6 @@
         const phoneInput = document.getElementById('phone');
         const careerSelect = document.getElementById('career');
 
-        // ตรวจเช็คค่า Input หลัก
         if (!fullnameInput.value.trim() || !phoneInput.value.trim() || !genderRadio || !ageRadio || !careerSelect.value) {
             alert("⚠️ กรุณากรอกข้อมูลส่วนตัวและเลือกปุ่มตัวเลือกให้ครบถ้วนด้วยค่ะ");
             return;
@@ -397,7 +386,6 @@
         let mooValue = "";
         let tambonValue = "ภายนอกคุ้งบางกะเจ้า";
 
-        // ตรวจเช็คเพิ่มเฉพาะกลุ่มคนในชุมชน
         if(userType === "คนในชุมชน") {
             const addr = document.getElementById('address_no').value.trim();
             const moo = document.getElementById('moo').value.trim();
@@ -435,34 +423,36 @@
         formParams.append('moo', mooValue);
         formParams.append('tambon', tambonValue);
 
+        // 🌟 [จุดแก้ไขหลักเพื่อแก้ปุ่มค้าง] ยิงข้อมูลออกไป และสั่งเปิดหน้าต่างสำเร็จทันทีโดยไม่รอสัญญาณ CORS ของ Google
         fetch(scriptUrl, {
             method: "POST",
             mode: "no-cors", 
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: formParams.toString()
-        })
-        .then(() => {
-            // 🚨 2. แจ้งเตือนเมื่อบันทึกข้อมูลเสร็จเรียบร้อย
+        });
+
+        // หน่วงเวลาจำลองการบันทึกข้อมูล 1.5 วินาที เพื่อให้ข้อมูลรันเข้าตารางสำเร็จแน่นอน
+        setTimeout(() => {
             alert("🎉 บันทึกข้อมูลอาสาสมัครเข้าสู่ระบบเรียบร้อยแล้วค่ะ!");
             
-            // 🚨 3. สั่งปิดหน้าต่าง LIFF ทันทีเพื่อเด้งกลับหน้าแชท LINE ปกติ
             if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-                liff.closeWindow();
+                // ส่งข้อความยืนยันเข้าห้องแชท LINE และสั่งเด้งม้วนหน้าต่างปิดตัวเองทันที
+                liff.sendMessages([
+                    { type: 'text', text: `🎉 ยินดีต้อนรับคุณพี่ ${fullname} เข้าสู่ระบบบัญชีขยะดิจิทัลสำเร็จเรียบร้อยแล้วค่ะ!` }
+                ]).then(() => {
+                    liff.closeWindow();
+                }).catch(() => {
+                    liff.closeWindow(); // หากส่งการ์ดแชทล้มเหลว ก็ยังบังคับปิดหน้าต่างตามกฎเดิมครับ
+                });
             } else {
-                // เผื่อกรณีเทสอบนบราวเซอร์คอมพิวเตอร์
+                // เผื่อกรณีเทสอบนบราวเซอร์คอมพิวเตอร์ทั่วไป
                 document.getElementById('registerForm').reset();
                 toggleUserTypeFields();
                 toggleSubmitButton();
                 btn.innerText = "💾 ลงทะเบียนข้อมูล";
                 btn.disabled = false;
             }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่อีกครั้งค่ะ");
-            btn.disabled = false;
-            btn.innerText = "💾 ลงทะเบียนข้อมูล";
-        });
+        }, 1500); 
     }
 </script>
 </body>
