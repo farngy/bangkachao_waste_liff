@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LearnDo Waste Recorder</title>
+    <!-- ดึง LINE LIFF SDK มาใช้งาน -->
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+      :root {
+        --primary-color: #1b4332;
+        --accent-color: #2d6a4f;
+        --text-color: #2d3748;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        color: var(--text-color);
+        background-color: #f8f9fa;
+        padding: 20px;
+        margin: 0;
+        text-align: center;
+      }
+      .container {
+        max-width: 450px;
+        margin: 0 auto;
+        background: white;
+        padding: 30px;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      }
+      h2 {
+        font-size: 26px;
+        color: var(--primary-color);
+        margin-top: 0;
+        font-weight: 700;
+      }
+      .step-desc {
+        font-size: 16px;
+        color: #718096;
+        margin-bottom: 30px;
+      }
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 20px;
+        margin: 15px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: white;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .btn-main {
+        background-color: var(--primary-color);
+      }
+      .btn-sub {
+        background-color: #e2e8f0;
+        color: var(--text-color);
+      }
+      .input-weight {
+        width: 80%;
+        padding: 15px;
+        font-size: 32px;
+        font-weight: bold;
+        text-align: center;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        margin: 20px 0;
+        color: var(--primary-color);
+      }
+      .file-label {
+        display: block;
+        background: #edf2f7;
+        border: 2px dashed #cbd5e0;
+        padding: 30px;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: 600;
+        color: #4a5568;
+        cursor: pointer;
+        margin: 20px 0;
+      }
+      .preview-img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 12px;
+        display: none;
+        margin-top: 15px;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- หน้าจอที่ 1: เลือกหมวดหมู่หลัก -->
+      <div id="step1">
+        <h2>เลือกหมวดหมู่หลัก</h2>
+        <div class="step-desc">โปรดเลือกประเภทขยะหลักที่ต้องการบันทึกค่ะ</div>
+        <button class="btn btn-main" onclick="selectMain('พลาสติก')">
+          ♻️ 1. พลาสติก
+        </button>
+        <button class="btn btn-main" onclick="selectMain('กระดาษ')">
+          📦 2. กระดาษ
+        </button>
+        <button class="btn btn-main" onclick="selectMain('แก้ว')">
+          🍾 3. แก้ว
+        </button>
+        <button class="btn btn-main" onclick="selectMain('อลูมิเนียม')">
+          🥫 4. อลูมิเนียม
+        </button>
+      </div>
+
+      <!-- หน้าจอที่ 2: เลือกหมวดหมู่ย่อย (จะงอกตามหมวดหลักอัตโนมัติ) -->
+      <div id="step2" class="hidden">
+        <h2>เลือกประเภทย่อย</h2>
+        <div class="step-desc">เลือกชนิดขยะย่อยที่ตรงกับของพี่ค่ะ</div>
+        <div id="sub-buttons-container"></div>
+        <button class="btn btn-sub" onclick="goBack(1)">⬅️ ย้อนกลับ</button>
+      </div>
+
+      <!-- หน้าจอที่ 3: กรอกน้ำหนัก และ ถ่ายรูปรูปถ่าย -->
+      <div id="step3" class="hidden">
+        <h2>ระบุน้ำหนักและถ่ายรูป</h2>
+        <div class="step-desc" id="summary-text"></div>
+
+        <input
+          type="number"
+          step="0.1"
+          id="weight"
+          class="input-weight"
+          placeholder="0.0"
+        />
+        <span style="font-size: 20px; font-weight: bold">กิโลกรัม (kg)</span>
+
+        <!-- บังคับเปิดกล้องมือถืออัตโนมัติเมื่อกดจิ้ม -->
+        <label class="file-label">
+          📸 กดตรงนี้เพื่อถ่ายรูปหลักฐาน
+          <input
+            type="file"
+            id="cameraInput"
+            accept="image/*"
+            capture="camera"
+            class="hidden"
+            onchange="previewFile()"
+          />
+        </label>
+        <img id="preview" class="preview-img" src="" alt="หลักฐานขยะ" />
+
+        <button
+          class="btn btn-main"
+          style="background-color: #2d6a4f; margin-top: 30px"
+          onclick="submitData()"
+        >
+          💾 บันทึกข้อมูล
+        </button>
+        <button class="btn btn-sub" onclick="goBack(2)">⬅️ ย้อนกลับ</button>
+      </div>
+    </div>
+
+    <script>
+      // 📝 ข้อมูลประเภทย่อยตามตารางคำนวณคาร์บอนของพี่แฟง
+      const garbageData = {
+        พลาสติก: [
+          "ขวดพลาสติกใส (PET)",
+          "ขวดพลาสติกขุ่น (HDPE)",
+          "ฝาขวดพลาสติก (HDPE)",
+        ],
+        กระดาษ: [
+          "กระดาษลัง",
+          "กระดาษสีขาว/เอกสาร",
+          "กระดาษนิตยสาร/หนังสือพิมพ์",
+        ],
+        แก้ว: ["ขวดแก้วชนิดเดียวกัน (ครบลัง)", "เศษ/ขวดแก้วรวม"],
+        อลูมิเนียม: ["กระป๋องอลูมิเนียม", "ฝาอลูมิเนียม", "เศษอลูมิเนียมอื่นๆ"],
+      };
+
+      let selectedMain = "";
+      let selectedSub = "";
+      let base64Image = "";
+      let imageName = "";
+
+      // 🚀 เปลี่ยนเลขตรงนี้เป็น LIFF ID ของพี่หลังจากทำส่วนที่ 3 เสร็จนะครับ
+      liff
+        .init({ liffId: "XXXXX-XXXXX" })
+        .then(() => {
+          if (!liff.isLoggedIn()) {
+            liff.login();
+          }
+        })
+        .catch((err) => console.error(err));
+
+      function selectMain(mainCat) {
+        selectedMain = mainCat;
+        const container = document.getElementById("sub-buttons-container");
+        container.innerHTML = "";
+
+        garbageData[mainCat].forEach((subCat) => {
+          const btn = document.createElement("button");
+          btn.className = "btn btn-main";
+          btn.style.backgroundColor = "#40916c";
+          btn.innerText = subCat;
+          btn.onclick = () => selectSub(subCat);
+          container.appendChild(btn);
+        });
+
+        switchStep(1, 2);
+      }
+
+      function selectSub(subCat) {
+        selectedSub = subCat;
+        document.getElementById(
+          "summary-text"
+        ).innerText = `${selectedMain} ➡️ ${selectedSub}`;
+        switchStep(2, 3);
+      }
+
+      function previewFile() {
+        const file = document.getElementById("cameraInput").files[0];
+        const preview = document.getElementById("preview");
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+          base64Image = reader.result;
+          preview.src = reader.result;
+          preview.style.display = "block";
+          imageName = `trash_${Date.now()}.jpg`;
+        };
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      }
+
+      function submitData() {
+        const weight = document.getElementById("weight").value;
+        if (!weight) {
+          alert("กรุณากรอกน้ำหนักก่อนนะคะ");
+          return;
+        }
+
+        liff.getProfile().then((profile) => {
+          // 🚨 เอาลิงก์ Web app URL จากขั้นตอนที่ 1 (Apps Script) มาวางแทนลิงก์ด้านล่างนี้ครับ
+          const scriptUrl =
+            "https://script.google.com/macros/s/AKfycbycUYkTC6ik7qHEiU4GtAvIWmWOyRQ0hWmVlSoZ9yM/dev";
+
+          const payload = {
+            userId: profile.userId,
+            mainCategory: selectedMain,
+            subCategory: selectedSub,
+            weight: weight,
+            imageData: base64Image,
+            imageName: imageName,
+          };
+
+          fetch(scriptUrl, { method: "POST", body: JSON.stringify(payload) })
+            .then((res) => res.json())
+            .then((res) => {
+              if (res.status === "success") {
+                liff
+                  .sendMessages([
+                    {
+                      type: "text",
+                      text: `♻️ บันทึกข้อมูลขยะสำเร็จ!\nประเภท: ${selectedSub}\nน้ำหนัก: ${weight} กิโลกรัม`,
+                    },
+                  ])
+                  .then(() => liff.closeWindow());
+              } else {
+                alert("เกิดข้อผิดพลาด ลองใหม่อีกครั้งนะคะ");
+              }
+            });
+        });
+      }
+
+      function switchStep(from, to) {
+        document.getElementById(`step${from}`).classList.add("hidden");
+        document.getElementById(`step${to}`).classList.remove("hidden");
+      }
+
+      function goBack(toStep) {
+        if (toStep === 1) {
+          switchStep(2, 1);
+        }
+        if (toStep === 2) {
+          switchStep(3, 2);
+        }
+      }
+    </script>
+  </body>
+</html>
