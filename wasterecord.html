@@ -11,16 +11,12 @@
             --primary-green: #1b4332;
             --bg-light: #F4F6F5;
             --text-main: #2d3748;
-            --mint-light: #e6fffa;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: var(--text-main);
-            background-color: #cbd5e0;
-            margin: 0; padding: 0;
-            display: flex; justify-content: center; align-items: flex-start;
-            min-height: 100vh;
+            color: var(--text-main); background-color: #cbd5e0; margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
         }
 
         .phone-container {
@@ -29,32 +25,29 @@
             display: flex; flex-direction: column; position: relative;
         }
 
-        /* ส่วนหัวแอปพลิเคชันจำลองประวัตินักอนุรักษ์ */
+        /* เมนูส่วนหัวดีไซน์พรีเมียม */
         .app-header {
             display: flex; align-items: center; justify-content: space-between;
             background: var(--bg-light); padding: 10px 16px; border-radius: 30px; margin-bottom: 25px;
         }
         .user-meta { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--primary-dark); }
         .badge-status { background: #319795; color: white; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
-        .avatar { width: 30px; height: 30px; border-radius: 50%; background: #a0aec0; overflow: hidden; }
+        .avatar { width: 30px; height: 30px; border-radius: 50%; background: #e2e8f0; overflow: hidden; display:flex; align-items:center; justify-content:center; }
 
         h2 { font-size: 24px; color: var(--primary-dark); text-align: center; font-weight: 800; margin: 0 0 25px 0; }
 
-        /* แผงปุ่มตารางสี่เหลี่ยมมินิมอลสวยงาม (Grid Menu) */
-        .category-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px;
-        }
+        /* 4 กลุ่มประเภทขยะหลักแบบปุ่มรูปสี่เหลี่ยมสวยงาม */
+        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
         .card-btn {
             background: #FFFFFF; border: 2px solid #e2e8f0; border-radius: 18px;
             padding: 24px 12px; display: flex; flex-direction: column; align-items: center;
             justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-            transition: all 0.2s ease;
         }
         .card-btn:active { transform: scale(0.96); border-color: var(--primary-dark); background: var(--bg-light); }
-        .card-btn img { width: 65px; height: 65px; object-fit: contain; }
-        .card-btn span { font-size: 16px; font-weight: 800; color: var(--primary-dark); }
+        .card-btn .icon-img { width: 70px; height: 70px; object-fit: contain; }
+        .card-btn span { font-size: 17px; font-weight: 800; color: var(--primary-dark); }
 
-        /* การ์ดประเภทย่อยแนวดิ่ง 3 ปุ่มซ้อน */
+        /* รายการย่อยแบบกรอบปุ่มขนาดใหญ่ตามผังรูปภาพประกอบ */
         .sub-category-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
         .sub-card {
             background: #FFFFFF; border: 2px solid #e2e8f0; border-radius: 16px;
@@ -62,23 +55,23 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
         .sub-card:active { border-color: var(--primary-dark); background: var(--bg-light); }
-        .sub-card img { width: 50px; height: 50px; object-fit: contain; }
-        .sub-card span { font-size: 15px; font-weight: 700; color: var(--text-main); text-align: left; line-height: 1.4; }
+        .sub-card .sub-img { width: 55px; height: 55px; object-fit: contain; }
+        .sub-card span { font-size: 16px; font-weight: 700; color: var(--text-main); text-align: left; line-height: 1.4; }
 
-        /* หน้าจอกรอกข้อมูลน้ำหนัก UX ลักชูรี */
+        /* ส่วนหน้าจอระบุน้ำหนักควบคุมตัวเลข */
         .weight-ui-box { text-align: center; }
         .weight-display { font-size: 45px; font-weight: 900; color: var(--primary-dark); margin: 15px 0; }
-        .counter-row { display: flex; justify-content: center; gap: 12px; margin-bottom: 25px; }
+        .counter-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
         .btn-count {
-            background: var(--primary-dark); color: white; border: none; padding: 12px 18px;
-            font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; min-width: 60px;
+            background: var(--primary-dark); color: white; border: none; padding: 12px 14px;
+            font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; min-width: 65px;
         }
         .btn-count:active { transform: scale(0.95); }
         
-        .checkbox-zone { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700; color: #4a5568; margin-bottom: 30px; }
-        .checkbox-zone input { width: 18px; height: 18px; cursor: pointer; }
+        .checkbox-zone { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 17px; font-weight: 700; color: #4a5568; margin-bottom: 30px; cursor: pointer; }
+        .checkbox-zone input { width: 20px; height: 20px; cursor: pointer; }
 
-        /* แผงแนบหลักฐานรูปถ่าย */
+        /* แผงแนบรูปถ่ายหลักฐาน */
         .photo-box {
             border: 2px dashed #cbd5e0; border-radius: 16px; padding: 24px;
             text-align: center; background: var(--bg-light); cursor: pointer; margin-bottom: 30px;
@@ -87,15 +80,15 @@
         .preview-box { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
         .preview-img { width: 80px; height: 80px; object-fit: cover; border-radius: 12px; border: 1px solid #cbd5e0; }
 
-        /* ปุ่มเดินหน้า/ถอยหลังด้านล่าง */
+        /* ชุดปุ่มนำทางล่างสุด */
         .footer-nav { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
-        .btn-next { background-color: var(--primary-dark); color: white; border: none; padding: 16px; font-size: 18px; font-weight: 800; border-radius: 30px; cursor: pointer; width: 100%; text-align: center; }
-        .btn-back { background: none; border: none; color: #718096; font-size: 16px; font-weight: 700; padding: 8px; cursor: pointer; text-align: center; }
+        .btn-next { background-color: var(--primary-dark); color: white; border: none; padding: 16px; font-size: 19px; font-weight: 800; border-radius: 30px; cursor: pointer; width: 100%; }
+        .btn-back { background: none; border: none; color: #718096; font-size: 17px; font-weight: 700; padding: 8px; cursor: pointer; }
 
-        /* หน้าสรุปผลโชว์คาร์บอนพรีเมียม */
+        /* แผงโชว์สรุปคาร์บอนเครดิต */
         .carbon-num { font-size: 75px; font-weight: 900; color: var(--primary-dark); margin: 10px 0; line-height: 1; }
         .tree-badge { background: var(--bg-light); border: 1px solid #e2e8f0; border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 12px; margin: 25px 0; text-align: left; }
-        .tree-badge span { font-size: 14px; font-weight: 700; color: #4a5568; line-height: 1.4; }
+        .tree-badge span { font-size: 15px; font-weight: 700; color: #4a5568; line-height: 1.4; }
 
         .hidden { display: none !important; }
     </style>
@@ -104,43 +97,46 @@
 
 <div class="phone-container">
     <div class="app-header">
-        <div style="font-size:20px; cursor:pointer; color:var(--primary-dark);">☰</div>
+        <div style="font-size:20px; color:var(--primary-dark);">☰</div>
         <div class="user-meta">
             <span id="headerName">somwang</span>
             <span class="badge-status">🏅 นักอนุรักษ์มือใหม่</span>
-            <div class="avatar"><img src="https://img.icons8.com/illustrations/lex/50/user-male-circle.png" style="width:100%"></div>
+            <div class="avatar">👤</div>
         </div>
     </div>
 
+    <!-- 🌐 หน้าจอที่ 1: เลือกประเภทขยะหลัก (Category Selection) -->
     <div id="step1">
         <h2>เลือกประเภทขยะ</h2>
         <div class="category-grid">
             <div class="card-btn" onclick="selectMainCategory('พลาสติก (Plastic)')">
-                <img src="https://img.icons8.com/external-flat-icons-inmotus-design/100/external-Plastic-ecology-flat-icons-inmotus-design-2.png" alt="พลาสติก">
+                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/3001/3001669.png" alt="พลาสติก">
                 <span>พลาสติก</span>
             </div>
             <div class="card-btn" onclick="selectMainCategory('กระดาษ (Paper)')">
-                <img src="https://img.icons8.com/external-flat-icons-inmotus-design/100/external-Paper-ecology-flat-icons-inmotus-design.png" alt="กระดาษ">
+                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/3143/3143431.png" alt="กระดาษ">
                 <span>กระดาษ</span>
             </div>
             <div class="card-btn" onclick="selectMainCategory('แก้ว (Glass)')">
-                <img src="https://img.icons8.com/external-flat-icons-inmotus-design/100/external-Glass-ecology-flat-icons-inmotus-design.png" alt="แก้ว">
+                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/9180/9180583.png" alt="แก้ว">
                 <span>แก้ว</span>
             </div>
             <div class="card-btn" onclick="selectMainCategory('อลูมิเนียม')">
-                <img src="https://img.icons8.com/external-flat-icons-inmotus-design/100/external-Can-ecology-flat-icons-inmotus-design.png" alt="อลูมิเนียม">
+                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/2666/2666687.png" alt="อลูมิเนียม">
                 <span>อลูมิเนียม</span>
             </div>
         </div>
+        <div class="footer-nav"><button class="btn-back" onclick="closeLiffWindow()">ปิดหน้าต่าง</button></div>
     </div>
 
+    <!-- 🌐 หน้าจอที่ 2: เลือกประเภทย่อยพร้อมรูปภาพประกอบชัดเจนสวยงาม -->
     <div id="step2" class="hidden">
         <h2 id="subTitleHeader">ประเภทขยะ</h2>
-        <div class="sub-category-list" id="subCategoryContainer">
-            </div>
+        <div class="sub-category-list" id="subCategoryContainer"></div>
         <div class="footer-nav"><button class="btn-back" onclick="goBackTo(1)">⬅️ ย้อนกลับ</button></div>
     </div>
 
+    <!-- 🌐 หน้าจอที่ 3: ระบุน้ำหนักและหลักฐานรูปถ่าย (Data Input) -->
     <div id="step3" class="hidden">
         <h2>ระบุน้ำหนักและหลักฐาน</h2>
         <div class="weight-ui-box">
@@ -157,7 +153,7 @@
             </label>
 
             <div class="photo-box" onclick="document.getElementById('cameraFile').click()">
-                <img src="https://img.icons8.com/fluency/48/camera.png" alt="กล้อง">
+                <img src="https://cdn-icons-png.flaticon.com/512/685/685655.png" style="width:45px;" alt="กล้อง">
                 <p style="margin:8px 0 0 0; font-weight:800; color:var(--primary-dark);">ถ่ายรูปขยะ</p>
                 <span>(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span>
                 <input type="file" id="cameraFile" class="hidden" accept="image/*" onchange="previewImages(this)">
@@ -170,6 +166,7 @@
         </div>
     </div>
 
+    <!-- 🌐 หน้าจอที่ 4: สรุปผลคาร์บอนเครดิตแลนด์สเคปสวยงาม (Summary & Submission) -->
     <div id="step4" class="hidden" style="text-align:center;">
         <h2>สรุปผลคาร์บอน</h2>
         <p style="font-size:16px; font-weight:700; color:#4a5568; margin:0;">คุณช่วยลดการปล่อยก๊าซเรือนกระจกได้</p>
@@ -177,7 +174,7 @@
         <span style="font-size:22px; font-weight:900; color:var(--primary-dark)">kgCO2e</span>
 
         <div class="tree-badge">
-            <img src="https://img.icons8.com/fluency/50/tree.png" style="width:45px">
+            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921820.png" style="width:45px">
             <span>เทียบเท่าคุณช่วยบางกะเจ้า<br><strong style="color:#143F24;" id="treeText">ปลูกต้นไม้เพิ่ม 0 ต้นแล้ว!</strong></span>
         </div>
 
@@ -187,36 +184,48 @@
     </div>
 </div>
 
-<script>
-    // 🌟 เปลี่ยนแทนค่า Web App URL ชุดใหม่ของพี่แฟงตรงนี้ได้เลยครับเรียบร้อย
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYpashQVDeva0koyTDw89r3lbB5HAPAnpk9dwLfvqdFedGKn6eVtbptJnUGFaN5I0/exec";
-    const LIFF_ID = "ใส่_LIFF_ID_หน้าขยะของพี่ตรงนี้"; 
+<!-- 📦 ฟอร์มลับทำหน้าที่ถล่มผ่านบล็อกประตูความปลอดภัยเพื่อหยอดค่าลง Google Sheets ของพี่แฟง -->
+<form id="hiddenForm" method="POST" target="hiddenFrame" style="display:none;">
+    <input type="hidden" name="action" value="saveGarbage">
+    <input type="hidden" name="userId" id="hideUserId">
+    <input type="hidden" name="main_category" id="hideMainCat">
+    <input type="hidden" name="sub_category" id="hideSubCat">
+    <input type="hidden" name="weight_kg" id="hideWeight">
+    <input type="hidden" name="image_url" value="https://learn-do-storage.local/evidence.jpg">
+</form>
+<iframe name="hiddenFrame" style="display:none;"></iframe>
 
-    let globalUserId = "MOCK_LINE_USER_ID";
+<script>
+    // 🔗 เปลี่ยนแทนค่าพิกัด Web App URL ตัวปัจจุบันของพี่แฟง
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYpashQVDeva0koyTDw89r3lbB5HAPAnpk9dwLfvqdFedGKn6eVtbptJnUGFaN5I0/exec";
+    const LIFF_ID = "2010255862-LZnK22cW"; 
+
+    let globalUserId = "MOCK_USER_ID_123";
     let selectedMainCat = "";
     let selectedSubCat = "";
     let currentWeight = 0.0;
+    let isWeightUnknown = false;
 
-    // ข้อมูลภาพประกอบประเภทย่อยลักชูรีตรงเป็กรูปที่ส่งมา
+    // คลังรูปภาพประเภทย่อย คัดสรรมาแบบพรีเมียม สวย เข้าใจง่าย เหมาะกับผู้สูงอายุ
     const subRepository = {
         "พลาสติก (Plastic)": [
-            { name: "ขวดน้ำพลาสติกใส (PET)", img: "https://img.icons8.com/fluency/96/plastic-bottle.png" },
-            { name: "ขวดน้ำพลาสติกขุ่น (HDPE) (บีทาเก้น, ดีไลท์, แกลลอนน้ำยาล้างจาน)", img: "https://img.icons8.com/fluency/96/shampoo-bottle.png" },
-            { name: "ฝาขวดพลาสติก (HDPE)", img: "https://img.icons8.com/emoji/96/bottle-cap-emoji.png" }
+            { name: "ขวดน้ำพลาสติกใส (PET)", img: "https://cdn-icons-png.flaticon.com/512/3081/3081971.png" },
+            { name: "ขวดน้ำพลาสติกขุ่น (HDPE) (บีทาเก้น, ดีไลท์, แกลลอนน้ำยาล้างจาน)", img: "https://cdn-icons-png.flaticon.com/512/9380/9380993.png" },
+            { name: "ฝาขวดพลาสติก (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/6122/6122240.png" }
         ],
         "กระดาษ (Paper)": [
-            { name: "กระดาษลัง", img: "https://img.icons8.com/fluency/96/box.png" },
-            { name: "กระดาษสีขาว/เอกสาร (A4)", img: "https://img.icons8.com/fluency/96/file.png" },
-            { name: "กระดาษนิตยสาร/หนังสือพิมพ์", img: "https://img.icons8.com/fluency/96/news.png" }
+            { name: "กระดาษลัง", img: "https://cdn-icons-png.flaticon.com/512/2329/2329173.png" },
+            { name: "กระดาษสีขาว/เอกสาร (A4)", img: "https://cdn-icons-png.flaticon.com/512/3388/3388043.png" },
+            { name: "กระดาษนิตยสาร/หนังสือพิมพ์", img: "https://cdn-icons-png.flaticon.com/512/2965/2965873.png" }
         ],
         "แก้ว (Glass)": [
-            { name: "ขวดแก้วชนิดเดียวกัน (ครบลัง)", img: "https://img.icons8.com/fluency/96/wine-bottle.png" },
-            { name: "ขวดแก้วรวม", img: "https://img.icons8.com/fluency/96/broken-bottle.png" }
+            { name: "ขวดแก้วชนิดเดียวกัน (ครบลัง)", img: "https://cdn-icons-png.flaticon.com/512/3050/3050186.png" },
+            { name: "ขวดแก้วรวม", img: "https://cdn-icons-png.flaticon.com/512/10410/10410065.png" }
         ],
         "อลูมิเนียม": [
-            { name: "กระป๋องอลูมิเนียม", img: "https://img.icons8.com/fluency/96/soda-can.png" },
-            { name: "ฝาอลูมิเนียม", img: "https://img.icons8.com/color/96/bottle-cap.png" },
-            { name: "เศษอลูมิเนียมอื่นๆ", img: "https://img.icons8.com/fluency/96/aluminum-foil.png" }
+            { name: "กระป๋องอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/1996/1996841.png" },
+            { name: "ฝาอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/4616/4616656.png" },
+            { name: "เศษอลูมิเนียมอื่นๆ", img: "https://cdn-icons-png.flaticon.com/512/2723/2723363.png" }
         ]
     };
 
@@ -242,10 +251,9 @@
             let div = document.createElement('div');
             div.className = "sub-card";
             div.onclick = () => selectSubCategory(item.name);
-            div.innerHTML = `<img src="${item.img}"><span>${item.name}</span>`;
+            div.innerHTML = `<img class="sub-img" src="${item.img}"><span>${item.name}</span>`;
             container.appendChild(div);
         });
-
         switchStep(1, 2);
     }
 
@@ -283,42 +291,32 @@
     }
 
     function submitToGoogleSheet() {
-        const nextBtn = document.querySelector('#step3 .btn-next');
-        nextBtn.innerText = "⏳ กำลังคำนวณคาร์บอน...";
-        nextBtn.disabled = true;
+        const form = document.getElementById('hiddenForm');
+        form.action = SCRIPT_URL; // ฝังพิกัดท่อปลายทาง
+        
+        // ผูกแมตช์ค่าลง Form ลับเพื่อเตรียมกดสลักส่ง
+        document.getElementById('hideUserId').value = globalUserId;
+        document.getElementById('hideMainCat').value = selectedMainCat;
+        document.getElementById('hideSubCat').value = selectedSubCat;
+        document.getElementById('hideWeight').value = isWeightUnknown ? "ไม่ทราบน้ำหนัก" : currentWeight;
 
-        const params = new URLSearchParams();
-        params.append('action', 'saveGarbage');
-        params.append('userId', globalUserId);
-        params.append('main_category', selectedMainCat);
-        params.append('sub_category', selectedSubCat);
-        params.append('weight_kg', isWeightUnknown ? "ไม่ระบุ" : currentWeight);
-        params.append('image_url', 'https://learn-do-storage.local/evidence.jpg');
+        // คำสั่งเด็ด: สั่งยิงข้อมูลฝ่าด่านทะลุไปหาชีทวงใหม่ทันที
+        form.submit();
 
-        fetch(SCRIPT_URL, {
-            method: "POST", mode: "no-cors",
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params.toString()
-        }).then(() => {
-            // ประเมินแสดงยอดผลลัพธ์คาร์บอนไดออกไซด์หน้าสุดท้าย
-            let ef = 0;
-            if (selectedMainCat === "พลาสติก (Plastic)") ef = 1.0310;
-            else if (selectedMainCat === "กระดาษ (Paper)") ef = 3.5460;
-            else if (selectedMainCat === "แก้ว (Glass)") ef = 0.2760;
-            else if (selectedMainCat === "อลูมิเนียม") ef = 9.1270;
+        // ระบุประเมินผลลัพธ์คาร์บอนโชว์หน้าปิดจ๊อบ
+        let ef = 0;
+        if (selectedMainCat === "พลาสติก (Plastic)") ef = 1.0310;
+        else if (selectedMainCat === "กระดาษ (Paper)") ef = 3.5460;
+        else if (selectedMainCat === "แก้ว (Glass)") ef = 0.2760;
+        else if (selectedMainCat === "อลูมิเนียม") ef = 9.1270;
 
-            let carbonSaved = currentWeight * ef;
-            document.getElementById('carbonDisplay').innerText = carbonSaved.toFixed(2);
-            
-            // สูตรคำนวณจำนวนต้นไม้โดยเฉลี่ย (ขยะช่วยลดคาร์บอน เทียบเท่าต้นไม้ดูดซับ 9-10 kgCO2/ปี)
-            let treeCount = Math.ceil(carbonSaved / 9.5);
-            document.getElementById('treeText').innerText = `ปลูกต้นไม้เพิ่ม ${treeCount || 0} ต้นแล้ว!`;
+        let carbonSaved = currentWeight * ef;
+        document.getElementById('carbonDisplay').innerText = carbonSaved.toFixed(2);
+        
+        let treeCount = Math.ceil(carbonSaved / 9.5);
+        document.getElementById('treeText').innerText = `ปลูกต้นไม้เพิ่ม ${treeCount || 0} ต้นแล้ว!`;
 
-            switchStep(3, 4);
-        }).catch(err => {
-            alert("บันทึกขัดข้อง ลองใหม่อีกครั้งค่ะ");
-            nextBtn.innerText = "ถัดไป ➡️"; nextBtn.disabled = false;
-        });
+        switchStep(3, 4);
     }
 
     function switchStep(from, to) {
