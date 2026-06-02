@@ -3,216 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ลงทะเบียนอาสาสมัคร - บัญชีขยะดิจิทัล</title>
+    <title>เทสระบบเชื่อมต่อ</title>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
-        :root { --primary-dark: #143F24; --bg-light: #F4F6F5; --text-main: #2d3748; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text-main); background-color: #cbd5e0; margin: 0; padding: 0; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
-        .phone-container { width: 100%; max-width: 450px; min-height: 100vh; background: #FFFFFF; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; position: relative; }
-        .top-bar { text-align: center; padding-bottom: 16px; border-bottom: 2px solid var(--bg-light); margin-bottom: 25px; }
-        .brand-name { font-size: 22px; font-weight: 800; color: var(--primary-dark); }
-        h2 { font-size: 26px; color: var(--primary-dark); margin: 0 0 10px 0; font-weight: 800; text-align: center; }
-        .sub-title { font-size: 15px; color: #718096; text-align: center; margin-bottom: 30px; }
-        .form-group { margin-bottom: 24px; text-align: left; }
-        .form-label { display: block; font-size: 17px; font-weight: 700; color: var(--primary-dark); margin-bottom: 12px; }
-        .form-input { width: 100%; box-sizing: border-box; padding: 16px; font-size: 18px; font-weight: 600; border: 2px solid #cbd5e0; border-radius: 14px; background-color: var(--bg-light); }
-        .radio-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .radio-grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        @media (min-width: 380px) { .radio-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; } }
-        .radio-box { position: relative; }
-        .radio-box input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
-        .radio-label { display: block; padding: 16px 10px; font-size: 17px; font-weight: 700; text-align: center; background: var(--bg-light); border: 2px solid #e2e8f0; border-radius: 14px; cursor: pointer; }
-        .radio-box input[type="radio"]:checked + .radio-label { background-color: var(--primary-dark); color: #FFFFFF; }
-        .form-select { width: 100%; padding: 16px; font-size: 18px; font-weight: 600; border: 2px solid #cbd5e0; border-radius: 14px; background-color: var(--bg-light); }
-        .address-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; }
-        .pdpa-container { background: var(--bg-light); border: 1px solid #E8ECE9; border-radius: 16px; padding: 18px; margin-bottom: 25px; }
-        .pdpa-title { font-size: 16px; font-weight: 800; color: var(--primary-dark); }
-        .pdpa-content { font-size: 14px; color: #4a5568; max-height: 90px; overflow-y: auto; margin-bottom: 15px; }
-        .pdpa-switch-zone { display: flex; align-items: center; justify-content: space-between; font-size: 16px; font-weight: 700; color: var(--primary-dark); border-top: 1px solid #cbd5e0; padding-top: 12px; }
-        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e0; transition: .3s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary-dark); }
-        input:checked + .slider:before { transform: translateX(22px); }
-        .btn-submit { background-color: var(--primary-dark); color: white; border: none; width: 100%; padding: 18px; font-size: 20px; font-weight: 800; border-radius: 35px; cursor: pointer; }
-        .btn-submit:disabled { background-color: #a0aec0; cursor: not-allowed; }
-        .hidden { display: none !important; }
-        .success-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; flex-grow: 1; padding: 40px 10px; }
-        .success-circle { width: 120px; height: 120px; background-color: #e6fffa; border: 4px solid #319795; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
-        .success-icon { font-size: 60px; color: #319795; }
-        .success-title { font-size: 28px; font-weight: 800; color: var(--primary-dark); margin-bottom: 12px; }
-        .success-subtitle { font-size: 18px; color: #4a5568; margin-bottom: 40px; }
-        .btn-line-close { background-color: #06C755; color: white; border: none; width: 100%; padding: 18px; font-size: 20px; font-weight: 800; border-radius: 35px; cursor: pointer; }
+        body { font-family: sans-serif; padding: 30px; text-align: center; background: #f4f6f5; }
+        .box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+        input { width: 100%; box-sizing: border-box; padding: 12px; margin-bottom: 15px; font-size: 16px; border: 1px solid #ccc; border-radius: 8px; }
+        button { background: #143F24; color: white; border: none; width: 100%; padding: 14px; font-size: 18px; font-weight: bold; border-radius: 25px; cursor: pointer; }
     </style>
 </head>
 <body>
-<div class="phone-container">
-    <div class="top-bar"><div class="brand-name">🌱 บัญชีขยะดิจิทัล</div></div>
-    <div id="formContainer">
-        <h2>ลงทะเบียนอาสาสมัคร</h2>
-        <div class="sub-title">กรุณากรอกข้อมูลเพื่อเข้าร่วมเครือข่ายบัญชีขยะดิจิทัล คุ้งบางกะเจ้าค่ะ</div>
-        <form id="registerForm" onsubmit="event.preventDefault(); submitRegistration();">
-            <div class="form-group">
-                <label class="form-label">👤 ประเภทผู้ใช้งาน</label>
-                <div class="radio-grid-2">
-                    <div class="radio-box"><input type="radio" id="type-local" name="user_type" value="คนในชุมชน" checked onchange="toggleUserTypeFields()"><label for="type-local" class="radio-label">🏡 คนในชุมชน</label></div>
-                    <div class="radio-box"><input type="radio" id="type-tourist" name="user_type" value="นักท่องเที่ยว" onchange="toggleUserTypeFields()"><label for="type-tourist" class="radio-label">🎒 นักท่องเที่ยว</label></div>
-                </div>
-            </div>
-            <div class="form-group"><label class="form-label" for="fullname">✍️ ชื่อ - นามสกุล</label><input type="text" id="fullname" class="form-input" placeholder="เช่น นายสมหวัง ใจดี" required></div>
-            <div class="form-group">
-                <label class="form-label">👫 เพศ</label>
-                <div class="radio-grid-4">
-                    <div class="radio-box"><input type="radio" id="g-m" name="gender" value="ชาย" required><label for="g-m" class="radio-label">ชาย</label></div>
-                    <div class="radio-box"><input type="radio" id="g-f" name="gender" value="หญิง"><label for="g-f" class="radio-label">หญิง</label></div>
-                    <div class="radio-box"><input type="radio" id="g-l" name="gender" value="LGBTQ+"><label for="g-l" class="radio-label">LGBTQ+</label></div>
-                    <div class="radio-box"><input type="radio" id="g-n" name="gender" value="ไม่ระบุ"><label for="g-n" class="radio-label">ไม่ระบุ</label></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">🎂 ช่วงอายุของคุณ</label>
-                <div class="radio-grid-2">
-                    <div class="radio-box"><input type="radio" id="age-u25" name="age_range" value="ต่ำกว่า 25" required><label for="age-u25" class="radio-label">ต่ำกว่า 25 ปี</label></div>
-                    <div class="radio-box"><input type="radio" id="age-26" name="age_range" value="26-45"><label for="age-26" class="radio-label">26 - 45 ปี</label></div>
-                    <div class="radio-box"><input type="radio" id="age-46" name="age_range" value="46-60"><label for="age-46" class="radio-label">46 - 60 ปี</label></div>
-                    <div class="radio-box"><input type="radio" id="age-61" name="age_range" value="61 ปีขึ้นไป" required><label for="age-61" class="radio-label">61 ปีขึ้นไป</label></div>
-                </div>
-            </div>
-            <div class="form-group"><label class="form-label" for="phone">📞 เบอร์โทรศัพท์</label><input type="tel" id="phone" class="form-input" placeholder="เช่น 0812345678" required></div>
-            <div class="form-group">
-                <label class="form-label" for="career">💼 อาชีพปัจจุบัน / อดีต</label>
-                <select id="career" class="form-select" required>
-                    <option value="" disabled selected>--- โปรดเลือกอาชีพ ---</option>
-                    <option value="ผู้ประกอบการ">ผู้ประกอบการ (ร้านค้า / โฮมสเตย์)</option>
-                    <option value="เกษตรกร">เกษตรกร / ทำสวน</option>
-                    <option value="ข้าราชการ/พนักงานของรัฐ">ข้าราชการ / พนักงานของรัฐ</option>
-                    <option value="พนักงานบริษัทเอกชน">พนักงานบริษัทเอกชน</option>
-                    <option value="รับจ้างทั่วไป">รับจ้างทั่วไป</option>
-                    <option value="นักเรียน/นักศึกษา">นักเรียน / นักศึกษา</option>
-                    <option value="ผู้เกษียณอายุ/ว่างงาน">ผู้เกษียณอายุ / ว่างงาน</option>
-                    <option value="อื่นๆ">อื่นๆ</option>
-                </select>
-            </div>
-            <div id="local-address-section">
-                <div class="form-group">
-                    <div class="address-row">
-                        <div><label class="form-label" for="address_no">🏠 บ้านเลขที่</label><input type="text" id="address_no" class="form-input" placeholder="เช่น 12/3"></div>
-                        <div><label class="form-label" for="moo">📍 หมู่ที่</label><input type="number" id="moo" class="form-input" placeholder="เช่น 4"></div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="tambon">🗺️ พื้นที่ 6 ตำบลหลัก</label>
-                    <select id="tambon" class="form-select">
-                        <option value="" disabled selected>--- โปรดเลือกตำบล ---</option>
-                        <option value="ทรงคนอง">ตำบลทรงคนอง</option>
-                        <option value="บางกระสอบ">ตำบลบางกระสอบ</option>
-                        <option value="บางน้ำผึ้ง">ตำบลบางน้ำผึ้ง</option>
-                        <option value="บางยอ">ตำบลบางยอ</option>
-                        <option value="บางกอบัว">ตำบลบางกอบัว</option>
-                        <option value="บางกะเจ้า">ตำบลบางกะเจ้า</option>
-                    </select>
-                </div>
-            </div>
-            <div class="pdpa-container">
-                <div class="pdpa-title">🔒 นโยบายคุ้มครองข้อมูลส่วนบุคคล</div>
-                <div class="pdpa-content">ทีมวิจัยโครงการ ขอยอมรับและคุ้มครองข้อมูลส่วนบุคคลของท่านที่ได้กรอกผ่านระบบบัญชีขยะดิจิทัล โดยข้อมูลนี้จะถูกนำไปใช้ตามกฎหมาย PDPA อย่างปลอดภัยสูงสุด</div>
-                <div class="pdpa-switch-zone"><span>ฉันยอมรับนโยบายข้อมูล</span><label class="switch"><input type="checkbox" id="pdpaConsent" onchange="toggleSubmitButton()"><span class="slider"></span></label></div>
-            </div>
-            <button type="submit" class="btn-submit" id="submitBtn" disabled>💾 ลงทะเบียนข้อมูล</button>
-        </form>
-    </div>
-    <div id="successView" class="success-wrapper hidden">
-        <div class="success-circle"><span class="success-icon">✓</span></div>
-        <h3 class="success-title">บันทึกข้อมูลเรียบร้อยแล้ว!</h3>
-        <p class="success-subtitle" id="successUserMessage"></p>
-        <button type="button" class="btn-line-close" onclick="closeLiffWindow()">💬 คลิกตรงนี้เพื่อกลับเข้าแชท LINE</button>
-    </div>
+
+<div class="box">
+    <h2>🧪 ทดสอบท่อเชื่อมต่อ LIFF</h2>
+    <p>กรอกชื่อแล้วกดปุ่มเพื่อดูว่าข้อมูลวิ่งเข้า Sheet ไหม</p>
+    
+    <input type="text" id="txtName" placeholder="พิมพ์ชื่อทดสอบที่นี่">
+    <input type="tel" id="txtPhone" placeholder="พิมพ์เบอร์โทรทดสอบที่นี่">
+    
+    <button onclick="sendTest()">⚡ ส่งข้อมูลเข้า Google Sheet</button>
 </div>
 
 <script>
-    // 🌟 ดึงลิงก์ Web App URL ตัวล่าสุดที่ได้หลังจากการกด Deploy บน Apps Script มาแปะตรงนี้ครับ
+    // 🔗 1. เอาลิงก์ Web App URL ที่ได้จากขั้นที่ 2 มาแปะแทนที่ในเครื่องหมายคำพูดนี้ครับ
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYpashQVDeva0koyTDw89r3lbB5HAPAnpk9dwLfvqdFedGKn6eVtbptJnUGFaN5I0/exec";
-    const LIFF_REGISTER_ID = "2010255862-LZnK22cW"; 
-    let globalUserId = "MOCK_USER_REG_123";
+    
+    // 🔗 2. เอาเลข LIFF ID หน้าลงทะเบียนของพี่มาแปะใส่ตรงนี้ครับ
+    const LIFF_ID = "2010255862-LZnK22cW"; 
 
-    if (typeof liff !== 'undefined' && LIFF_REGISTER_ID !== "") {
-        liff.init({ liffId: LIFF_REGISTER_ID }).then(async () => { 
+    let globalUserId = "MOCK_LINE_ID_Mมือถือ";
+
+    // สั่งโหลดระบบดึงรหัส LINE ID ของแท้จากมือถือ
+    if (LIFF_ID !== "") {
+        liff.init({ liffId: LIFF_ID }).then(async () => {
             if (!liff.isLoggedIn()) { liff.login(); } else {
                 const profile = await liff.getProfile();
                 if(profile && profile.userId) { globalUserId = profile.userId; }
             }
-        }).catch(err => console.error("LIFF โหลดล้มเหลว", err));
+        }).catch(err => console.error(err));
     }
 
-    function toggleUserTypeFields() {
-        const isLocal = document.getElementById('type-local').checked;
-        const addressSection = document.getElementById('local-address-section');
-        const addrInput = document.getElementById('address_no');
-        const mooInput = document.getElementById('moo');
-        const tambonSelect = document.getElementById('tambon');
-        if (isLocal) {
-            addressSection.classList.remove('hidden');
-            addrInput.required = mooInput.required = tambonSelect.required = true;
-        } else {
-            addressSection.classList.add('hidden');
-            addrInput.required = mooInput.required = tambonSelect.required = false;
-            addrInput.value = mooInput.value = tambonSelect.value = '';
-        }
-    }
-    toggleUserTypeFields();
+    function sendTest() {
+        const name = document.getElementById('txtName').value;
+        const phone = document.getElementById('txtPhone').value;
+        if(!name) { alert("กรุณาพิมพ์ชื่อก่อนครับพี่แฟง"); return; }
 
-    function toggleSubmitButton() {
-        document.getElementById('submitBtn').disabled = !document.getElementById('pdpaConsent').checked;
-    }
+        alert("⏳ กำลังยิงข้อมูลข้ามค่าย... กด OK แล้วรอสลับดูหน้า Google Sheet ได้เลยครับ!");
 
-    function closeLiffWindow() { if (typeof liff !== 'undefined') { liff.closeWindow(); } }
-
-    function submitRegistration() {
-        const btn = document.getElementById('submitBtn');
-        const userType = document.querySelector('input[name="user_type"]:checked').value;
-        const fullname = document.getElementById('fullname').value;
-        const gender = document.querySelector('input[name="gender"]:checked').value;
-        const ageRange = document.querySelector('input[name="age_range"]:checked').value;
-        const phone = document.getElementById('phone').value;
-        const career = document.getElementById('career').value;
-        
-        let addressNo = "-", mooValue = "-", tambonValue = "นักท่องเที่ยว (ภายนอกคุ้งบางกะเจ้า)";
-        if(userType === "คนในชุมชน") {
-            addressNo = document.getElementById('address_no').value.trim();
-            mooValue = document.getElementById('moo').value.trim();
-            tambonValue = document.getElementById('tambon').value;
-        }
-
-        btn.innerText = "⏳ กำลังบันทึกข้อมูล..."; btn.disabled = true;
-
-        // ท่าส่งข้อมูลดั้งเดิม ยิง Parameter ตรงๆ แบบ FormURL เข้าสู่ฟังก์ชัน appendRow
-        const formParams = new URLSearchParams();
-        formParams.append('userId', globalUserId); 
-        formParams.append('fullname', fullname);
-        formParams.append('phone', phone);
-        formParams.append('userType', userType);
-        formParams.append('tambon', tambonValue);
-        formParams.append('moo', mooValue);
-        formParams.append('addressNo', addressNo);
-        formParams.append('gender', gender);
-        formParams.append('ageRange', ageRange);
-        formParams.append('career', career);
+        // ท่าส่งข้อมูลตรงดิบๆ ผ่าน URLSearchParams เข้าหากูเกิลชีท
+        const params = new URLSearchParams();
+        params.append('userId', globalUserId);
+        params.append('fullname', name);
+        params.append('phone', phone);
 
         fetch(SCRIPT_URL, {
             method: "POST", mode: "no-cors",
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: formParams.toString()
+            body: params.toString()
         });
-
-        setTimeout(() => {
-            document.getElementById('formContainer').classList.add('hidden');
-            document.getElementById('successUserMessage').innerHTML = `ระบบจัดเก็บข้อมูลอาสาสมัครของ <strong>คุณ ${fullname}</strong> เรียบร้อยแล้วค่ะ!`;
-            document.getElementById('successView').classList.remove('hidden');
-            if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-                liff.sendMessages([{ type: 'text', text: `🎉 ยินดีต้อนรับคุณ ${fullname} เข้าสู่ระบบบัญชีขยะดิจิทัลสำเร็จแล้วค่ะ!` }]).catch(e => console.log(e));
-            }
-        }, 1500); 
     }
 </script>
 </body>
