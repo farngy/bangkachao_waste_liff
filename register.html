@@ -263,6 +263,51 @@
         .btn-line-close:active {
             transform: scale(0.97);
         }
+
+        /* ==================== สไตล์หน้าจอเลเยอร์นับถอยหลังพิเศษ ==================== */
+        .countdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(20, 63, 36, 0.96); /* สีเขียวอัตลักษณ์แบรนด์แบบพรีเมียม */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top: 5px solid #06C755;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .countdown-text {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .countdown-timer {
+            font-size: 48px;
+            font-weight: 900;
+            color: #06C755;
+        }
     </style>
 </head>
 <body>
@@ -392,9 +437,15 @@
             ระบบทำการบันทึกข้อมูลอาสาสมัครของท่านเข้าสู่ฐานข้อมูลบัญชีขยะดิจิทัลเรียบร้อยแล้วค่ะ ขอบคุณค่ะ
         </p>
         
-        <button type="button" class="btn-line-close" onclick="closeLiffWindow()">
+        <button type="button" class="btn-line-close" onclick="startExitTransition()">
             💬 คลิกตรงนี้เพื่อกลับเข้าแชท LINE
         </button>
+    </div>
+
+    <div id="countdownScreen" class="countdown-overlay hidden">
+        <div class="spinner"></div>
+        <div class="countdown-text">💾 กำลังปิดหน้าต่างและนำท่านกลับแชท LINE...</div>
+        <div id="timerNumber" class="countdown-timer">3</div>
     </div>
 </div>
 
@@ -413,4 +464,144 @@
                         if(profile && profile.userId) {
                             globalUserId = profile.userId; 
                         }
-                    } catch (
+                    } catch (err) {
+                        console.error("เกิดข้อผิดพลาดในการดึงรหัส LINE ID แท้:", err);
+                    }
+                }
+            })
+            .catch(err => console.error("LIFF โหลดล้มเหลว", err));
+    }
+
+    function toggleUserTypeFields() {
+        const isLocal = document.getElementById('type-local').checked;
+        const addressSection = document.getElementById('local-address-section');
+        const addrInput = document.getElementById('address_no');
+        const mooInput = document.getElementById('moo');
+        const tambonSelect = document.getElementById('tambon');
+
+        if (isLocal) {
+            addressSection.classList.remove('hidden');
+            addrInput.required = true;
+            mooInput.required = true;
+            tambonSelect.required = true;
+        } else {
+            addressSection.classList.add('hidden');
+            addrInput.required = false;
+            mooInput.required = false;
+            tambonSelect.required = false;
+            addrInput.value = '';
+            mooInput.value = '';
+            tambonSelect.value = '';
+        }
+    }
+
+    toggleUserTypeFields();
+
+    function toggleSubmitButton() {
+        const pdpaAccepted = document.getElementById('pdpaConsent').checked;
+        document.getElementById('submitBtn').disabled = !pdpaAccepted;
+    }
+
+    // 🌟 ฟังก์ชันนับถอยหลัง 3 วินาทีสไตล์นุ่มนวลก่อนปิดหน้าจอ LINE
+    function startExitTransition() {
+        const countdownScreen = document.getElementById('countdownScreen');
+        const timerNumber = document.getElementById('timerNumber');
+        
+        // เปิดหน้าจอนับถอยหลังสีเขียวพรีเมียม
+        countdownScreen.classList.remove('hidden');
+        
+        let timeLeft = 3;
+        
+        const interval = setInterval(() => {
+            timeLeft--;
+            timerNumber.innerText = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(interval);
+                // เมื่อครบ 3 วินาที สั่งกระชากหน้าต่างม้วนปิดตัวลงพากลับ LINE ทันที
+                if (typeof liff !== 'undefined') {
+                    liff.closeWindow();
+                }
+            }
+        }, 1000);
+    }
+
+    function submitRegistration() {
+        const btn = document.getElementById('submitBtn');
+
+        const userTypeRadio = document.querySelector('input[name="user_type"]:checked');
+        const genderRadio = document.querySelector('input[name="gender"]:checked');
+        const ageRadio = document.querySelector('input[name="age_range"]:checked');
+        const fullnameInput = document.getElementById('fullname');
+        const phoneInput = document.getElementById('phone');
+        const careerSelect = document.getElementById('career');
+
+        if (!fullnameInput.value.trim() || !phoneInput.value.trim() || !genderRadio || !ageRadio || !careerSelect.value) {
+            alert("⚠️ กรุณากรอกข้อมูลส่วนตัวและเลือกปุ่มตัวเลือกให้ครบถ้วนด้วยค่ะ");
+            return;
+        }
+
+        const userType = userTypeRadio.value;
+        const fullname = fullnameInput.value;
+        const gender = genderRadio.value;
+        const ageRange = ageRadio.value;
+        const phone = phoneInput.value;
+        const career = careerSelect.value;
+        
+        let addressNo = "";
+        let mooValue = "";
+        let tambonValue = "ภายนอกคุ้งบางกะเจ้า";
+
+        if(userType === "คนในชุมชน") {
+            const addr = document.getElementById('address_no').value.trim();
+            const moo = document.getElementById('moo').value.trim();
+            const tam = document.getElementById('tambon').value;
+            
+            if(!addr || !moo || !tam) {
+                alert("⚠️ สำหรับคนในชุมชน กรุณากรอกบ้านเลขที่ หมู่ที่ และตำบลให้ครบด้วยค่ะ");
+                return;
+            }
+            addressNo = addr;
+            mooValue = moo;
+            tambonValue = tam;
+        }
+
+        btn.innerText = "⏳ กำลังบันทึกข้อมูล...";
+        btn.disabled = true;
+
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbzcEN_Dkv9EUfAIeCKHL7QxW61elqdimdCr7WJDtnb5hCVd4aeeA6y7gWgL7cUfKz_u/exec";
+
+        const formParams = new URLSearchParams();
+        formParams.append('userId', globalUserId); 
+        formParams.append('userType', userType);
+        formParams.append('fullname', fullname);
+        formParams.append('gender', gender);
+        formParams.append('ageRange', ageRange);
+        formParams.append('phone', phone);
+        formParams.append('career', career);
+        formParams.append('addressNo', addressNo);
+        formParams.append('moo', mooValue);
+        formParams.append('tambon', tambonValue);
+
+        fetch(scriptUrl, {
+            method: "POST",
+            mode: "no-cors", 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: formParams.toString()
+        });
+
+        setTimeout(() => {
+            document.getElementById('formContainer').classList.add('hidden');
+            document.getElementById('successUserMessage').innerHTML = `ระบบจัดเก็บข้อมูลอาสาสมัครของ <strong>คุณพี่ ${fullname}</strong> ในฐานะ ${userType} เรียบร้อยแล้วค่ะ!<br><br>ขอบคุณที่ร่วมเป็นส่วนหนึ่งในโครงการชุมชนสีเขียว คุ้งบางกะเจ้า นะคะ`;
+            document.getElementById('successView').classList.remove('hidden');
+            
+            if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
+                liff.sendMessages([
+                    { type: 'text', text: `🎉 ยินดีต้อนรับคุณพี่ ${fullname} เข้าสู่ระบบบัญชีขยะดิจิทัลสำเร็จเรียบร้อยแล้วค่ะ!` }
+                ]).catch(err => console.log("ส่งข้อความสำเร็จ"));
+            }
+        }, 1500); 
+    }
+</script>
+</body>
+</html>
