@@ -3,47 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เทสระบบเชื่อมต่อ</title>
+    <title>ปุ่มกดเทส โอเค</title>
     <style>
-        body { font-family: sans-serif; padding: 50px; text-align: center; background: #e9ecef; }
-        .box { background: white; padding: 30px; border-radius: 16px; max-width: 380px; margin: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        input { width: 100%; box-sizing: border-box; padding: 14px; margin-bottom: 15px; font-size: 16px; border: 2px solid #cbd5e0; border-radius: 10px; }
-        button { background: #143F24; color: white; border: none; width: 100%; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer; }
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f6f5; margin: 0; }
+        button { background: #143F24; color: white; border: none; padding: 25px 50px; font-size: 24px; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 80%; max-width: 300px; }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>🧪 ทดสอบท่อส่งข้อมูล</h2>
-    <p>พิมพ์ชื่อเล่นแล้วกดปุ่มสีเขียวได้เลยครับ</p>
-    
-    <input type="text" id="txtName" placeholder="พิมพ์ชื่อทดสอบที่นี่ (เช่น พี่แฟง)">
-    <input type="tel" id="txtPhone" placeholder="พิมพ์เบอร์โทรทดสอบที่นี่">
-    
-    <button onclick="sendDataToSheet()">⚡ ยิงข้อมูลเข้า Google Sheet</button>
-</div>
+    <button onclick="pressOK()">⚡ กดปุ่มส่งคำว่า โอเค</button>
 
 <script>
-    // 🔗 1. เอาลิงก์ Web App URL ตัวล่าสุดของพี่แฟง (ที่ลงท้ายด้วย /exec) มาแปะแทนที่ในนี้ครับ
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3cduolHHhS0eQ1_4F7QxyKbTVjCHTgkoamQ958fM2fGhhLoR1NUVz8spr42mT44sM/exec";
+    // 🔗 แปะลิงก์ /exec ตัวล่าสุดของพี่แฟงที่คัดลอกมาจากสเต็ปที่ 2 วางสวมในเครื่องหมายคำพูดนี้แทนเลยครับพี่!
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzv3E2rOc66DikVe3k3ncR1AxFUbQYe3kcu-Q7PT-9ozOjR7aeX6hbcGhV3mVl5VGEJ/exec";
 
-    function sendDataToSheet() {
-        const name = document.getElementById('txtName').value;
-        const phone = document.getElementById('txtPhone').value;
-        if(!name) { alert("กรุณาพิมพ์ชื่อก่อนครับพี่แฟง"); return; }
-
-        alert("⏳ กำลังส่งข้อมูล... กด OK แล้วสลับไปดูหน้า Google Sheet ได้เลยครับ!");
-
-        // ส่งค่าผ่าน URLSearchParams ตรงเข้าหา Apps Script ดิบๆ ทันที
-        const params = new URLSearchParams();
-        params.append('fullname', name);
-        params.append('phone', phone);
-
-        fetch(SCRIPT_URL, {
-            method: "POST", mode: "no-cors",
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params.toString()
-        });
+    function pressOK() {
+        alert("⏳ กำลังยิงข้อมูลข้ามค่าย... กด OK แล้วสลับไปดูที่หน้า Google Sheet ได้เลยครับพี่แฟง!");
+        fetch(SCRIPT_URL, { method: "GET", mode: "no-cors" });
     }
 </script>
 </body>
