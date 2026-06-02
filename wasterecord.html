@@ -9,17 +9,10 @@
         :root { --primary-dark: #143F24; --primary-green: #1b4332; --bg-light: #F4F6F5; --text-main: #2d3748; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text-main); background-color: #e9ecef; margin: 0; padding: 0; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
         .phone-container { width: 100%; max-width: 450px; min-height: 100vh; background: #FFFFFF; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        .guard-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: white; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-        .spinner { width: 45px; height: 45px; border: 4px solid rgba(20, 63, 36, 0.1); border-top: 4px solid var(--primary-dark); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .top-bar { text-align: center; padding-bottom: 16px; border-bottom: 2px solid var(--bg-light); margin-bottom: 25px; }
         .brand-name { font-size: 22px; font-weight: 800; color: var(--primary-dark); }
         h2 { font-size: 26px; color: var(--primary-dark); margin: 0 0 10px 0; font-weight: 800; text-align: center; }
         .sub-title { font-size: 15px; color: #718096; text-align: center; margin-bottom: 25px; }
-        .welcome-card { background: linear-gradient(135deg, #143F24 0%, #1b4332 100%); color: white; padding: 20px; border-radius: 18px; margin-bottom: 25px; box-shadow: 0 8px 20px rgba(20, 63, 36, 0.15); }
-        .welcome-title { font-size: 15px; opacity: 0.85; margin-bottom: 4px; font-weight: 600; }
-        .welcome-name { font-size: 22px; font-weight: 800; }
-        .welcome-tag { display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 10px; }
         .form-group { margin-bottom: 24px; }
         .form-label { display: block; font-size: 17px; font-weight: 700; color: var(--primary-dark); margin-bottom: 12px; }
         .form-input { width: 100%; box-sizing: border-box; padding: 16px; font-size: 20px; font-weight: 700; border: 2px solid #cbd5e0; border-radius: 14px; background-color: var(--bg-light); text-align: center; }
@@ -36,24 +29,11 @@
 </head>
 <body>
 <div class="phone-container">
-    <!-- หน้าจอดักสิทธิ์ตรวจสอบสถานะการเป็นอาสาสมัคร -->
-    <div id="guardScreen" class="guard-overlay">
-        <div class="spinner"></div>
-        <h4 style="color: var(--primary-dark); margin: 0; font-size: 18px; font-weight: 800;">🔒 กำลังตรวจสอบสิทธิ์อาสาสมัคร...</h4>
-        <p style="color: #718096; font-size: 14px; margin-top: 8px;">กรุณารอสักครู่ระบบกำลังเชื่อมต่อฐานข้อมูลค่ะ</p>
-    </div>
-
     <div class="top-bar"><div class="brand-name">🌱 บัญชีขยะดิจิทัล</div></div>
 
     <div id="garbageFormContainer">
         <h2>บันทึกข้อมูลส่งขยะ</h2>
         <div class="sub-title">กรุณากรอกประเภทและน้ำหนักขยะรีไซเคิลที่ท่านนำมาส่งค่ะ</div>
-        
-        <div class="welcome-card">
-            <div class="welcome-title">อาสาสมัครเครือข่ายบางกะเจ้า</div>
-            <div class="welcome-name" id="userDisplayName">คุณอาสาสมัครใจดี</div>
-            <div class="welcome-tag" id="userDisplayType">🏡 คนในชุมชน</div>
-        </div>
 
         <form id="garbageForm" onsubmit="event.preventDefault(); submitGarbageData();">
             <div class="form-group">
@@ -67,10 +47,7 @@
                     <option value="กระป๋องอลูมิเนียม">กระป๋องอลูมิเนียม / โลหะรวม</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label class="form-label" for="weight">⚖️ น้ำหนักขยะ (กิโลกรัม)</label>
-                <input type="number" id="weight" class="form-input" step="0.1" min="0.1" placeholder="0.0" inputmode="decimal" required>
-            </div>
+            <div class="form-group"><label class="form-label" for="weight">⚖️ น้ำหนักขยะ (กิโลกรัม)</label><input type="number" id="weight" class="form-input" step="0.1" min="0.1" placeholder="0.0" inputmode="decimal" required></div>
             <button type="submit" class="btn-submit" id="submitGarbageBtn">💾 บันทึกข้อมูลขยะ</button>
         </form>
     </div>
@@ -84,9 +61,8 @@
 </div>
 
 <script>
-    // 🌟 นำรหัส LIFF ID ของฟังก์ชันบันทึกขยะมาแปะตรงนี้ได้เลยครับพี่แฟง
-    const LIFF_GARBAGE_ID = "2010255862-aZKhXa7N"; 
-    const LIFF_REGISTER_URL = "https://liff.line.me/2010255862-LZnK22cW"; 
+    // 🌟 ใส่รหัส LIFF ID ของหน้าบันทึกขยะตรงนี้ได้เลยครับพี่แฟง
+    const LIFF_GARBAGE_ID = "ใส่_LIFF_ID_ของหน้าบันทึกขยะตรงนี้"; 
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcEN_Dkv9EUfAIeCKHL7QxW61elqdimdCr7WJDtnb5hCVd4aeeA6y7gWgL7cUfKz_u/exec";
     let globalUserId = "MOCK_USER_ID";
 
@@ -94,27 +70,9 @@
         liff.init({ liffId: LIFF_GARBAGE_ID }).then(async () => { 
             if (!liff.isLoggedIn()) { liff.login(); } else {
                 const profile = await liff.getProfile();
-                if(profile && profile.userId) {
-                    globalUserId = profile.userId;
-                    checkUserStatus(profile.userId); 
-                }
+                if(profile && profile.userId) { globalUserId = profile.userId; }
             }
-        }).catch(err => { console.error(err); document.getElementById('guardScreen').classList.add('hidden'); });
-    } else {
-        setTimeout(() => { document.getElementById('guardScreen').classList.add('hidden'); }, 800);
-    }
-
-    function checkUserStatus(userId) {
-        fetch(`${SCRIPT_URL}?action=checkUser&userId=${userId}`).then(r => r.json()).then(result => {
-            if (result.registered === false) {
-                alert("⚠️ ขออภัยค่ะ คุณยายยังไม่ได้ลงทะเบียนอาสาสมัครโครงการเลยค่ะ ระบบกำลังพาวาร์ปไปหน้าลงทะเบียนนะคะ");
-                window.location.href = LIFF_REGISTER_URL; 
-            } else {
-                document.getElementById('userDisplayName').innerText = "คุณ " + result.fullname;
-                document.getElementById('userDisplayType').innerText = result.userType ? result.userType : "🏡 อาสาสมัคร";
-                document.getElementById('guardScreen').classList.add('hidden'); 
-            }
-        }).catch(err => { document.getElementById('guardScreen').classList.add('hidden'); });
+        }).catch(err => console.error(err));
     }
 
     function closeLiffWindow() { if (typeof liff !== 'undefined') { liff.closeWindow(); } }
