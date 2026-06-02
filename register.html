@@ -1,5 +1,50 @@
-// 🌟 สวมลิงก์ตัวจริงของพี่แฟงที่ได้มาล่าสุดตรงนี้เลยครับพี่
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3cduolHHhS0eQ1_4F7QxyKbTVjCHTgkoamQ958fM2fGhhLoR1NUVz8spr42mT44sM/exec";
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เทสระบบเชื่อมต่อ</title>
+    <style>
+        body { font-family: sans-serif; padding: 50px; text-align: center; background: #e9ecef; }
+        .box { background: white; padding: 30px; border-radius: 16px; max-width: 380px; margin: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        input { width: 100%; box-sizing: border-box; padding: 14px; margin-bottom: 15px; font-size: 16px; border: 2px solid #cbd5e0; border-radius: 10px; }
+        button { background: #143F24; color: white; border: none; width: 100%; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer; }
+    </style>
+</head>
+<body>
 
-// เลข LIFF ID ประจำหน้าลงทะเบียนของพี่แฟง
-const LIFF_ID = "2010255862-LZnK22cW";
+<div class="box">
+    <h2>🧪 ทดสอบท่อส่งข้อมูล</h2>
+    <p>พิมพ์ชื่อเล่นแล้วกดปุ่มสีเขียวได้เลยครับ</p>
+    
+    <input type="text" id="txtName" placeholder="พิมพ์ชื่อทดสอบที่นี่ (เช่น พี่แฟง)">
+    <input type="tel" id="txtPhone" placeholder="พิมพ์เบอร์โทรทดสอบที่นี่">
+    
+    <button onclick="sendDataToSheet()">⚡ ยิงข้อมูลเข้า Google Sheet</button>
+</div>
+
+<script>
+    // 🔗 1. เอาลิงก์ Web App URL ตัวล่าสุดของพี่แฟง (ที่ลงท้ายด้วย /exec) มาแปะแทนที่ในนี้ครับ
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby3cduolHHhS0eQ1_4F7QxyKbTVjCHTgkoamQ958fM2fGhhLoR1NUVz8spr42mT44sM/exec";
+
+    function sendDataToSheet() {
+        const name = document.getElementById('txtName').value;
+        const phone = document.getElementById('txtPhone').value;
+        if(!name) { alert("กรุณาพิมพ์ชื่อก่อนครับพี่แฟง"); return; }
+
+        alert("⏳ กำลังส่งข้อมูล... กด OK แล้วสลับไปดูหน้า Google Sheet ได้เลยครับ!");
+
+        // ส่งค่าผ่าน URLSearchParams ตรงเข้าหา Apps Script ดิบๆ ทันที
+        const params = new URLSearchParams();
+        params.append('fullname', name);
+        params.append('phone', phone);
+
+        fetch(SCRIPT_URL, {
+            method: "POST", mode: "no-cors",
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: params.toString()
+        });
+    }
+</script>
+</body>
+</html>
