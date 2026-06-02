@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ลงทะเบียนอาสาสมัคร - บัญชีขยะดิจิทัล</title>
+    <!-- ดึงระบบ LINE LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
-            --primary-dark: #143F24;     /* สีเขียวเข้มพรีเมียมจากรูป NIA */
+            --primary-dark: #143F24;     /* สีเขียวเข้มพรีเมียม */
             --primary-green: #1b4332;    /* สีเขียวแบรนด์หลัก */
             --accent-gold: #b3925c;      /* สีทองทรายหรูหราเพิ่มมิติ */
             --bg-light: #F4F6F5;         /* สีพื้นหลังขาวครีมสดชื่น */
@@ -246,7 +247,7 @@
             margin-bottom: 40px;
         }
 
-        /* ปุ่มปิดหน้าต่าง LINE สไตล์แบรนด์ Green พรีเมียม */
+        /* ปุ่มปิดหน้าต่าง LINE */
         .btn-line-close {
             background-color: #06C755;
             color: white;
@@ -264,14 +265,14 @@
             transform: scale(0.97);
         }
 
-        /* ==================== สไตล์หน้าจอเลเยอร์นับถอยหลังพิเศษ ==================== */
+        /* หน้าจอเลเยอร์นับถอยหลังพิเศษ */
         .countdown-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(20, 63, 36, 0.96); /* สีเขียวอัตลักษณ์แบรนด์แบบพรีเมียม */
+            background-color: rgba(20, 63, 36, 0.96);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -317,6 +318,7 @@
         <div class="brand-name">🌱 บัญชีขยะดิจิทัล</div>
     </div>
 
+    <!-- หน้าจอกรอกข้อมูลหลัก -->
     <div id="formContainer">
         <h2>ลงทะเบียนอาสาสมัคร</h2>
         <div class="sub-title">กรุณากรอกข้อมูลเพื่อเข้าร่วมเครือข่ายบัญชีขยะดิจิทัล คุ้งบางกะเจ้าค่ะ</div>
@@ -382,23 +384,24 @@
                 </select>
             </div>
 
+            <!-- กล่องที่อยู่แยกเฉพาะของคนในชุมชน -->
             <div id="local-address-section">
                 <div class="form-group">
                     <div class="address-row">
                         <div>
                             <label class="form-label" for="address_no">🏠 บ้านเลขที่</label>
-                            <input type="text" id="address_no" class="form-input" placeholder="เช่น 12/3">
+                            <input type="text" id="address_no" class="form-input" placeholder="เช่น 12/3" required>
                         </div>
                         <div>
                             <label class="form-label" for="moo">📍 หมู่ที่</label>
-                            <input type="number" id="moo" class="form-input" placeholder="เช่น 4">
+                            <input type="number" id="moo" class="form-input" placeholder="เช่น 4" required>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="tambon">🗺️ พื้นที่ 6 ตำบลหลัก</label>
-                    <select id="tambon" class="form-select">
+                    <select id="tambon" class="form-select" required>
                         <option value="" disabled selected>--- โปรดเลือกตำบล ---</option>
                         <option value="ทรงคนอง">ตำบลทรงคนอง</option>
                         <option value="บางกระสอบ">ตำบลบางกระสอบ</option>
@@ -428,6 +431,7 @@
         </form>
     </div>
 
+    <!-- หน้าจอแสดงผลสำเร็จ -->
     <div id="successView" class="success-wrapper hidden">
         <div class="success-circle">
             <span class="success-icon">✓</span>
@@ -442,6 +446,7 @@
         </button>
     </div>
 
+    <!-- หน้าจอเลเยอร์คั่นเวลานับถอยหลัง 3 วินาที -->
     <div id="countdownScreen" class="countdown-overlay hidden">
         <div class="spinner"></div>
         <div class="countdown-text">💾 กำลังปิดหน้าต่างและนำท่านกลับแชท LINE...</div>
@@ -472,6 +477,7 @@
             .catch(err => console.error("LIFF โหลดล้มเหลว", err));
     }
 
+    // 🌟 ฟังก์ชันจัดการเปิด-ปิด ฟิลด์ที่อยู่ แยกระหว่างคนในชุมชน กับ นักท่องเที่ยว
     function toggleUserTypeFields() {
         const isLocal = document.getElementById('type-local').checked;
         const addressSection = document.getElementById('local-address-section');
@@ -495,21 +501,21 @@
         }
     }
 
+    // เรียกทำงานตั้งแต่วินาทีแรกเพื่อสแตนด์บายฟอร์ม
     toggleUserTypeFields();
 
+    // 🌟 ฟังก์ชันเปิด-ปิด สิทธิ์ปุ่มลงทะเบียนข้อมูลเมื่อกดยอมรับ PDPA
     function toggleSubmitButton() {
         const pdpaAccepted = document.getElementById('pdpaConsent').checked;
         document.getElementById('submitBtn').disabled = !pdpaAccepted;
     }
 
-    // 🌟 ฟังก์ชันนับถอยหลัง 3 วินาทีสไตล์นุ่มนวลก่อนปิดหน้าจอ LINE
+    // ฟังก์ชันนับถอยหลัง 3 วินาทีก่อนกระชากหน้าจอปิดกลับเข้า LINE
     function startExitTransition() {
         const countdownScreen = document.getElementById('countdownScreen');
         const timerNumber = document.getElementById('timerNumber');
         
-        // เปิดหน้าจอนับถอยหลังสีเขียวพรีเมียม
         countdownScreen.classList.remove('hidden');
-        
         let timeLeft = 3;
         
         const interval = setInterval(() => {
@@ -518,7 +524,6 @@
             
             if (timeLeft <= 0) {
                 clearInterval(interval);
-                // เมื่อครบ 3 วินาที สั่งกระชากหน้าต่างม้วนปิดตัวลงพากลับ LINE ทันที
                 if (typeof liff !== 'undefined') {
                     liff.closeWindow();
                 }
@@ -548,9 +553,9 @@
         const phone = phoneInput.value;
         const career = careerSelect.value;
         
-        let addressNo = "";
-        let mooValue = "";
-        let tambonValue = "ภายนอกคุ้งบางกะเจ้า";
+        let addressNo = "-";
+        let mooValue = "-";
+        let tambonValue = "นักท่องเที่ยว (ภายนอกคุ้งบางกะเจ้า)";
 
         if(userType === "คนในชุมชน") {
             const addr = document.getElementById('address_no').value.trim();
