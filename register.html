@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ลงทะเบียนอาสาสมัคร - บัญชีขยะดิจิทัล</title>
-    <!-- ดึงระบบ LINE LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
@@ -318,7 +317,6 @@
         <div class="brand-name">🌱 บัญชีขยะดิจิทัล</div>
     </div>
 
-    <!-- หน้าจอกรอกข้อมูลหลัก -->
     <div id="formContainer">
         <h2>ลงทะเบียนอาสาสมัคร</h2>
         <div class="sub-title">กรุณากรอกข้อมูลเพื่อเข้าร่วมเครือข่ายบัญชีขยะดิจิทัล คุ้งบางกะเจ้าค่ะ</div>
@@ -384,24 +382,23 @@
                 </select>
             </div>
 
-            <!-- กล่องที่อยู่แยกเฉพาะของคนในชุมชน -->
             <div id="local-address-section">
                 <div class="form-group">
                     <div class="address-row">
                         <div>
                             <label class="form-label" for="address_no">🏠 บ้านเลขที่</label>
-                            <input type="text" id="address_no" class="form-input" placeholder="เช่น 12/3" required>
+                            <input type="text" id="address_no" class="form-input" placeholder="เช่น 12/3">
                         </div>
                         <div>
                             <label class="form-label" for="moo">📍 หมู่ที่</label>
-                            <input type="number" id="moo" class="form-input" placeholder="เช่น 4" required>
+                            <input type="number" id="moo" class="form-input" placeholder="เช่น 4">
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="tambon">🗺️ พื้นที่ 6 ตำบลหลัก</label>
-                    <select id="tambon" class="form-select" required>
+                    <select id="tambon" class="form-select">
                         <option value="" disabled selected>--- โปรดเลือกตำบล ---</option>
                         <option value="ทรงคนอง">ตำบลทรงคนอง</option>
                         <option value="บางกระสอบ">ตำบลบางกระสอบ</option>
@@ -431,7 +428,6 @@
         </form>
     </div>
 
-    <!-- หน้าจอแสดงผลสำเร็จ -->
     <div id="successView" class="success-wrapper hidden">
         <div class="success-circle">
             <span class="success-icon">✓</span>
@@ -446,7 +442,6 @@
         </button>
     </div>
 
-    <!-- หน้าจอเลเยอร์คั่นเวลานับถอยหลัง 3 วินาที -->
     <div id="countdownScreen" class="countdown-overlay hidden">
         <div class="spinner"></div>
         <div class="countdown-text">💾 กำลังปิดหน้าต่างและนำท่านกลับแชท LINE...</div>
@@ -477,7 +472,6 @@
             .catch(err => console.error("LIFF โหลดล้มเหลว", err));
     }
 
-    // 🌟 ฟังก์ชันจัดการเปิด-ปิด ฟิลด์ที่อยู่ แยกระหว่างคนในชุมชน กับ นักท่องเที่ยว
     function toggleUserTypeFields() {
         const isLocal = document.getElementById('type-local').checked;
         const addressSection = document.getElementById('local-address-section');
@@ -501,16 +495,21 @@
         }
     }
 
-    // เรียกทำงานตั้งแต่วินาทีแรกเพื่อสแตนด์บายฟอร์ม
     toggleUserTypeFields();
 
-    // 🌟 ฟังก์ชันเปิด-ปิด สิทธิ์ปุ่มลงทะเบียนข้อมูลเมื่อกดยอมรับ PDPA
     function toggleSubmitButton() {
         const pdpaAccepted = document.getElementById('pdpaConsent').checked;
         document.getElementById('submitBtn').disabled = !pdpaAccepted;
     }
 
-    // ฟังก์ชันนับถอยหลัง 3 วินาทีก่อนกระชากหน้าจอปิดกลับเข้า LINE
+    // 🌟 ใส่ฟังก์ชัน liff.closeWindow() บังคับปิดแอปและส่งข้ามหน้า
+    function closeLiffWindow() {
+        if (typeof liff !== 'undefined') {
+            liff.closeWindow();
+        }
+    }
+
+    // ฟังก์ชันนับถอยหลัง 3 วินาทีก่อนสั่งปิดหน้าต่าง LINE จริง
     function startExitTransition() {
         const countdownScreen = document.getElementById('countdownScreen');
         const timerNumber = document.getElementById('timerNumber');
@@ -524,9 +523,7 @@
             
             if (timeLeft <= 0) {
                 clearInterval(interval);
-                if (typeof liff !== 'undefined') {
-                    liff.closeWindow();
-                }
+                closeLiffWindow(); // 🌟 บังคับปิดม้วนหน้าจอ
             }
         }, 1000);
     }
@@ -595,6 +592,7 @@
             body: formParams.toString()
         });
 
+        // 🌟 ล็อกสเตจคงค้างหน้าจอความสำเร็จถาวรและเอาคำสั่ง .reset() ที่เสี่ยงทำรีเฟรชหน้าวนลูปออกถอนรากถอนโคน
         setTimeout(() => {
             document.getElementById('formContainer').classList.add('hidden');
             document.getElementById('successUserMessage').innerHTML = `ระบบจัดเก็บข้อมูลอาสาสมัครของ <strong>คุณพี่ ${fullname}</strong> ในฐานะ ${userType} เรียบร้อยแล้วค่ะ!<br><br>ขอบคุณที่ร่วมเป็นส่วนหนึ่งในโครงการชุมชนสีเขียว คุ้งบางกะเจ้า นะคะ`;
