@@ -247,13 +247,12 @@
             margin-bottom: 40px;
         }
 
+        /* ปุ่มปิดหน้าต่าง LINE สไตล์แบรนด์ Green พรีเมียม */
         .btn-line-close {
-            display: block;
-            text-decoration: none;
             background-color: #06C755;
             color: white;
+            border: none;
             width: 100%;
-            box-sizing: border-box;
             padding: 18px;
             font-size: 20px;
             font-weight: 800;
@@ -386,7 +385,7 @@
         </form>
     </div>
 
-    <!-- หน้าจอสำเร็จรูปเฉพาะ -->
+    <!-- หน้าจอสำเร็จรูปย้ายมาควบคุมผ่าน JavaScript แท้ ป้องกันบั๊กหน้า 404 -->
     <div id="successView" class="success-wrapper hidden">
         <div class="success-circle">
             <span class="success-icon">✓</span>
@@ -396,26 +395,31 @@
             ระบบทำการบันทึกข้อมูลอาสาสมัครของท่านเข้าสู่ฐานข้อมูลบัญชีขยะดิจิทัลเรียบร้อยแล้วค่ะ ขอบคุณค่ะ
         </p>
         
-        <a href="https://liff.line.me/2010255862-LZnK22cW/close" class="btn-line-close">
+        <!-- ใช้ฟังก์ชัน onclick เรียกกระชากหน้าจอ LINE ให้ยุบตัวลงโดยตรงทันที -->
+        <button type="button" class="btn-line-close" onclick="closeLiffWindow()">
             💬 คลิกตรงนี้เพื่อกลับเข้าแชท LINE
-        </a>
+        </button>
     </div>
 </div>
 
 <script>
     const LIFF_REGISTER_ID = "2010255862-LZnK22cW";
-    let globalUserId = "MOCK_USER_REG_123"; // ค่าเริ่มต้นกรณีทดสอบผ่านคอมพิวเตอร์
+    let globalUserId = "MOCK_USER_REG_123";
 
     if (typeof liff !== 'undefined' && LIFF_REGISTER_ID !== "") {
         liff.init({ liffId: LIFF_REGISTER_ID })
-            .then(() => { 
-                if (liff.isLoggedIn()) {
-                    // 🌟 รันระบบขุดดึงรหัส LINE User ID ที่แท้จริงทันทีหลังล็อกอินสำเร็จ
-                    liff.getProfile().then(profile => {
-                        globalUserId = profile.userId;
-                    }).catch(err => console.error("ดึงโปรไฟล์ล้มเหลว:", err));
-                } else {
+            .then(async () => { 
+                if (!liff.isLoggedIn()) {
                     liff.login();
+                } else {
+                    try {
+                        const profile = await liff.getProfile();
+                        if(profile && profile.userId) {
+                            globalUserId = profile.userId; 
+                        }
+                    } catch (err) {
+                        console.error("เกิดข้อผิดพลาดในการดึงรหัส LINE ID แท้:", err);
+                    }
                 }
             })
             .catch(err => console.error("LIFF โหลดล้มเหลว", err));
@@ -449,6 +453,13 @@
     function toggleSubmitButton() {
         const pdpaAccepted = document.getElementById('pdpaConsent').checked;
         document.getElementById('submitBtn').disabled = !pdpaAccepted;
+    }
+
+    // ฟังก์ชันสั่งปิดหน้าจอม้วนตัวกลับแชท LINE ของจริง
+    function closeLiffWindow() {
+        if (typeof liff !== 'undefined') {
+            liff.closeWindow();
+        }
     }
 
     function submitRegistration() {
@@ -497,7 +508,7 @@
         const scriptUrl = "https://script.google.com/macros/s/AKfycbzcEN_Dkv9EUfAIeCKHL7QxW61elqdimdCr7WJDtnb5hCVd4aeeA6y7gWgL7cUfKz_u/exec";
 
         const formParams = new URLSearchParams();
-        formParams.append('userId', globalUserId); // 🌟 ยิงรหัส LINE User ID จริงที่ขุดได้ส่งเข้าสู่ตารางสเปรดชีต
+        formParams.append('userId', globalUserId); 
         formParams.append('userType', userType);
         formParams.append('fullname', fullname);
         formParams.append('gender', gender);
@@ -523,7 +534,13 @@
             if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
                 liff.sendMessages([
                     { type: 'text', text: `🎉 ยินดีต้อนรับคุณพี่ ${fullname} เข้าสู่ระบบบัญชีขยะดิจิทัลสำเร็จเรียบร้อยแล้วค่ะ!` }
-                ]).catch(err => console.log("ส่งข้อความคู่ขนานเรียบร้อย"));
+                ]).then(() => {
+                    // ปิดหน้าต่างทันทีหลังจากส่งข้อความทักทายเรียบร้อย
+                    liff.closeWindow();
+                }).catch(err => {
+                    console.log("ส่งข้อความคู่ขนานเสร็จสิ้น");
+                    liff.closeWindow();
+                });
             }
         }, 1500); 
     }
