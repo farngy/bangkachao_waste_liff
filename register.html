@@ -247,7 +247,7 @@
             margin-bottom: 40px;
         }
 
-        /* ปุ่มปิดหน้าต่าง LINE */
+        /* ปุ่มปิดหน้าต่าง LINE สไตล์แบรนด์สีเขียวแท้ */
         .btn-line-close {
             background-color: #06C755;
             color: white;
@@ -263,51 +263,6 @@
         }
         .btn-line-close:active {
             transform: scale(0.97);
-        }
-
-        /* หน้าจอเลเยอร์นับถอยหลังพิเศษ */
-        .countdown-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(20, 63, 36, 0.96);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            color: white;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255, 255, 255, 0.2);
-            border-top: 5px solid #06C755;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .countdown-text {
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
-        .countdown-timer {
-            font-size: 48px;
-            font-weight: 900;
-            color: #06C755;
         }
     </style>
 </head>
@@ -431,7 +386,7 @@
         </form>
     </div>
 
-    <!-- หน้าจอแสดงผลสำเร็จ -->
+    <!-- หน้าจอแสดงผลสำเร็จ (เมื่อกดปุ่มเขียวจะสั่งปิดตัววาร์ปกลับ LINE ทันที) -->
     <div id="successView" class="success-wrapper hidden">
         <div class="success-circle">
             <span class="success-icon">✓</span>
@@ -441,16 +396,10 @@
             ระบบทำการบันทึกข้อมูลอาสาสมัครของท่านเข้าสู่ฐานข้อมูลบัญชีขยะดิจิทัลเรียบร้อยแล้วค่ะ ขอบคุณค่ะ
         </p>
         
-        <button type="button" class="btn-line-close" onclick="startExitTransition()">
+        <!-- 🌟 ล็อคปุ่มให้กดเรียก closeLiffWindow() เด้งกลับทันที ไม่หน่วงเวลา -->
+        <button type="button" class="btn-line-close" onclick="closeLiffWindow()">
             💬 คลิกตรงนี้เพื่อกลับเข้าแชท LINE
         </button>
-    </div>
-
-    <!-- หน้าจอเลเยอร์คั่นเวลานับถอยหลัง 3 วินาที -->
-    <div id="countdownScreen" class="countdown-overlay hidden">
-        <div class="spinner"></div>
-        <div class="countdown-text">💾 กำลังปิดหน้าต่างและนำท่านกลับแชท LINE...</div>
-        <div id="timerNumber" class="countdown-timer">3</div>
     </div>
 </div>
 
@@ -507,29 +456,11 @@
         document.getElementById('submitBtn').disabled = !pdpaAccepted;
     }
 
+    // 🌟 สั่งปิดหน้าต่างดีดตัวกลับเข้าไลน์แบบ Real-time 
     function closeLiffWindow() {
         if (typeof liff !== 'undefined') {
             liff.closeWindow(); 
         }
-    }
-
-    // ฟังก์ชันนับถอยหลัง 3 วินาทีก่อนสั่งม้วนปิดหน้าจอที่เราเทสผ่านแล้ว
-    function startExitTransition() {
-        const countdownScreen = document.getElementById('countdownScreen');
-        const timerNumber = document.getElementById('timerNumber');
-        
-        countdownScreen.classList.remove('hidden');
-        let timeLeft = 3;
-        
-        const interval = setInterval(() => {
-            timeLeft--;
-            timerNumber.innerText = timeLeft;
-            
-            if (timeLeft <= 0) {
-                clearInterval(interval);
-                closeLiffWindow(); 
-            }
-        }, 1000);
     }
 
     function submitRegistration() {
