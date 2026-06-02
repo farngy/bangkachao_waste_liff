@@ -11,14 +11,32 @@
         .phone-container { width: 100%; max-width: 450px; min-height: 100vh; background: #FFFFFF; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; position: relative; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
         .top-bar { text-align: center; padding-bottom: 16px; border-bottom: 2px solid var(--bg-light); margin-bottom: 25px; }
         .brand-name { font-size: 22px; font-weight: 800; color: var(--primary-dark); }
-        h2 { font-size: 26px; color: var(--primary-dark); margin: 0 0 10px 0; font-weight: 800; text-align: center; }
+        h2 { font-size: 25px; color: var(--primary-dark); margin: 0 0 10px 0; font-weight: 800; text-align: center; }
         .sub-title { font-size: 15px; color: #718096; text-align: center; margin-bottom: 25px; }
         .form-group { margin-bottom: 24px; }
         .form-label { display: block; font-size: 17px; font-weight: 700; color: var(--primary-dark); margin-bottom: 12px; }
-        .form-input { width: 100%; box-sizing: border-box; padding: 16px; font-size: 20px; font-weight: 700; border: 2px solid #cbd5e0; border-radius: 14px; background-color: var(--bg-light); text-align: center; }
-        .form-select { width: 100%; padding: 16px; font-size: 18px; font-weight: 600; border: 2px solid #cbd5e0; border-radius: 14px; background-color: var(--bg-light); color: var(--text-main); }
-        .btn-submit { background-color: var(--primary-dark); color: white; border: none; width: 100%; padding: 18px; font-size: 20px; font-weight: 800; border-radius: 35px; cursor: pointer; box-shadow: 0 5px 15px rgba(20, 63, 36, 0.2); margin-top: 10px; }
+        .form-select { width: 100%; padding: 16px; font-size: 17px; font-weight: 600; border: 2px solid #cbd5e0; border-radius: 14px; background-color: var(--bg-light); color: var(--text-main); }
+        
+        /* สไตล์ชุดปุ่มกดเพิ่มลดน้ำหนัก UX */
+        .weight-control-wrapper { display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 12px; }
+        .btn-counter { width: 55px; height: 55px; border-radius: 50%; border: 2px solid var(--primary-dark); background: white; color: var(--primary-dark); font-size: 24px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .btn-counter:active { background: var(--bg-light); }
+        .weight-input-box { width: 140px; padding: 12px; font-size: 26px; font-weight: 800; border: 2px solid #cbd5e0; border-radius: 14px; background-color: var(--bg-light); text-align: center; color: var(--primary-dark); }
+        
+        .btn-unknown { display: block; width: 100%; background: none; border: 2px dashed #a0aec0; padding: 12px; border-radius: 12px; font-size: 15px; font-weight: 700; color: #4a5568; cursor: pointer; margin-top: 10px; }
+        .btn-unknown.active { background: #e2e8f0; border-color: var(--primary-dark); color: var(--primary-dark); }
+        
+        /* ปุ่มถ่ายรูปและแนบหลักฐาน */
+        .upload-zone { border: 2px dashed #cbd5e0; border-radius: 16px; padding: 20px; text-align: center; background: var(--bg-light); cursor: pointer; position: relative; }
+        .upload-icon { font-size: 32px; margin-bottom: 6px; display: block; }
+        .upload-text { font-size: 16px; font-weight: 700; color: var(--primary-dark); }
+        .preview-container { display: flex; gap: 10px; justify-content: center; margin-top: 12px; }
+        .img-preview { width: 75px; height: 75px; object-fit: cover; border-radius: 10px; border: 1px solid #cbd5e0; }
+        
+        .btn-submit { background-color: var(--primary-dark); color: white; border: none; width: 100%; padding: 18px; font-size: 20px; font-weight: 800; border-radius: 35px; cursor: pointer; box-shadow: 0 5px 15px rgba(20, 63, 36, 0.2); margin-top: 25px; }
         .hidden { display: none !important; }
+        
+        /* สไตล์หน้าสำเร็จ */
         .success-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; flex-grow: 1; padding: 40px 10px; }
         .success-circle { width: 100px; height: 100px; background-color: #e6fffa; border: 4px solid #319795; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; }
         .success-icon { font-size: 50px; color: #319795; }
@@ -33,38 +51,94 @@
 
     <div id="garbageFormContainer">
         <h2>บันทึกข้อมูลส่งขยะ</h2>
-        <div class="sub-title">กรุณากรอกประเภทและน้ำหนักขยะรีไซเคิลที่ท่านนำมาส่งค่ะ</div>
+        <div class="sub-title">กรุณากรอกประเภทขยะและน้ำหนักรีไซเคิลของท่านค่ะ</div>
 
         <form id="garbageForm" onsubmit="event.preventDefault(); submitGarbageData();">
+            <!-- ส่วนที่ 1: การเลือกประเภทขยะหลัก -->
             <div class="form-group">
-                <label class="form-label" for="garbageType">♻️ ประเภทขยะรีไซเคิล</label>
-                <select id="garbageType" class="form-select" required>
-                    <option value="" disabled selected>--- โปรดเลือกประเภทขยะ ---</option>
-                    <option value="ขวดพลาสติกใส (PET)">ขวดพลาสติกใส (PET)</option>
-                    <option value="พลาสติกรวม/ขวดขุ่น (HDPE)">พลาสติกรวม / ขวดขุ่น (HDPE)</option>
-                    <option value="กระดาษ/ลังกระดาษ">กระดาษ / ลังกระดาษ</option>
-                    <option value="ขวดแก้ว/เศษแก้ว">ขวดแก้ว / เศษแก้ว</option>
-                    <option value="กระป๋องอลูมิเนียม">กระป๋องอลูมิเนียม / โลหะรวม</option>
+                <label class="form-label">♻️ ประเภทขยะหลัก (Main Category)</label>
+                <select id="mainCategory" class="form-select" onchange="updateSubCategories()" required>
+                    <option value="" disabled selected>--- โปรดเลือกกลุ่มขยะหลัก ---</option>
+                    <option value="พลาสติก (Plastic)">พลาสติก (Plastic)</option>
+                    <option value="กระดาษ (Paper)">กระดาษ (Paper)</option>
+                    <option value="แก้ว (Glass)">แก้ว (Glass)</option>
+                    <option value="อลูมิเนียม">อลูมิเนียม</option>
                 </select>
             </div>
-            <div class="form-group"><label class="form-label" for="weight">⚖️ น้ำหนักขยะ (กิโลกรัม)</label><input type="number" id="weight" class="form-input" step="0.1" min="0.1" placeholder="0.0" inputmode="decimal" required></div>
+
+            <!-- หมวดย่อยที่จะงอกขึ้นมาอัตโนมัติอ้างอิงตามค่า อบก. -->
+            <div class="form-group">
+                <label class="form-label">🔍 ประเภทย่อย (Sub Category)</label>
+                <select id="subCategory" class="form-select" required disabled>
+                    <option value="" disabled selected>--- โปรดเลือกประเภทขยะหลักก่อน ---</option>
+                </select>
+            </div>
+
+            <!-- ส่วนที่ 2: ระบบกรอกตัวเลขและชุดปุ่มช่วยกด UX -->
+            <div class="form-group" id="weightSection">
+                <label class="form-label">⚖️ ระบุน้ำหนักขยะ (กิโลกรัม)</label>
+                <div class="weight-control-wrapper">
+                    <button type="button" class="btn-counter" onclick="adjustWeight(-1)">-1</button>
+                    <button type="button" class="btn-counter" onclick="adjustWeight(-0.5)">-0.5</button>
+                    <input type="number" id="weight" class="weight-input-box" step="0.1" min="0" placeholder="0.0" inputmode="decimal">
+                    <button type="button" class="btn-counter" onclick="adjustWeight(0.5)">+0.5</button>
+                    <button type="button" class="btn-counter" onclick="adjustWeight(1)">+1</button>
+                </div>
+                <button type="button" id="unknownBtn" class="btn-unknown" onclick="toggleUnknownWeight()">❓ ยังไม่ทราบน้ำหนักขยะ (ไม่มีเครื่องชั่ง)</button>
+            </div>
+
+            <!-- ส่วนปุ่มแนบรูปหลักฐานถ่ายรูปขยะ -->
+            <div class="form-group">
+                <label class="form-label">📸 รูปถ่ายขยะพร้อมตราชั่ง (สูงสุด 2 รูป)</label>
+                <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+                    <span class="upload-icon">📷</span>
+                    <span class="upload-text">ถ่ายรูปขยะ</span>
+                    <input type="file" id="fileInput" class="hidden" accept="image/*" multiple onchange="handleFileSelect(this)">
+                </div>
+                <div class="preview-container" id="previewContainer"></div>
+            </div>
+
             <button type="submit" class="btn-submit" id="submitGarbageBtn">💾 บันทึกข้อมูลขยะ</button>
         </form>
     </div>
 
+    <!-- หน้าจอแสดงความสำเร็จพร้อมแจงคาร์บอนเครดิตที่ลดได้ -->
     <div id="garbageSuccessView" class="success-wrapper hidden">
         <div class="success-circle"><span class="success-icon">✓</span></div>
-        <h3 class="success-title">บันทึกข้อมูลขยะสำเร็จ!</h3>
+        <h3 class="success-title">บันทึกข้อมูลสำเร็จ!</h3>
         <p class="success-subtitle" id="successGarbageMessage"></p>
         <button type="button" class="btn-line-close" onclick="closeLiffWindow()">💬 กลับเข้าแชท LINE</button>
     </div>
 </div>
 
 <script>
-    // 🌟 ใส่รหัส LIFF ID ของหน้าบันทึกขยะตรงนี้ได้เลยครับพี่แฟง
     const LIFF_GARBAGE_ID = "ใส่_LIFF_ID_ของหน้าบันทึกขยะตรงนี้"; 
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzcEN_Dkv9EUfAIeCKHL7QxW61elqdimdCr7WJDtnb5hCVd4aeeA6y7gWgL7cUfKz_u/exec";
     let globalUserId = "MOCK_USER_ID";
+    let isWeightUnknown = false;
+
+    // คลังข้อมูลประเภทย่อย อบก. มัดรวมผูกล็อกสิทธิ์เลือก 2 ชั้นสไตล์พี่แฟง
+    const subCategoriesData = {
+        "พลาสติก (Plastic)": [
+            "ขวดน้ำพลาสติกใส (PET)",
+            "ขวดน้ำพลาสติกขุ่น (HDPE) (บีทาเก้น, ดีไลท์, แกลลอนน้ำยาล้างจาน)",
+            "ฝาขวดพลาสติก (HDPE)"
+        ],
+        "กระดาษ (Paper)": [
+            "กระดาษลัง",
+            "กระดาษสีขาว/เอกสาร (A4)",
+            "กระดาษนิตยสาร/หนังสือพิมพ์"
+        ],
+        "แก้ว (Glass)": [
+            "ขวดแก้วชนิดเดียวกัน (ครบลัง)",
+            "ขวดแก้วรวม"
+        ],
+        "อลูมิเนียม": [
+            "กระป๋องอลูมิเนียม",
+            "ฝาอลูมิเนียม",
+            "เศษอลูมิเนียมอื่นๆ"
+        ]
+    };
 
     if (typeof liff !== 'undefined' && LIFF_GARBAGE_ID !== "") {
         liff.init({ liffId: LIFF_GARBAGE_ID }).then(async () => { 
@@ -75,20 +149,81 @@
         }).catch(err => console.error(err));
     }
 
+    // ฟังก์ชันจัดการงอกประเภทย่อยตามกลุ่มหลักที่จิ้มเลือก
+    function updateSubCategories() {
+        const mainCat = document.getElementById('mainCategory').value;
+        const subSelect = document.getElementById('subCategory');
+        subSelect.innerHTML = '<option value="" disabled selected>--- โปรดเลือกประเภทย่อย ---</option>';
+        
+        if (subCategoriesData[mainCat]) {
+            subSelect.disabled = false;
+            subCategoriesData[mainCat].forEach(sub => {
+                let opt = document.createElement('option');
+                opt.value = sub; opt.innerText = sub;
+                subSelect.appendChild(opt);
+            });
+        }
+    }
+
+    // ฟังก์ชันกลุ่มปุ่มลักชูรี UX กดสลับบวกหรือลดน้ำหนักขยะทีละ 0.5 - 1 กก.
+    function adjustWeight(amount) {
+        if(isWeightUnknown) return;
+        const input = document.getElementById('weight');
+        let current = parseFloat(input.value) || 0;
+        let nextValue = current + amount;
+        input.value = nextValue >= 0 ? nextValue.toFixed(1) : "0.0";
+    }
+
+    // ฟังก์ชันสลับสถานะกรณีคุณยายไม่มีตราชั่ง (กดปุ่มไม่ทราบน้ำหนัก)
+    function toggleUnknownWeight() {
+        isWeightUnknown = !isWeightUnknown;
+        const input = document.getElementById('weight');
+        const btn = document.getElementById('unknownBtn');
+        if(isWeightUnknown) {
+            input.value = ""; input.disabled = true;
+            btn.classList.add('active'); btn.innerText = "✅ เลือกโหมด: ยังไม่ทราบน้ำหนักขยะ";
+        } else {
+            input.disabled = false; input.value = "0.0";
+            btn.classList.remove('active'); btn.innerText = "❓ ยังไม่ทราบน้ำหนักขยะ (ไม่มีเครื่องชั่ง)";
+        }
+    }
+
+    // ระบบพรีวิวรูปหลักฐานยืนยันการชั่งขยะ
+    function handleFileSelect(input) {
+        const container = document.getElementById('previewContainer');
+        container.innerHTML = "";
+        const files = Array.from(input.files).slice(0, 2); // จำกัดโควตาไม่เกิน 2 ใบ
+        files.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result; img.className = "img-preview";
+                container.appendChild(img);
+            }
+            reader.readAsDataURL(file);
+        });
+    }
+
     function closeLiffWindow() { if (typeof liff !== 'undefined') { liff.closeWindow(); } }
 
     function submitGarbageData() {
         const btn = document.getElementById('submitGarbageBtn');
-        const garbageType = document.getElementById('garbageType').value;
-        const weight = document.getElementById('weight').value;
-        if (!garbageType || !weight) { return; }
+        const mainCat = document.getElementById('mainCategory').value;
+        const subCat = document.getElementById('subCategory').value;
+        let weight = document.getElementById('weight').value;
+        
+        if(isWeightUnknown) { weight = "0"; }
+        if (!mainCat || !subCat || (!isWeightUnknown && !weight)) { alert("กรุณากรอกข้อมูลให้ครบถ้วนค่ะ"); return; }
 
-        btn.innerText = "⏳ กำลังบันทึกข้อมูลขยะ..."; btn.disabled = true;
+        btn.innerText = "⏳ กำลังบันทึกข้อมูลขยะและค่าคาร์บอน..."; btn.disabled = true;
+        
         const formParams = new URLSearchParams();
         formParams.append('action', 'saveGarbage');
         formParams.append('userId', globalUserId);
-        formParams.append('garbageType', garbageType);
-        formParams.append('weight', weight);
+        formParams.append('main_category', mainCat);
+        formParams.append('sub_category', subCat);
+        formParams.append('weight_kg', weight);
+        formParams.append('image_url', 'https://learn-do-storage.local/demo_bin.jpg'); // ลิงก์จำลองเก็บไฟล์รูปหลักฐาน
 
         fetch(SCRIPT_URL, {
             method: "POST", mode: "no-cors",
@@ -98,10 +233,14 @@
 
         setTimeout(() => {
             document.getElementById('garbageFormContainer').classList.add('hidden');
-            document.getElementById('successGarbageMessage').innerHTML = `ระบบได้ทำการบันทึกข้อมูลการส่งขยะประเภท <strong>"${garbageType}"</strong> ปริมาณ <strong>${weight} กก.</strong> เรียบร้อยแล้วค่ะ ขอบคุณมากค่ะ`;
+            let successTxt = `ระบบเก็บสถิติขยะประเภท <strong>"${subCat}"</strong> เรียบร้อยแล้วค่ะ!`;
+            if(!isWeightUnknown) {
+                successTxt += `<br><br><span style="color:#143F24; font-weight:800;">🌍 ชุมชนคูณช่วยลดปริมาณคาร์บอนสะสมสำเร็จแล้วค่ะ!</span>`;
+            }
+            document.getElementById('successGarbageMessage').innerHTML = successTxt;
             document.getElementById('garbageSuccessView').classList.remove('hidden');
             if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-                liff.sendMessages([{ type: 'text', text: `♻️ บันทึกส่งขยะสำเร็จ: ${garbageType} ปริมาณ ${weight} กิโลกรัม เรียบร้อยแล้วค่ะ!` }]).catch(e => console.log(e));
+                liff.sendMessages([{ type: 'text', text: `♻️ บันทึกสำเร็จ: ${subCat} น้ำหนัก ${isWeightUnknown ? 'ไม่ระบุ' : weight + ' กก.'} เรียบร้อยแล้วค่ะ!` }]).catch(e => console.log(e));
             }
         }, 1500);
     }
