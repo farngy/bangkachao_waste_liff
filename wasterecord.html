@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>บันทึกขยะดิจิทัล - บางกะเจ้า</title>
-    <!-- เชื่อมต่อ LINE LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
@@ -225,7 +224,6 @@
 <div class="phone-container">
     <div class="top-bar">🌱 บัญชีขยะดิจิทัล</div>
 
-    <!-- ================== STEP 1: เลือกประเภทขยะหลัก ================== -->
     <div id="step1">
         <h2>เลือกประเภทขยะ</h2>
         <div class="card-grid">
@@ -251,18 +249,15 @@
         </div>
     </div>
 
-    <!-- ================== STEP 2: เลือกประเภทย่อย ================== -->
     <div id="step2" class="hidden">
         <h2 id="subTypeHeader">ประเภทย่อย</h2>
         <div class="card-grid" id="subTypeContainer">
-            <!-- ปุ่มหมวดย่อยจะเจนที่นี่ -->
-        </div>
+            </div>
         <div class="bottom-nav">
             <button class="btn-back" onclick="changeStep(1)">ย้อนกลับ</button>
         </div>
     </div>
 
-    <!-- ================== STEP 3: ระบุน้ำหนักและหลักฐานรูปถ่าย ================== -->
     <div id="step3" class="hidden">
         <h2>ระบุน้ำหนักและหลักฐาน</h2>
         
@@ -286,10 +281,10 @@
         </div>
 
         <div style="margin-bottom: 20px;">
-            <label class="form-label">แนบรูปถ่ายขยะ</label>
+            <label class="form-label">แนบรูปถ่ายขยะ (ถ้ามี)</label>
             <div class="photo-upload-zone">
                 <div class="upload-icon">📷</div>
-                <div class="upload-text" id="uploadStatusText">ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span></div>
+                <div class="upload-text" id="uploadStatusText">ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก / ไม่แนบก็ได้)</span></div>
                 <input type="file" id="imageFile" accept="image/*" onchange="processPhotoSelection()">
             </div>
         </div>
@@ -300,7 +295,6 @@
         </div>
     </div>
 
-    <!-- ================== STEP 4: หน้าสรุปผลลัพธ์คาร์บอนฟุตพริ้นท์ ================== -->
     <div id="step4" class="hidden">
         <h2>สรุปผลคาร์บอน</h2>
         <div class="text-center" style="font-weight: bold; font-size: 16px;">คุณช่วยลดการปล่อยก๊าซเรือนกระจกได้</div>
@@ -322,11 +316,9 @@
 </div>
 
 <script>
-    // 🎯 ท่อส่งตรงเวอร์ชัน /exec ล่าสุดของพี่ฝาง
     const scriptUrl = "https://script.google.com/macros/s/AKfycbzbIa6Ro8gRCLquI2U5iGruFi3lUyFafANlXgvwxtePuvXoCx_Ubv2cjlAVJil1dAnA/exec";
     let globalUserId = "MOCK_USER_TRASH_123";
 
-    // 📦 คลังข้อมูลประเภทขยะย่อย
     const subTypeData = {
         "ขยะพลาสติก": [
             { name: "ขวดน้ำพลาสติกใส (PET)", img: "https://cdn-icons-png.flaticon.com/512/3050/3050181.png", factor: 2.15 },
@@ -353,7 +345,6 @@
     var photoBase64 = "";
     var photoType = "";
 
-    // เรียกเปิดสิทธิ์ LINE LIFF SDK
     if (typeof liff !== 'undefined') {
         liff.init({ liffId: "2010255862-LZnK22cW" }).then(() => {
             if (liff.isLoggedIn()) {
@@ -366,7 +357,6 @@
         }).catch(err => console.log(err));
     }
 
-    // ฟังก์ชันสั่งสลับหน้าจอ (Step)
     function changeStep(stepNum) {
         document.getElementById('step1').classList.add('hidden');
         document.getElementById('step2').classList.add('hidden');
@@ -375,7 +365,6 @@
         document.getElementById('step' + stepNum).classList.remove('hidden');
     }
 
-    // เจนปุ่มตัวเลือกย่อยเมื่อกดเลือกหมวดหลัก
     function selectMainType(mainName) {
         selectedMain = mainName;
         const container = document.getElementById('subTypeContainer');
@@ -438,17 +427,17 @@
             reader.onload = function(e) {
                 photoBase64 = e.target.result.split(',')[1];
                 photoType = file.type;
-                statusText.innerHTML = "✅ แนบรูปสำเร็จแล้ว<br><span style='font-size:12px;color:#143F24; font-weight:bold;'>พร้อมไปต่อ</span>";
+                statusText.innerHTML = "✅ แนบรูปสำเร็จแล้ว<br><span style='font-size:12px;color:#143F24; font-weight:bold;'>รูปภาพพร้อมส่ง</span>";
                 validateWeightAndPhoto();
             };
             reader.readAsDataURL(file);
         }
     }
 
+    // 🎯 ปรับปรุงลอจิก: แค่มีน้ำหนัก > 0 ก็ยอมให้กดถัดไปได้เลย ไม่บังคับรูปภาพแล้วครับ
     function validateWeightAndPhoto() {
         const weight = parseFloat(document.getElementById('weight').value) || 0;
-        const hasPhoto = photoBase64 !== "";
-        document.getElementById('toStep4Btn').disabled = !(weight > 0 && hasPhoto);
+        document.getElementById('toStep4Btn').disabled = !(weight > 0);
     }
 
     function processCarbonCalculationAndMove() {
@@ -470,12 +459,12 @@
 
         const formData = new FormData();
         formData.append("action", "trash");
-        formData.append("lineUserId", globalUserId);
+        formData.append("userId", globalUserId); // 🎯 แก้ชื่อจาก lineUserId เป็น userId ให้ตรงกับหลังบ้าน ตัว ID จะได้บันทึกลงชีทครับ
         formData.append("mainType", selectedMain);
         formData.append("subType", selectedSub);
         formData.append("weight", document.getElementById('weight').value);
         formData.append("carbonAmount", document.getElementById('finalCarbon').innerText);
-        formData.append("imageData", photoBase64);
+        formData.append("imageData", photoBase64); // หากไม่มีรูป ค่านี้จะเป็นค่าว่าง ส่งไปหลังบ้านก็จะไม่ติดขัดครับ
         formData.append("imageMimeType", photoType);
 
         fetch(scriptUrl, {
@@ -485,22 +474,23 @@
         })
         .then(() => {
             status.innerText = "🎉 บันทึกสำเร็จเรียบร้อย!";
-            alert("🎉 บันทึกข้อมูลขยะและรูปถ่ายเข้าคลังบางกะเจ้าเสร็จสมบูรณ์แล้วค่ะ!");
+            alert("🎉 บันทึกข้อมูลขยะเข้าคลังบางกะเจ้าเสร็จสมบูรณ์แล้วค่ะ!");
             
+            // ล้างค่าฟอร์มกลับสู่สถานะเริ่มต้น
             photoBase64 = ""; 
             photoType = "";
             document.getElementById('weight').value = "0.00";
             document.getElementById('noWeight').checked = false;
             document.getElementById('weight').disabled = false;
             document.getElementById('imageFile').value = "";
-            document.getElementById('uploadStatusText').innerHTML = `ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span>`;
+            document.getElementById('uploadStatusText').innerHTML = `ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก / ไม่แนบก็ได้)</span>`;
             
             changeStep(1);
             btn.disabled = false;
             status.innerText = "";
         })
         .catch(err => {
-            status.innerText = "❌ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง";
+            status.innerText = "❌ เกิดข้อผิดพลาด กรุณาลองใหมี่อีกครั้ง";
             btn.disabled = false;
         });
     }
