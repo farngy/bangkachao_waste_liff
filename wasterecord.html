@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>บันทึกข้อมูลขยะ - บัญชีขยะดิจิทัล</title>
-    <!-- ดึงระบบ LINE LIFF SDK (เผื่อพี่เปิดใช้ระบบผ่านไลน์สไตล์เดียวกับหน้าลงทะเบียน) -->
+    <title>บันทึกขยะดิจิทัล - บางกะเจ้า</title>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
-            --primary-dark: #143F24;     /* สีเขียวเข้มพรีเมียม */
-            --primary-green: #2f855a;    /* สีเขียวบันทึกขยะ */
-            --bg-light: #F4F6F5;         /* สีพื้นหลังขาวครีม */
-            --text-main: #2d3748;        /* สีตัวหนังสือหลัก */
+            --primary-dark: #143F24;
+            --text-main: #2d3748;
+            --bg-light: #F4F6F5;
+            --border-color: #E8ECE9;
         }
 
         body {
@@ -22,288 +21,501 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
             min-height: 100vh;
         }
 
         .phone-container {
             width: 100%;
             max-width: 450px;
-            min-height: 100vh;
             background: #FFFFFF;
             box-sizing: border-box;
             padding: 24px;
             display: flex;
             flex-direction: column;
+            position: relative;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
         .top-bar {
             text-align: center;
-            padding-bottom: 16px;
+            padding-bottom: 12px;
             border-bottom: 2px solid var(--bg-light);
-            margin-bottom: 25px;
-        }
-        .brand-name {
-            font-size: 22px;
+            margin-bottom: 20px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--primary-dark);
         }
 
         h2 {
-            font-size: 26px;
+            font-size: 24px;
             color: var(--primary-dark);
-            margin: 0 0 10px 0;
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 25px;
             font-weight: 800;
+        }
+
+        /* 📱 ระบบปุ่มการ์ดสี่เหลี่ยมตามรูปสกรีนช็อต */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .choice-card {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            transition: all 0.2s ease-in-out;
+        }
+        .choice-card:hover {
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        .choice-card.selected {
+            border-color: var(--primary-dark);
+            background-color: rgba(20, 63, 36, 0.03);
+        }
+
+        .choice-card img {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
+
+        .choice-card .label {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
             text-align: center;
         }
-        .sub-title {
-            font-size: 15px;
-            color: #718096;
+
+        /* ⚖️ หน้าใส่รายละเอียดและน้ำหนัก */
+        .weight-box {
+            background: var(--bg-light);
+            border: 2px solid var(--primary-dark);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+        .weight-input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 36px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--primary-dark);
+            outline: none;
+        }
+
+        .btn-quick-wrap {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .btn-quick {
+            background: #ffffff;
+            border: 1px solid #cbd5e0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #4a5568;
+        }
+
+        /* 📸 ช่องอัปโหลดรูปถ่ายสไตล์กรอบเส้นประ */
+        .photo-upload-zone {
+            border: 2px dashed #a0aec0;
+            border-radius: 14px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 40px;
+            background-color: var(--bg-light);
+        }
+        .photo-upload-zone input[type="file"] {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer;
+        }
+        .upload-icon { font-size: 32px; color: #4a5568; margin-bottom: 8px; }
+        .upload-text { font-size: 14px; font-weight: bold; color: #718096; line-height: 1.4; }
+
+        /* 🌳 ส่วนสรุปผลและเทียบต้นไม้ */
+        .carbon-display {
+            font-size: 56px;
+            font-weight: 900;
+            color: var(--text-main);
+            margin: 20px 0 5px 0;
+            text-align: center;
+        }
+        .carbon-unit {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-main);
             text-align: center;
             margin-bottom: 30px;
         }
-
-        .form-group {
-            margin-bottom: 20px;
+        .tree-badge {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 45px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
             text-align: left;
         }
+        .tree-badge img { width: 45px; height: 45px; }
+        .tree-text { font-size: 15px; font-weight: 700; color: #2d3748; line-height: 1.4; }
 
-        .form-label {
-            display: block;
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 8px;
+        /* 🔘 ระบบปุ่มกึ่งล่าง */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 20px;
         }
-
-        .form-input, .form-select {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 600;
-            border: 2px solid #cbd5e0;
-            border-radius: 12px;
-            color: var(--text-main);
-            background-color: var(--bg-light);
+        .btn-back {
+            font-size: 18px;
+            font-weight: 800;
+            color: #718096;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: var(--primary-dark);
-            background-color: #FFFFFF;
-        }
-
-        .readonly-input {
-            background-color: #e2e8f0;
-            color: #4a5568;
-            cursor: not-allowed;
-        }
-
-        .btn-submit {
+        .btn-next, .btn-action-submit {
             background-color: var(--primary-dark);
             color: white;
             border: none;
-            width: 100%;
-            padding: 16px;
+            padding: 12px 30px;
             font-size: 18px;
             font-weight: 800;
-            border-radius: 35px;
+            border-radius: 25px;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(20, 63, 36, 0.2);
-            margin-top: 15px;
-            margin-bottom: 20px;
         }
-        .btn-submit:disabled {
-            background-color: #a0aec0;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .status-report {
-            background: #edf2f7;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 14px;
-            text-align: center;
-            margin-top: 10px;
-        }
+        .btn-action-submit { width: 100%; padding: 16px; border-radius: 35px; }
+        .btn-next:disabled, .btn-action-submit:disabled { background-color: #cbd5e0; cursor: not-allowed; }
 
         .hidden { display: none !important; }
+        .text-center { text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="phone-container">
-    <div class="top-bar">
-        <div class="brand-name">🌱 บัญชีขยะดิจิทัล</div>
+    <div class="top-bar">🌱 บัญชีขยะดิจิทัล</div>
+
+    <!-- ------------------ STEP 1: เลือกประเภทขยะหลัก ------------------ -->
+    <div id="step1">
+        <h2>เลือกประเภทขยะ</h2>
+        <div class="card-grid">
+            <div class="choice-card" onclick="selectMainType('ขยะพลาสติก')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2666/2666631.png" alt="พลาสติก">
+                <div class="label">พลาสติก</div>
+            </div>
+            <div class="choice-card" onclick="selectMainType('ขยะกระดาษ')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2541/2541991.png" alt="กระดาษ">
+                <div class="label">กระดาษ</div>
+            </div>
+            <div class="choice-card" onclick="selectMainType('ขยะแก้ว')">
+                <img src="https://cdn-icons-png.flaticon.com/512/3100/3100566.png" alt="แก้ว">
+                <div class="label">แก้ว</div>
+            </div>
+            <div class="choice-card" onclick="selectMainType('ขยะอลูมิเนียม')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2653/2653504.png" alt="อลูมิเนียม">
+                <div class="label">อลูมิเนียม</div>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="closeLiffWindow()">ย้อนกลับ</button>
+        </div>
     </div>
 
-    <div id="formContainer">
-        <h2>บันทึกข้อมูลขยะชุมชน</h2>
-        <div class="sub-title">กรอกข้อมูลและถ่ายรูปขยะพลาสติก เพื่อคำนวณการลดคาร์บอนฟุตพริ้นท์ค่ะ</div>
+    <!-- ------------------ STEP 2: เลือกประเภทย่อย ------------------ -->
+    <div id="step2" class="hidden">
+        <h2 id="subTypeHeader">ประเภทย่อย</h2>
+        <div class="card-grid" id="subTypeContainer">
+            <!-- ข้อมูลตัวเลือกย่อยจะเปลี่ยนไดนามิกผ่าน JavaScript -->
+        </div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="changeStep(1)">ย้อนกลับ</button>
+        </div>
+    </div>
 
-        <form id="trashForm" onsubmit="event.preventDefault(); submitTrashData();">
-            
-            <!-- 1. คอลัมน์ A: LINE_User_ID -->
-            <div class="form-group">
-                <label class="form-label">🆔 LINE User ID</label>
-                <input type="text" id="lineUserId" class="form-input readonly-input" readonly placeholder="กำลังดึงข้อมูล LINE ID...">
+    <!-- ------------------ STEP 3: ระบุน้ำหนักและหลักฐาน ------------------ -->
+    <div id="step3" class="hidden">
+        <h2>ระบุน้ำหนักและหลักฐาน</h2>
+        
+        <div class="form-group">
+            <div class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>ระบุน้ำหนัก (กก.)</span>
+                <label style="font-size:14px; font-weight:normal; display:flex; align-items:center; gap:4px;">
+                    <input type="checkbox" id="noWeight" onchange="toggleNoWeight()"> ไม่ทราบน้ำหนัก
+                </label>
             </div>
-
-            <!-- 2. คอลัมน์ C: ประเภทขยะหลัก -->
-            <div class="form-group">
-                <label class="form-label">📦 ประเภทขยะหลัก</label>
-                <select id="mainType" class="form-select" required>
-                    <option value="ขยะพลาสติก" selected>ขยะพลาสติก</option>
-                    <option value="ขยะอินทรีย์">ขยะอินทรีย์</option>
-                    <option value="ขยะรีไซเคิลอื่นๆ">ขยะรีไซเคิลอื่นๆ</option>
-                </select>
+            <div class="weight-box">
+                <input type="number" id="weight" class="weight-input" step="0.01" value="0.00" min="0.01" oninput="validateWeightAndPhoto()">
             </div>
+        </div>
 
-            <!-- 3. คอลัมน์ D: ประเภทขยะย่อย -->
-            <div class="form-group">
-                <label class="form-label">🔍 ประเภทขยะย่อย</label>
-                <select id="subType" class="form-select" required onchange="calculateCarbon()">
-                    <option value="" disabled selected>--- โปรดเลือกประเภทขยะย่อย ---</option>
-                    <option value="ขวดพลาสติกใส (PET)">ขวดพลาสติกใส (PET)</option>
-                    <option value="ถุงพลาสติก/ซองขนม (LDPE/PP)">ถุงพลาสติก/ซองขนม (LDPE/PP)</option>
-                    <option value="แก้วพลาสติก/หลอด (PP/PS)">แก้วพลาสติก/หลอด (PP/PS)</option>
-                    <option value="ขวดพลาสติกขุ่น (HDPE)">ขวดพลาสติกขุ่น (HDPE)</option>
-                </select>
+        <div class="btn-quick-wrap">
+            <button class="btn-quick" onclick="addWeight(1.0)">+1.0</button>
+            <button class="btn-quick" onclick="addWeight(0.5)">+0.5</button>
+            <button class="btn-quick" onclick="addWeight(-0.5)">-0.5</button>
+            <button class="btn-quick" onclick="clearWeight()">ล้างค่า</button>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">แนบรูปถ่าย</label>
+            <div class="photo-upload-zone">
+                <div class="upload-icon">📷</div>
+                <div class="upload-text" id="uploadStatusText">ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span></div>
+                <input type="file" id="imageFile" accept="image/*" onchange="processPhotoSelection()">
             </div>
+        </div>
 
-            <!-- 4. คอลัมน์ E: น้ำหนัก (กิโลกรัม) -->
-            <div class="form-group">
-                <label class="form-label">⚖️ น้ำหนักขยะ (กิโลกรัม)</label>
-                <input type="number" id="weight" class="form-input" step="0.01" min="0.01" placeholder="เช่น 1.25" required oninput="calculateCarbon()">
-            </div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="changeStep(2)">ย้อนกลับ</button>
+            <button class="btn-next" id="toStep4Btn" disabled onclick="processCarbonCalculationAndMove()">ถัดไป</button>
+        </div>
+    </div>
 
-            <!-- 5. คอลัมน์ G: ปริมาณ Carbon (kgCO2e) -->
-            <div class="form-group">
-                <label class="form-label">📉 ปริมาณคาร์บอนที่ลดได้ (kgCO2e)</label>
-                <input type="number" id="carbonAmount" class="form-input readonly-input" step="0.001" readonly placeholder="ระบบคำนวณให้อัตโนมัติ">
-            </div>
+    <!-- ------------------ STEP 4: สรุปผลคาร์บอน ------------------ -->
+    <div id="step4" class="hidden">
+        <h2>สรุปผลคาร์บอน</h2>
+        <div class="text-center" style="font-weight: bold; font-size: 15px;">คุณช่วยลดการปล่อยก๊าซเรือนกระจกได้</div>
+        
+        <div class="carbon-display" id="finalCarbon">0</div>
+        <div class="carbon-unit">kgCO2e</div>
 
-            <!-- 6. คอลัมน์ F: ลิงก์รูปภาพ (ช่องเลือกไฟล์ถ่ายรูป) -->
-            <div class="form-group">
-                <label class="form-label">📸 ถ่ายรูปภาพขยะแนบเข้าระบบ</label>
-                <input type="file" id="imageFile" class="form-input" accept="image/*" required>
-            </div>
+        <div class="tree-badge">
+            <img src="https://cdn-icons-png.flaticon.com/512/489/489969.png" alt="ต้นไม้">
+            <div class="tree-text" id="treeCompareText">เทียบเท่าคุณช่วยบางกะเจ้า<br>ปลูกต้นไม้เพิ่ม 0 ต้นแล้ว!</div>
+        </div>
 
-            <button type="submit" class="btn-submit" id="submitBtn">🚀 บันทึกข้อมูลขยะ</button>
-        </form>
-        <div id="statusReport" class="status-report">สถานะ: แสตนด์บาย รอการบันทึกข้อมูล...</div>
+        <button class="btn-submit" id="finalSubmitBtn" onclick="sendDataToGoogleSheet()">ส่งข้อมูลบันทึกขยะ</button>
+        
+        <div class="text-center" id="networkStatus" style="margin-top: 15px; font-weight: bold; color: var(--primary-dark);"></div>
+        <br>
+        <button class="btn-back" onclick="changeStep(3)">ย้อนกลับ</button>
     </div>
 </div>
 
 <script>
-    // 🎯 ใช้สคริปต์ท่อเดี่ยวตัวเดียวกับหน้า Register ที่ทำงานผ่านฉลุยเรียบร้อยแล้ว
+    // 🎯 ท่อรับเส้นเดิมที่เซฟและลงล็อก Sheet เรียบร้อยแล้วครับ
     const scriptUrl = "https://script.google.com/macros/s/AKfycbxMvlOCITbRiV_sPkHZtyO-X-l9sL03ZTy2I4lzaG-tVxauKJLcFO0ubb3ke8ZhA9lK/exec";
-    const LIFF_TRASH_ID = "2010255862-LZnK22cW"; // ใช้ LIFF ID เดียวกันหรือเปลี่ยนตามระบบจริงได้เลยครับ
-    let globalUserId = "MOCK_USER_TRASH_999";
+    let globalUserId = "MOCK_USER_TRASH_123";
 
-    // เริ่มทำงานระบบดึงโปรไฟล์ LINE
-    if (typeof liff !== 'undefined' && LIFF_TRASH_ID !== "") {
-        liff.init({ liffId: LIFF_TRASH_ID })
-            .then(async () => { 
-                if (!liff.isLoggedIn()) {
-                    liff.login();
-                } else {
-                    const profile = await liff.getProfile();
-                    if(profile && profile.userId) {
-                        globalUserId = profile.userId; 
-                        document.getElementById('lineUserId').value = globalUserId;
+    // 📦 ข้อมูลจำแนกหมวดหมู่ประเภทย่อยตามโมเดลฐานข้อมูลของพี่ฝาง
+    const subTypeData = {
+        "ขยะพลาสติก": [
+            { name: "ขวดน้ำพลาสติกใส (PET)", img: "https://cdn-icons-png.flaticon.com/512/3050/3050181.png", factor: 2.15 },
+            { name: "ขวดน้ำพลาสติกขุ่น (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/9133/9133884.png", factor: 2.05 },
+            { name: "ฝาขวดพลาสติก (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/6253/6253018.png", factor: 1.95 }
+        ],
+        "ขยะกระดาษ": [
+            { name: "กระดาษลัง/กล่องเก่า", img: "https://cdn-icons-png.flaticon.com/512/2855/2855546.png", factor: 1.12 },
+            { name: "สมุด/กระดาษขาวดำ", img: "https://cdn-icons-png.flaticon.com/512/2324/2324623.png", factor: 0.98 }
+        ],
+        "ขยะแก้ว": [
+            { name: "ขวดแก้วใส/แก้วน้ำ", img: "https://cdn-icons-png.flaticon.com/512/3100/3100566.png", factor: 0.28 },
+            { name: "เศษกระจก/ขวดแก้วสี", img: "https://cdn-icons-png.flaticon.com/512/2157/2157077.png", factor: 0.20 }
+        ],
+        "ขยะอลูมิเนียม": [
+            { name: "กระป๋องอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/2653/2653504.png", factor: 9.10 },
+            { name: "เศษเหล็ก/โลหะอื่นๆ", img: "https://cdn-icons-png.flaticon.com/512/2525/2525700.png", factor: 3.50 }
+        ]
+    };
+
+    // ตัวแปรเก็บสถานะขยะที่กำลังเลือกฟอร์ม
+    var selectedMain = "";
+    var selectedSub = "";
+    var currentFactor = 0;
+    var photoBase64 = "";
+    var photoType = "";
+
+    // เปิดตั๋วระบบ LINE LIFF SDK
+    if (typeof liff !== 'undefined') {
+        liff.init({ liffId: "2010255862-LZnK22cW" }).then(() => {
+            if (liff.isLoggedIn()) {
+                liff.getProfile().then(p => {
+                    if(p.userId) {
+                        globalUserId = p.userId;
                     }
-                }
-            })
-            .catch(err => {
-                console.error("LIFF โหลดล้มเหลว", err);
-                document.getElementById('lineUserId').value = globalUserId;
-            });
-    } else {
-        document.getElementById('lineUserId').value = globalUserId;
+                });
+            }
+        }).catch(err => console.log(err));
     }
 
-    // 📉 ฟังก์ชันคำนวณค่าคาร์บอนฟุตพริ้นท์โดยอ้างอิงตามค่าสากลเบื้องต้น
-    function calculateCarbon() {
-        const weight = parseFloat(document.getElementById('weight').value) || 0;
-        const subType = document.getElementById('subType').value;
-        let emissionFactor = 0;
+    // ฟังก์ชันสั่งเปลี่ยน View
+    function changeStep(stepNum) {
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step3').classList.add('hidden');
+        document.getElementById('step4').classList.add('hidden');
+        document.getElementById('step' + stepNum).classList.remove('hidden');
+    }
 
-        // อิงตามสูตรคำนวณการลดก๊าซเรือนกระจกเบื้องต้น (สามารถปรับตัวคูณได้ตามความต้องการครับ)
-        if (subType === "ขวดพลาสติกใส (PET)") {
-            emissionFactor = 2.15; 
-        } else if (subType === "ถุงพลาสติก/ซองขนม (LDPE/PP)") {
-            emissionFactor = 1.85;
-        } else if (subType === "แก้วพลาสติก/หลอด (PP/PS)") {
-            emissionFactor = 1.90;
-        } else if (subType === "ขวดพลาสติกขุ่น (HDPE)") {
-            emissionFactor = 2.05;
+    // เลือกหมวดหลัก -> เจนการ์ดย่อย
+    function selectMainType(mainName) {
+        selectedMain = mainName;
+        const container = document.getElementById('subTypeContainer');
+        document.getElementById('subTypeHeader').innerText = "ประเภท" + mainName.replace("ขยะ", "");
+        container.innerHTML = "";
+
+        subTypeData[mainName].forEach(sub => {
+            container.innerHTML += `
+                <div class="choice-card" onclick="selectSubType('${sub.name}', ${sub.factor})">
+                    <img src="${sub.img}">
+                    <div class="label">${sub.name}</div>
+                </div>
+            `;
+        });
+        changeStep(2);
+    }
+
+    // เลือกหมวดขยะย่อย
+    function selectSubType(subName, factor) {
+        selectedSub = subName;
+        currentFactor = factor;
+        changeStep(3);
+        validateWeightAndPhoto();
+    }
+
+    // จัดการกลไกน้ำหนัก
+    function addWeight(val) {
+        const input = document.getElementById('weight');
+        let current = parseFloat(input.value) || 0;
+        current = Math.max(0, current + val);
+        input.value = current.toFixed(2);
+        validateWeightAndPhoto();
+    }
+
+    function clearWeight() {
+        document.getElementById('weight').value = "0.00";
+        validateWeightAndPhoto();
+    }
+
+    function toggleNoWeight() {
+        const isChecked = document.getElementById('noWeight').checked;
+        const input = document.getElementById('weight');
+        if (isChecked) {
+            input.value = "0.10"; // ค่าน้ำหนักประเมินขั้นต่ำ
+            input.disabled = true;
+        } else {
+            input.value = "0.00";
+            input.disabled = false;
         }
-
-        const carbonSaved = weight * emissionFactor;
-        document.getElementById('carbonAmount').value = carbonSaved.toFixed(3);
+        validateWeightAndPhoto();
     }
 
-    // 🚀 ฟังก์ชันจัดรวมก้อนข้อมูลและแปลงภาพยิงตรงเข้าฐานข้อมูลกูเกิลชีท
-    function submitTrashData() {
-        const btn = document.getElementById('submitBtn');
-        const status = document.getElementById('statusReport');
+    // จัดการเรื่องรูปภาพถ่าย
+    function processPhotoSelection() {
         const fileInput = document.getElementById('imageFile');
-
-        if (fileInput.files.length === 0) {
-            alert("⚠️ กรุณาถ่ายภาพหรือเลือกรูปภาพขยะก่อนกดบันทึกค่ะ");
-            return;
+        const statusText = document.getElementById('uploadStatusText');
+        
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            statusText.innerText = "⏳ แปลงภาพ: " + file.name;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                photoBase64 = e.target.result.split(',')[1];
+                photoType = file.type;
+                statusText.innerHTML = "✅ แนบรูปสำเร็จ<br><span style='font-size:12px;color:#143F24; font-weight:bold;'>พร้อมส่งข้อมูล</span>";
+                validateWeightAndPhoto();
+            };
+            reader.readAsDataURL(file);
         }
+    }
 
-        btn.innerText = "⏳ กำลังส่งข้อมูลขยะและอัปโหลดภาพ...";
+    // ปลดล็อกปุ่มถัดไป
+    function validateWeightAndPhoto() {
+        const weight = parseFloat(document.getElementById('weight').value) || 0;
+        const hasPhoto = photoBase64 !== "";
+        document.getElementById('toStep4Btn').disabled = !(weight > 0 && hasPhoto);
+    }
+
+    // คำนวณคาร์บอนฟุตพริ้นท์เข้าสู่ขั้นสรุปผลตามหน้าจอสี่
+    function processCarbonCalculationAndMove() {
+        const weight = parseFloat(document.getElementById('weight').value) || 0;
+        const carbonSaved = weight * currentFactor;
+        
+        // สูตรร่วมปลูกต้นไม้โดยเฉลี่ย ต้นไม้ 1 ต้นช่วยดูดซับได้ประมาณ 9-10 kgCO2e ต่อปี
+        const treeCount = Math.max(1, Math.round(carbonSaved / 9.5));
+
+        document.getElementById('finalCarbon').innerText = carbonSaved.toFixed(1);
+        document.getElementById('treeCompareText').innerHTML = `เทียบเท่าคุณช่วยบางกะเจ้า<br>ปลูกต้นไม้เพิ่ม ${treeCount} ต้นแล้ว!`;
+        changeStep(4);
+    }
+
+    // ยิงท่อตรงแบบ no-cors ผ่านเข้า Google Sheets โครงสร้างแท็บสอง
+    function sendDataToGoogleSheet() {
+        const btn = document.getElementById('finalSubmitBtn');
+        const status = document.getElementById('networkStatus');
+        
         btn.disabled = true;
-        status.innerText = "กำลังแปลงไฟล์ภาพความละเอียดสูงและเชื่อมต่อเซิร์ฟเวอร์...";
+        status.innerText = "⏳ กำลังบันทึกข้อมูลเข้าชีตส่วนกลาง...";
 
-        const file = fileInput.files[0];
-        const reader = new FileReader();
+        const formData = new FormData();
+        formData.append("action", "trash");
+        formData.append("lineUserId", globalUserId);
+        formData.append("mainType", selectedMain);
+        formData.append("subType", selectedSub);
+        formData.append("weight", document.getElementById('weight').value);
+        formData.append("carbonAmount", document.getElementById('finalCarbon').innerText);
+        formData.append("imageData", photoBase64);
+        formData.append("imageMimeType", photoType);
 
-        reader.onload = function(e) {
-            // แปลงก้อนไฟล์รูปภาพเป็น Base64
-            const base64Data = e.target.result.split(',')[1];
+        fetch(scriptUrl, {
+            method: "POST",
+            mode: "no-cors",
+            body: formData
+        })
+        .then(() => {
+            status.innerText = "🎉 บันทึกสำเร็จเรียบร้อย!";
+            alert("🎉 บันทึกข้อมูลขยะและรูปภาพลงฐานข้อมูลดิจิทัลสำเร็จแล้วค่ะ!");
+            
+            // ล้างหน้าจอเพื่อเตรียมพร้อมรับขยะรอบใหม่
+            document.getElementById('trashForm').reset();
+            photoBase64 = ""; photoType = "";
+            document.getElementById('uploadStatusText').innerHTML = `ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span>`;
+            changeStep(1);
+            
+            btn.disabled = false;
+            status.innerText = "";
+        })
+        .catch(err => {
+            status.innerText = "❌ มีปัญหาทางเครือข่าย กรุณาลองอีกครั้ง";
+            btn.disabled = false;
+        });
+    }
 
-            const formData = new FormData();
-            formData.append("action", "trash"); // ส่ง Tag สับรางไปบอก Apps Script ว่าให้ลงแท็บบันทึกขยะ
-            formData.append("lineUserId", globalUserId);
-            formData.append("mainType", document.getElementById('mainType').value);
-            formData.append("subType", document.getElementById('subType').value);
-            formData.append("weight", document.getElementById('weight').value);
-            formData.append("carbonAmount", document.getElementById('carbonAmount').value);
-            formData.append("imageData", base64Data);
-            formData.append("imageMimeType", file.type);
-
-            // ยิงเข้าเซิร์ฟเวอร์ผ่านโหมดความปลอดภัยสูง
-            fetch(scriptUrl, {
-                method: "POST",
-                mode: "no-cors", // ใช้รูปแบบ no-cors ให้ทะลวงผ่านการป้องกันบล็อกของเบราว์เซอร์มือถือ
-                body: formData
-            })
-            .then(() => {
-                status.innerHTML = "<span style='color:#143F24;'>🎉 บันทึกข้อมูลขยะและอัปโหลดรูปภาพลงแท็บสำเร็จเรียบร้อยแล้วค่ะ!</span>";
-                document.getElementById('trashForm').reset();
-                document.getElementById('lineUserId').value = globalUserId;
-                btn.innerText = "🚀 บันทึกข้อมูลขยะ";
-                btn.disabled = false;
-                
-                alert("🎉 บันทึกข้อมูลขยะและรูปถ่ายเข้าฐานข้อมูลบางกะเจ้าสำเร็จแล้วค่ะ!");
-            })
-            .catch(err => {
-                console.error("Error:", err);
-                status.innerHTML = "<span style='color:#red;'>❌ เกิดข้อผิดพลาดเครือข่าย กรุณาลองใหม่อีกครั้ง</span>";
-                btn.innerText = "🚀 บันทึกข้อมูลขยะ";
-                btn.disabled = false;
-            });
-        };
-
-        reader.readAsDataURL(file);
+    function closeLiffWindow() {
+        if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
+            liff.closeWindow();
+        }
     }
 </script>
+
 </body>
 </html>
