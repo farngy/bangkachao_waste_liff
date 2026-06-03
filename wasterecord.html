@@ -3,79 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧪 สเต็ปที่ 1: เทสส่งรูปเข้ากูเกิลไดร์ฟ</title>
+    <title>ระบบบันทึกข้อมูลขยะพลาสติก - บางกะเจ้า</title>
     <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: #f7fafc; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh; 
-            margin: 0; 
+        :root {
+            --primary: #2f855a;
+            --primary-hover: #22543d;
+            --bg: #f7fafc;
+            --card-bg: #ffffff;
+            --text: #2d3748;
         }
-        .box { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 20px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-            text-align: center; 
-            max-width: 400px; 
-            width: 90%; 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
         }
-        .btn { 
-            background-color: #007bff; 
-            color: white; 
-            border: none; 
-            padding: 18px; 
-            font-size: 18px; 
-            font-weight: bold; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            width: 100%; 
-            margin-top: 20px; 
+        .container {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 480px;
+            box-sizing: border-box;
+        }
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
+            text-align: center;
+            font-size: 22px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        select, input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(47, 133, 90, 0.1);
+        }
+        .gps-btn {
+            background-color: #edf2f7;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+            padding: 8px 12px;
+            font-size: 13px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 6px;
+            font-weight: bold;
+        }
+        .btn-submit {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
             transition: background 0.2s;
         }
-        .btn:active { 
-            transform: scale(0.97); 
-        }
-        #result { 
-            margin-top: 20px; 
-            font-size: 15px; 
-            font-weight: bold; 
-            color: #4a5568; 
-            word-break: break-all; 
-            text-align: left; 
-            background: #edf2f7; 
-            padding: 12px; 
-            border-radius: 10px; 
-            display: none; 
+        .btn-submit:hover { background-color: var(--primary-hover); }
+        .btn-submit:disabled { background-color: #cbd5e0; cursor: not-allowed; }
+        #statusReport {
+            margin-top: 20px;
+            padding: 15px;
+            background: #edf2f7;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            word-break: break-all;
         }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h2>🧪 เทสอัปโหลดรูปภาพเข้า Drive</h2>
-    <p style="color: #718096; font-size: 14px; line-height: 1.5;">
-        ระบบจะจำลองส่งรูปภาพสี่เหลี่ยมสีเขียวขนาดเล็ก ยิงตรงจาก GitHub ไปเซฟในโฟลเดอร์ Google Drive ของพี่แฟงเพื่อทดสอบระบบสิทธิ์โดยตรงจ้า
-    </p>
+<div class="container">
+    <h2>🌳 บันทึกข้อมูลขยะชุมชน บางกะเจ้า</h2>
     
-    <button class="btn" onclick="testUploadImage()">🚀 สั่งยิงรูปภาพเข้าไดร์ฟ</button>
-    
-    <div id="result">กำลังเตรียมส่ง...</div>
+    <form id="trashForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+            <label for="trashType">ประเภทขยะพลาสติก</label>
+            <select id="trashType" required>
+                <option value="">-- เลือกประเภทขยะ --</option>
+                <option value="ขวดพลาสติก PET">ขวดพลาสติก PET</option>
+                <option value="ถุงพลาสติก/ซองขนม">ถุงพลาสติก/ซองขนม</option>
+                <option value="แก้วพลาสติก/หลอด">แก้วพลาสติก/หลอด</option>
+                <option value="เศษโฟม">เศษโฟม</option>
+                <option value="อื่นๆ">ขยะพลาสติกประเภทอื่นๆ</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="location">พิกัดสถานที่ตำแหน่ง (GPS)</label>
+            <input type="text" id="location" placeholder="เช่น 13.6625, 100.5641 หรือกดปุ่มดึงพิกัด" required>
+            <button type="button" class="gps-btn" onclick="getLocation()">📍 กดดึงพิกัดปัจจุบันอัตโนมัติ</button>
+        </div>
+
+        <div class="form-group">
+            <label for="description">รายละเอียด/จุดสังเกตเพิ่มเติม</label>
+            <textarea id="description" rows="3" placeholder="ระบุสภาพที่พบ เช่น ลอยในคูน้ำ, กองใต้ต้นไม้..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="imageFile">ถ่ายรูปขยะแนบเข้าระบบ</label>
+            <input type="file" id="imageFile" accept="image/*" required>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submitBtn">ส่งข้อมูลเข้าฐานข้อมูล 🚀</button>
+    </form>
+
+    <div id="statusReport">สถานะ: แสตนด์บาย รอการบันทึกข้อมูล...</div>
 </div>
 
 <script>
-    // 🔗 ฝัง URL เว็บแอปตัวใหม่ของพี่แฟงให้เรียบร้อยแล้วครับ
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNZdYOHFKbk8luJp1j6Dz1o4iK4Qa4YVPyevPv1raPGDVMIGhiiXeUZu6XJ_jN1v5u/exec";
+    // 🎯 เจาะจงลิงก์ท่อตรง: นำ URL ที่ได้จากการ Deploy ตัว Apps Script ล่าสุดมาวางสวมที่นี่แทนครับ
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxMvlOCITbRiV_sPkHZtyO-X-l9sL03ZTy2I4lzaG-tVxauKJLcFO0ubb3ke8ZhA9lK/exec";
 
-    function testUploadImage() {
-        const resDiv = document.getElementById('result');
-        resDiv.style.display = "block";
-        resDiv.innerText = "⏳ กำลังยิงข้อมูลรูปภาพไปกูเกิลไดร์ฟ...";
-        resDiv.style.color = "#dd6b20";
+    // ฟังก์ชันดึงพิกัดจากมือถือ/คอมพิวเตอร์
+    function getLocation() {
+        const locationInput = document.getElementById('location');
+        if (navigator.geolocation) {
+            locationInput.value = "⏳ กำลังจับสัญญาณดาวเทียม...";
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    locationInput.value = position.coords.latitude + ", " + position.coords.longitude;
+                },
+                function(error) {
+                    alert("ไม่สามารถดึงพิกัดได้ กรุณาพิมพ์ระบุตำแหน่งเองครับ");
+                    locationInput.value = "";
+                }
+            );
+        } else {
+            alert("อุปกรณ์นี้ไม่รองรับระบบ GPS ระบบพิกัดอัตโนมัติ");
+        }
+    }
 
-        // ก้อนข้อมูลรูปสี่เหลี่ยมสีเขียวจำลองขนาดเล็กมาก (แปลงเป็น Base64 ล่วงหน้า)
-        const mockBase64Image = "iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAA
+    // ฟังก์ชันรวบรวมก้อนข้อมูลและส่งออกไปยังหลังบ้าน
+    function submitForm(event) {
+        event.preventDefault();
+        
+        const btn = document.getElementById('submitBtn');
+        const status = document.getElementById('statusReport');
+        const fileInput = document.getElementById('imageFile');
+        
+        btn.innerText = "⏳ กำลังส่งรูปภาพและข้อมูลขึ้นคลาวด์...";
+        btn.disabled = true;
+        status.innerText = "กำลังแปลงก้อนไฟล์รูปภาพและส่งสิทธิผ่านระบบความปลอดภัย...";
+
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const base64Data = e.target.result.split(',')[1];
+            
+            // จัดการแพ็กข้อมูลลงใน FormData เพื่อยิงท่อแบบ POST เข้าหา Apps Script โดยตรง
+            const formData = new FormData();
+            formData.append("trashType", document.getElementById('trashType').value);
+            formData.append("location", document.getElementById('location').value);
+            formData.append("description", document.getElementById('description').value);
+            formData.append("imageData", base64Data);
+            formData.append("imageMimeType", file.type);
+
+            fetch(WEB_APP_URL, {
+                method: "POST",
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    status.innerHTML = `<span style="color:#2f855a;">${data.message}</span>`;
+                    document.getElementById('trashForm').reset(); // เคลียร์ฟอร์มให้ว่างพร้อมรับรอบถัดไป
+                } else {
+                    status.innerHTML = `<span style="color:#c53030;">❌ ล้มเหลว: ${data.message}</span>`;
+                }
+                btn.innerText = "ส่งข้อมูลเข้าฐานข้อมูล 🚀";
+                btn.disabled = false;
+            })
+            .catch(err => {
+                status.innerHTML = `<span style="color:#c53030;">❌ เครือข่ายมีปัญหา: ${err.toString()}</span>`;
+                btn.innerText = "ส่งข้อมูลเข้าฐานข้อมูล 🚀";
+                btn.disabled = false;
+            });
+        };
+
+        reader.readAsDataURL(file);
+    }
+</script>
+
+</body>
+</html>
