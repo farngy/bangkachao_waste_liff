@@ -316,9 +316,8 @@
 </div>
 
 <script>
-    // 🌍 ประกาศตัวแปร Global หลักแบบปลอดภัยสูงสุด ป้องกันเบราว์เซอร์เอ๋อ
     var scriptUrl = "https://script.google.com/macros/s/AKfycbzbIa6Ro8gRCLquI2U5iGruFi3lUyFafANlXgvwxtePuvXoCx_Ubv2cjlAVJil1dAnA/exec";
-    var globalUserId = "LINE_USER_NOT_FOUND"; // ค่าตั้งต้นแบบปลอดภัย
+    var globalUserId = "LINE_USER_NOT_FOUND"; 
 
     var subTypeData = {
         "ขยะพลาสติก": [
@@ -346,16 +345,16 @@
     var photoBase64 = "";
     var photoType = "";
 
-    // 📡 โครงสร้างฟังก์ชันเริ่มต้นระบบ LINE LIFF แบบแยกสัดส่วนชัดเจน ไม่กวนปุ่มกดหน้าบ้าน
+    // 🎯 อัปเดตผูกตั๋วเข้ากับ LIFF ID ใหม่ของพี่ฝางเรียบร้อยครับ (บรรทัดที่ 187)
     window.onload = function() {
         if (typeof liff !== 'undefined') {
-            liff.init({ liffId: "2010255862-LZnK22cW" })
+            liff.init({ liffId: "2010255862-aZKhXa7N" })
                 .then(function() {
                     if (liff.isLoggedIn()) {
                         liff.getProfile()
                             .then(function(profile) {
                                 if (profile && profile.userId) {
-                                    globalUserId = profile.userId; // 🎯 เจาะจงดึงค่าพาสปอร์ตไลน์สำเร็จ
+                                    globalUserId = profile.userId; 
                                 }
                             })
                             .catch(function(pErr) { console.log("Profile error:", pErr); });
@@ -500,7 +499,7 @@
             status.innerText = "";
         })
         .catch(function(err) {
-            status.innerText = "❌ เกิดข้อผิดพลาด กรุณลองใหม่อีกครั้ง";
+            status.innerText = "❌ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง";
             btn.disabled = false;
         });
     }
