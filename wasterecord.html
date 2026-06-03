@@ -3,151 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>บันทึกข้อมูลขยะ - บัญชีขยะดิจิทัล</title>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <title>🧪 หน้าต่างทดสอบระบบส่งข้อมูลด่วน</title>
     <style>
-        :root {
-            --primary-dark: #143F24;
-            --primary-green: #1b4332;
-            --bg-light: #F4F6F5;
-            --text-main: #2d3748;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: var(--text-main); background-color: #cbd5e0; margin: 0; padding: 0;
-            display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
+            font-family: sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
         }
-
-        .phone-container {
-            width: 100%; max-width: 450px; min-height: 100vh;
-            background: #FFFFFF; box-sizing: border-box; padding: 20px;
-            display: flex; flex-direction: column; position: relative;
+        .test-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 360px;
+            width: 90%;
         }
-
-        /* เมนูส่วนหัวดีไซน์พรีเมียม */
-        .app-header {
-            display: flex; align-items: center; justify-content: space-between;
-            background: var(--bg-light); padding: 10px 16px; border-radius: 30px; margin-bottom: 25px;
+        .btn-danger-test {
+            background-color: #e53e3e;
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(229, 62, 62, 0.4);
+            width: 100%;
+            margin-top: 20px;
         }
-        .user-meta { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--primary-dark); }
-        .badge-status { background: #319795; color: white; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
-        .avatar { width: 30px; height: 30px; border-radius: 50%; background: #e2e8f0; overflow: hidden; display:flex; align-items:center; justify-content:center; }
-
-        h2 { font-size: 24px; color: var(--primary-dark); text-align: center; font-weight: 800; margin: 0 0 25px 0; }
-
-        /* 4 กลุ่มประเภทขยะหลักแบบปุ่มรูปสี่เหลี่ยมสวยงาม */
-        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
-        .card-btn {
-            background: #FFFFFF; border: 2px solid #e2e8f0; border-radius: 18px;
-            padding: 24px 12px; display: flex; flex-direction: column; align-items: center;
-            justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        .btn-danger-test:active {
+            transform: scale(0.95);
+            background-color: #c53030;
         }
-        .card-btn:active { transform: scale(0.96); border-color: var(--primary-dark); background: var(--bg-light); }
-        .card-btn .icon-img { width: 70px; height: 70px; object-fit: contain; }
-        .card-btn span { font-size: 17px; font-weight: 800; color: var(--primary-dark); }
-
-        /* รายการย่อยแบบกรอบปุ่มขนาดใหญ่ตามผังรูปภาพประกอบ */
-        .sub-category-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
-        .sub-card {
-            background: #FFFFFF; border: 2px solid #e2e8f0; border-radius: 16px;
-            padding: 16px; display: flex; align-items: center; gap: 16px; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        #statusMessage {
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #4a5568;
         }
-        .sub-card:active { border-color: var(--primary-dark); background: var(--bg-light); }
-        .sub-card .sub-img { width: 55px; height: 55px; object-fit: contain; }
-        .sub-card span { font-size: 16px; font-weight: 700; color: var(--text-main); text-align: left; line-height: 1.4; }
-
-        /* ส่วนหน้าจอระบุน้ำหนักควบคุมตัวเลข */
-        .weight-ui-box { text-align: center; }
-        .weight-display { font-size: 45px; font-weight: 900; color: var(--primary-dark); margin: 15px 0; }
-        .counter-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .btn-count {
-            background: var(--primary-dark); color: white; border: none; padding: 12px 14px;
-            font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; min-width: 65px;
-        }
-        .btn-count:active { transform: scale(0.95); }
-        
-        .checkbox-zone { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 17px; font-weight: 700; color: #4a5568; margin-bottom: 30px; cursor: pointer; }
-        .checkbox-zone input { width: 20px; height: 20px; cursor: pointer; }
-
-        /* แผงแนบรูปถ่ายหลักฐาน */
-        .photo-box {
-            border: 2px dashed #cbd5e0; border-radius: 16px; padding: 24px;
-            text-align: center; background: var(--bg-light); cursor: pointer; margin-bottom: 30px;
-        }
-        .photo-box span { display: block; font-size: 14px; color: #718096; margin-top: 6px; font-weight: 600; }
-        .preview-box { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
-        .preview-img { width: 80px; height: 80px; object-fit: cover; border-radius: 12px; border: 1px solid #cbd5e0; }
-
-        /* ชุดปุ่มนำทางล่างสุด */
-        .footer-nav { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
-        .btn-next { background-color: var(--primary-dark); color: white; border: none; padding: 16px; font-size: 19px; font-weight: 800; border-radius: 30px; cursor: pointer; width: 100%; }
-        .btn-back { background: none; border: none; color: #718096; font-size: 17px; font-weight: 700; padding: 8px; cursor: pointer; }
-
-        /* แผงโชว์สรุปคาร์บอนเครดิต */
-        .carbon-num { font-size: 75px; font-weight: 900; color: var(--primary-dark); margin: 10px 0; line-height: 1; }
-        .tree-badge { background: var(--bg-light); border: 1px solid #e2e8f0; border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 12px; margin: 25px 0; text-align: left; }
-        .tree-badge span { font-size: 15px; font-weight: 700; color: #4a5568; line-height: 1.4; }
-
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="phone-container">
-    <div class="app-header">
-        <div style="font-size:20px; color:var(--primary-dark);">☰</div>
-        <div class="user-meta">
-            <span id="headerName">กำลังโหลดข้อมูล...</span>
-            <span class="badge-status">🏅 นักอนุรักษ์มือใหม่</span>
-            <div class="avatar">👤</div>
-        </div>
-    </div>
+<div class="test-box">
+    <h2>🧪 สเต็ปทดสอบท่อส่ง</h2>
+    <p style="color: #718096;">กดปุ่มสีแดงด้านล่าง เพื่อทดลองส่งคำว่า "OK" วิ่งเข้าสู่ตารางสเปรดชีต</p>
+    
+    <button class="btn-danger-test" onclick="sendOkToGoogleSheet()">กดส่ง OK 🚀</button>
+    
+    <div id="statusMessage">สถานะ: รอการกดปุ่ม...</div>
+</div>
 
-    <div id="step1">
-        <h2>เลือกประเภทขยะ</h2>
-        <div class="category-grid">
-            <div class="card-btn" onclick="selectMainCategory('พลาสติก (Plastic)')">
-                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/3001/3001669.png" alt="พลาสติก">
-                <span>พลาสติก</span>
-            </div>
-            <div class="card-btn" onclick="selectMainCategory('กระดาษ (Paper)')">
-                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/3143/3143431.png" alt="กระดาษ">
-                <span>กระดาษ</span>
-            </div>
-            <div class="card-btn" onclick="selectMainCategory('แก้ว (Glass)')">
-                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/9180/9180583.png" alt="แก้ว">
-                <span>แก้ว</span>
-            </div>
-            <div class="card-btn" onclick="selectMainCategory('อลูมิเนียม')">
-                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/2666/2666687.png" alt="อลูมิเนียม">
-                <span>อลูมิเนียม</span>
-            </div>
-        </div>
-        <div class="footer-nav"><button class="btn-back" onclick="closeLiffWindow()">ปิดหน้าต่าง</button></div>
-    </div>
+<script>
+    // พิกัดท่อส่ง Google Apps Script ตัวจริงของพี่แฟง
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzv3E2rOc66DikVe3k3ncR1AxFUbQYe3kcu-Q7PT-9ozOjR7aeX6hbcGhV3mVl5VGEJ/exec";
 
-    <div id="step2" class="hidden">
-        <h2 id="subTitleHeader">ประเภทขยะ</h2>
-        <div class="sub-category-list" id="subCategoryContainer"></div>
-        <div class="footer-nav"><button class="btn-back" onclick="goBackTo(1)">⬅️ ย้อนกลับ</button></div>
-    </div>
+    function sendOkToGoogleSheet() {
+        const msgDiv = document.getElementById('statusMessage');
+        msgDiv.innerText = "⏳ กำลังยิงข้อมูลข้ามท่อ...";
+        msgDiv.style.color = "#d69e2e";
 
-    <div id="step3" class="hidden">
-        <h2>ระบุน้ำหนักและหลักฐาน</h2>
-        <div class="weight-ui-box">
-            <div class="weight-display"><span id="weightText">0.0</span> <span style="font-size:20px; font-weight:700; color:#718096">กก.</span></div>
-            <div class="counter-row">
-                <button class="btn-count" onclick="modifyWeight(-1.0)">-1.0</button>
-                <button class="btn-count" onclick="modifyWeight(-0.5)">-0.5</button>
-                <button class="btn-count" onclick="modifyWeight(0.5)">+0.5</button>
-                <button class="btn-count" onclick="modifyWeight(1.0)">+1.0</button>
-            </div>
-            
-            <label class="checkbox-zone">
-                <input type="checkbox" id="chkUnknown" onchange="handleUnknownCheckbox(this)"> ไม่ทราบน้ำหนักขยะ
-            </label>
+        // ยิงข้อมูลทดสอบแบบดิบๆ ไม่ต้องพึ่งพาข้อมูลใดๆ ทั้งสิ้น
+        const payload = new URLSearchParams();
+        payload.append("action", "saveGarbage");
+        payload.append("userId", "OK"); // บังคับเขียนลงคอลัมน์ A ว่า OK 
 
-            <div class="photo-box" onclick="document.getElementById('cameraFile').click()">
-                <img src="https://cdn-icons-png.
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            body: payload,
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+        .then(res => {
+            msgDiv.innerText = "✅ ส่งคำว่า OK สำเร็จแล้ว! พี่แฟงเปิดดูในชีตได้เลย!";
+            msgDiv.style.color = "#38a169";
+        })
+        .catch(err => {
+            msgDiv.innerText = "❌ เกิดข้อผิดพลาด: " + err.toString();
+            msgDiv.style.color = "#e53e3e";
+            console.error(err);
+        });
+    }
+</script>
+
+</body>
+</html>
