@@ -316,10 +316,11 @@
 </div>
 
 <script>
-    const scriptUrl = "https://script.google.com/macros/s/AKfycbzbIa6Ro8gRCLquI2U5iGruFi3lUyFafANlXgvwxtePuvXoCx_Ubv2cjlAVJil1dAnA/exec";
-    let globalUserId = ""; // ตั้งเป็นค่าว่างไว้เพื่อให้สแตมป์ค่าจริงเมื่อดึงสำเร็จ
+    // 🌍 ประกาศตัวแปร Global หลักแบบปลอดภัยสูงสุด ป้องกันเบราว์เซอร์เอ๋อ
+    var scriptUrl = "https://script.google.com/macros/s/AKfycbzbIa6Ro8gRCLquI2U5iGruFi3lUyFafANlXgvwxtePuvXoCx_Ubv2cjlAVJil1dAnA/exec";
+    var globalUserId = "LINE_USER_NOT_FOUND"; // ค่าตั้งต้นแบบปลอดภัย
 
-    const subTypeData = {
+    var subTypeData = {
         "ขยะพลาสติก": [
             { name: "ขวดน้ำพลาสติกใส (PET)", img: "https://cdn-icons-png.flaticon.com/512/3050/3050181.png", factor: 2.15 },
             { name: "ขวดน้ำพลาสติกขุ่น (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/9133/9133884.png", factor: 2.05 },
@@ -345,21 +346,28 @@
     var photoBase64 = "";
     var photoType = "";
 
-    // 🎯 แก้ไขลอจิกดึงข้อมูลโปรไฟล์ LINE บรรทัดที่ 185 (เปลี่ยนตัวพิมพ์ใหญ่ p.userId)
-    if (typeof liff !== 'undefined') {
-        liff.init({ liffId: "2010255862-LZnK22cW" }).then(() => {
-            if (liff.isLoggedIn()) {
-                liff.getProfile().then(p => {
-                    if(p.userId) { 
-                        globalUserId = p.userId; // สแกนเจอและล็อกค่า ID พาสปอร์ตไลน์ของอาสาสมัครสำเร็จ
+    // 📡 โครงสร้างฟังก์ชันเริ่มต้นระบบ LINE LIFF แบบแยกสัดส่วนชัดเจน ไม่กวนปุ่มกดหน้าบ้าน
+    window.onload = function() {
+        if (typeof liff !== 'undefined') {
+            liff.init({ liffId: "2010255862-LZnK22cW" })
+                .then(function() {
+                    if (liff.isLoggedIn()) {
+                        liff.getProfile()
+                            .then(function(profile) {
+                                if (profile && profile.userId) {
+                                    globalUserId = profile.userId; // 🎯 เจาะจงดึงค่าพาสปอร์ตไลน์สำเร็จ
+                                }
+                            })
+                            .catch(function(pErr) { console.log("Profile error:", pErr); });
+                    } else {
+                        globalUserId = "WEB_TEST_NO_LOGIN";
                     }
-                }).catch(err => console.log("Profile Error:", err));
-            } else {
-                // หากเปิดทดสอบบนเบราว์เซอร์ปกติที่ไม่มีการล็อกอินไลน์ ให้ fallback เป็นระบบทดสอบป้องกันตัวแปรว่าง
-                globalUserId = "WEB_TEST_USER_TRASH";
-            }
-        }).catch(err => console.log("LIFF Error:", err));
-    }
+                })
+                .catch(function(liffErr) { console.log("LIFF Init error:", liffErr); });
+        } else {
+            globalUserId = "NO_LIFF_SDK_LOADED";
+        }
+    };
 
     function changeStep(stepNum) {
         document.getElementById('step1').classList.add('hidden');
@@ -371,11 +379,11 @@
 
     function selectMainType(mainName) {
         selectedMain = mainName;
-        const container = document.getElementById('subTypeContainer');
+        var container = document.getElementById('subTypeContainer');
         document.getElementById('subTypeHeader').innerText = "ประเภท" + mainName.replace("ขยะ", "");
         container.innerHTML = "";
 
-        subTypeData[mainName].forEach(sub => {
+        subTypeData[mainName].forEach(function(sub) {
             container.innerHTML += `
                 <div class="choice-card" onclick="selectSubType('${sub.name}', ${sub.factor})">
                     <img src="${sub.img}">
@@ -394,8 +402,8 @@
     }
 
     function addWeight(val) {
-        const input = document.getElementById('weight');
-        let current = parseFloat(input.value) || 0;
+        var input = document.getElementById('weight');
+        var current = parseFloat(input.value) || 0;
         current = Math.max(0, current + val);
         input.value = current.toFixed(2);
         validateWeightAndPhoto();
@@ -407,8 +415,8 @@
     }
 
     function toggleNoWeight() {
-        const isChecked = document.getElementById('noWeight').checked;
-        const input = document.getElementById('weight');
+        var isChecked = document.getElementById('noWeight').checked;
+        var input = document.getElementById('weight');
         if (isChecked) {
             input.value = "0.10";
             input.disabled = true;
@@ -420,14 +428,14 @@
     }
 
     function processPhotoSelection() {
-        const fileInput = document.getElementById('imageFile');
-        const statusText = document.getElementById('uploadStatusText');
+        var fileInput = document.getElementById('imageFile');
+        var statusText = document.getElementById('uploadStatusText');
         
         if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
+            var file = fileInput.files[0];
             statusText.innerText = "⏳ กำลังประมวลผลรูปถ่าย: " + file.name;
             
-            const reader = new FileReader();
+            var reader = new FileReader();
             reader.onload = function(e) {
                 photoBase64 = e.target.result.split(',')[1];
                 photoType = file.type;
@@ -439,14 +447,14 @@
     }
 
     function validateWeightAndPhoto() {
-        const weight = parseFloat(document.getElementById('weight').value) || 0;
+        var weight = parseFloat(document.getElementById('weight').value) || 0;
         document.getElementById('toStep4Btn').disabled = !(weight > 0);
     }
 
     function processCarbonCalculationAndMove() {
-        const weight = parseFloat(document.getElementById('weight').value) || 0;
-        const carbonSaved = weight * currentFactor;
-        const treeCount = Math.max(1, Math.round(carbonSaved / 9.5));
+        var weight = parseFloat(document.getElementById('weight').value) || 0;
+        var carbonSaved = weight * currentFactor;
+        var treeCount = Math.max(1, Math.round(carbonSaved / 9.5));
 
         document.getElementById('finalCarbon').innerText = carbonSaved.toFixed(1);
         document.getElementById('treeCompareText').innerHTML = `เทียบเท่าคุณช่วยบางกะเจ้า<br>ปลูกต้นไม้เพิ่ม ${treeCount} ต้นแล้ว!`;
@@ -454,13 +462,13 @@
     }
 
     function sendDataToGoogleSheet() {
-        const btn = document.getElementById('finalSubmitBtn');
-        const status = document.getElementById('networkStatus');
+        var btn = document.getElementById('finalSubmitBtn');
+        var status = document.getElementById('networkStatus');
         
         btn.disabled = true;
         status.innerText = "⏳ กำลังส่งข้อมูล...";
 
-        const formData = new FormData();
+        var formData = new FormData();
         formData.append("action", "trash");
         formData.append("userId", globalUserId); 
         formData.append("mainType", selectedMain);
@@ -475,7 +483,7 @@
             mode: "no-cors",
             body: formData
         })
-        .then(() => {
+        .then(function() {
             status.innerText = "🎉 บันทึกสำเร็จเรียบร้อย!";
             alert("🎉 บันทึกข้อมูลขยะเข้าคลังบางกะเจ้าเสร็จสมบูรณ์แล้วค่ะ!");
             
@@ -485,4 +493,24 @@
             document.getElementById('noWeight').checked = false;
             document.getElementById('weight').disabled = false;
             document.getElementById('imageFile').value = "";
-            document.getElementById('uploadStatusText').innerHTML =
+            document.getElementById('uploadStatusText').innerHTML = `ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก / ไม่แนบก็ได้)</span>`;
+            
+            changeStep(1);
+            btn.disabled = false;
+            status.innerText = "";
+        })
+        .catch(function(err) {
+            status.innerText = "❌ เกิดข้อผิดพลาด กรุณลองใหม่อีกครั้ง";
+            btn.disabled = false;
+        });
+    }
+
+    function closeLiffWindow() {
+        if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
+            liff.closeWindow();
+        }
+    }
+</script>
+
+</body>
+</html>
