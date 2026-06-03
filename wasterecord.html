@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>บันทึกขยะดิจิทัล - บางกะเจ้า</title>
+    <!-- เชื่อมต่อ LINE LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
@@ -135,4 +136,381 @@
         }
 
         /* 📸 อัปโหลดรูปสไตล์กรอบเส้นประพรีเมียม */
-        .photo-upload-zone
+        .photo-upload-zone {
+            border: 2px dashed #a0aec0;
+            border-radius: 14px;
+            padding: 35px 20px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 40px;
+            background-color: var(--bg-light);
+        }
+        .photo-upload-zone input[type="file"] {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; cursor: pointer;
+        }
+        .upload-icon { font-size: 36px; color: #4a5568; margin-bottom: 8px; }
+        .upload-text { font-size: 14px; font-weight: bold; color: #718096; line-height: 1.5; }
+
+        /* 🌳 สรุปผลคาร์บอนและเปรียบเทียบต้นไม้ */
+        .carbon-display {
+            font-size: 64px;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin: 20px 0 5px 0;
+            text-align: center;
+        }
+        .carbon-unit {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-main);
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        .tree-badge {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 45px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            text-align: left;
+        }
+        .tree-badge img { width: 50px; height: 50px; }
+        .tree-text { font-size: 15px; font-weight: 700; color: #2d3748; line-height: 1.5; }
+
+        /* 🔘 ระบบปุ่มนำทางด้านล่าง */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 20px;
+        }
+        .btn-back {
+            font-size: 18px;
+            font-weight: 800;
+            color: #718096;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px 0;
+        }
+        .btn-next, .btn-action-submit {
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 18px;
+            font-weight: 800;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(20, 63, 36, 0.15);
+        }
+        .btn-action-submit { width: 100%; padding: 16px; border-radius: 35px; }
+        .btn-next:disabled { background-color: #cbd5e0; cursor: not-allowed; box-shadow: none; }
+
+        .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .form-label { display: block; font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <div class="top-bar">🌱 บัญชีขยะดิจิทัล</div>
+
+    <!-- ================== STEP 1: เลือกประเภทขยะหลัก ================== -->
+    <div id="step1">
+        <h2>เลือกประเภทขยะ</h2>
+        <div class="card-grid">
+            <div class="choice-card" onclick="selectMainType('ขยะพลาสติก')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2666/2666631.png" alt="พลาสติก">
+                <div class="label">พลาสติก</div>
+            </div>
+            <div class="choice-card" onclick="selectMainType('ขยะกระดาษ')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2541/2541991.png" alt="กระดาษ">
+                <div class="label">กระดาษ</div>
+            </div>
+            <div class="choice-card" onclick="selectMainType('ขยะแก้ว')">
+                <img src="https://cdn-icons-png.flaticon.com/512/3100/3100566.png" alt="แก้ว">
+                <div class="label">แก้ว</div>
+            </div>
+            <div class="choice-card" onclick="selectMainType('ขยะอลูมิเนียม')">
+                <img src="https://cdn-icons-png.flaticon.com/512/2653/2653504.png" alt="อลูมิเนียม">
+                <div class="label">อลูมิเนียม</div>
+            </div>
+        </div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="closeLiffWindow()">ย้อนกลับ</button>
+        </div>
+    </div>
+
+    <!-- ================== STEP 2: เลือกประเภทย่อย ================== -->
+    <div id="step2" class="hidden">
+        <h2 id="subTypeHeader">ประเภทย่อย</h2>
+        <div class="card-grid" id="subTypeContainer">
+            <!-- ปุ่มหมวดย่อยจะเจนที่นี่ -->
+        </div>
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="changeStep(1)">ย้อนกลับ</button>
+        </div>
+    </div>
+
+    <!-- ================== STEP 3: ระบุน้ำหนักและหลักฐานรูปถ่าย ================== -->
+    <div id="step3" class="hidden">
+        <h2>ระบุน้ำหนักและหลักฐาน</h2>
+        
+        <div style="margin-bottom: 20px;">
+            <div class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+                <span>ระบุน้ำหนัก (กก.)</span>
+                <label style="font-size:14px; font-weight:normal; display:flex; align-items:center; gap:4px; color: var(--text-main);">
+                    <input type="checkbox" id="noWeight" onchange="toggleNoWeight()"> ไม่ทราบน้ำหนัก
+                </label>
+            </div>
+            <div class="weight-box">
+                <input type="number" id="weight" class="weight-input" step="0.01" value="0.00" min="0.01" oninput="validateWeightAndPhoto()">
+            </div>
+        </div>
+
+        <div class="btn-quick-wrap">
+            <button class="btn-quick" onclick="addWeight(1.0)">+1.0</button>
+            <button class="btn-quick" onclick="addWeight(0.5)">+0.5</button>
+            <button class="btn-quick" onclick="addWeight(-0.5)">-0.5</button>
+            <button class="btn-quick" onclick="clearWeight()">ล้างค่า</button>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label class="form-label">แนบรูปถ่ายขยะ</label>
+            <div class="photo-upload-zone">
+                <div class="upload-icon">📷</div>
+                <div class="upload-text" id="uploadStatusText">ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span></div>
+                <input type="file" id="imageFile" accept="image/*" onchange="processPhotoSelection()">
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <button class="btn-back" onclick="changeStep(2)">ย้อนกลับ</button>
+            <button class="btn-next" id="toStep4Btn" disabled onclick="processCarbonCalculationAndMove()">ถัดไป</button>
+        </div>
+    </div>
+
+    <!-- ================== STEP 4: หน้าสรุปผลลัพธ์คาร์บอนฟุตพริ้นท์ ================== -->
+    <div id="step4" class="hidden">
+        <h2>สรุปผลคาร์บอน</h2>
+        <div class="text-center" style="font-weight: bold; font-size: 16px;">คุณช่วยลดการปล่อยก๊าซเรือนกระจกได้</div>
+        
+        <div class="carbon-display" id="finalCarbon">0.0</div>
+        <div class="carbon-unit">kgCO2e</div>
+
+        <div class="tree-badge">
+            <img src="https://cdn-icons-png.flaticon.com/512/489/489969.png" alt="ต้นไม้">
+            <div class="tree-text" id="treeCompareText">เทียบเท่าคุณช่วยบางกะเจ้า<br>ปลูกต้นไม้เพิ่ม 0 ต้นแล้ว!</div>
+        </div>
+
+        <button class="btn-action-submit" id="finalSubmitBtn" onclick="sendDataToGoogleSheet()">ส่งข้อมูลบันทึกขยะ</button>
+        
+        <div class="text-center" id="networkStatus" style="margin-top: 15px; font-weight: bold; color: var(--primary-dark); font-size: 14px;"></div>
+        <br>
+        <button class="btn-back" onclick="changeStep(3)">ย้อนกลับ</button>
+    </div>
+</div>
+
+<script>
+    // 🎯 ท่อส่งตรงเวอร์ชัน /exec ล่าสุดของพี่ฝาง
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzbIa6Ro8gRCLquI2U5iGruFi3lUyFafANlXgvwxtePuvXoCx_Ubv2cjlAVJil1dAnA/exec";
+    let globalUserId = "MOCK_USER_TRASH_123";
+
+    // 📦 คลังข้อมูลประเภทขยะย่อย
+    const subTypeData = {
+        "ขยะพลาสติก": [
+            { name: "ขวดน้ำพลาสติกใส (PET)", img: "https://cdn-icons-png.flaticon.com/512/3050/3050181.png", factor: 2.15 },
+            { name: "ขวดน้ำพลาสติกขุ่น (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/9133/9133884.png", factor: 2.05 },
+            { name: "ฝาขวดพลาสติก (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/6253/6253018.png", factor: 1.95 }
+        ],
+        "ขยะกระดาษ": [
+            { name: "กระดาษลัง/กล่องเก่า", img: "https://cdn-icons-png.flaticon.com/512/2855/2855546.png", factor: 1.12 },
+            { name: "สมุด/กระดาษขาวดำ", img: "https://cdn-icons-png.flaticon.com/512/2324/2324623.png", factor: 0.98 }
+        ],
+        "ขยะแก้ว": [
+            { name: "ขวดแก้วใส/แก้วน้ำ", img: "https://cdn-icons-png.flaticon.com/512/3100/3100566.png", factor: 0.28 },
+            { name: "เศษกระจก/ขวดแก้วสี", img: "https://cdn-icons-png.flaticon.com/512/2157/2157077.png", factor: 0.20 }
+        ],
+        "ขยะอลูมิเนียม": [
+            { name: "กระป๋องอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/2653/2653504.png", factor: 9.10 },
+            { name: "เศษเหล็ก/โลหะอื่นๆ", img: "https://cdn-icons-png.flaticon.com/512/2525/2525700.png", factor: 3.50 }
+        ]
+    };
+
+    var selectedMain = "";
+    var selectedSub = "";
+    var currentFactor = 0;
+    var photoBase64 = "";
+    var photoType = "";
+
+    // เรียกเปิดสิทธิ์ LINE LIFF SDK
+    if (typeof liff !== 'undefined') {
+        liff.init({ liffId: "2010255862-LZnK22cW" }).then(() => {
+            if (liff.isLoggedIn()) {
+                liff.getProfile().then(p => {
+                    if(p.userId) {
+                        globalUserId = p.userId;
+                    }
+                });
+            }
+        }).catch(err => console.log(err));
+    }
+
+    // ฟังก์ชันสั่งสลับหน้าจอ (Step)
+    function changeStep(stepNum) {
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('step2').classList.add('hidden');
+        document.getElementById('step3').classList.add('hidden');
+        document.getElementById('step4').classList.add('hidden');
+        document.getElementById('step' + stepNum).classList.remove('hidden');
+    }
+
+    // เจนปุ่มตัวเลือกย่อยเมื่อกดเลือกหมวดหลัก
+    function selectMainType(mainName) {
+        selectedMain = mainName;
+        const container = document.getElementById('subTypeContainer');
+        document.getElementById('subTypeHeader').innerText = "ประเภท" + mainName.replace("ขยะ", "");
+        container.innerHTML = "";
+
+        subTypeData[mainName].forEach(sub => {
+            container.innerHTML += `
+                <div class="choice-card" onclick="selectSubType('${sub.name}', ${sub.factor})">
+                    <img src="${sub.img}">
+                    <div class="label">${sub.name}</div>
+                </div>
+            `;
+        });
+        changeStep(2);
+    }
+
+    function selectSubType(subName, factor) {
+        selectedSub = subName;
+        currentFactor = factor;
+        changeStep(3);
+        validateWeightAndPhoto();
+    }
+
+    function addWeight(val) {
+        const input = document.getElementById('weight');
+        let current = parseFloat(input.value) || 0;
+        current = Math.max(0, current + val);
+        input.value = current.toFixed(2);
+        validateWeightAndPhoto();
+    }
+
+    function clearWeight() {
+        document.getElementById('weight').value = "0.00";
+        validateWeightAndPhoto();
+    }
+
+    function toggleNoWeight() {
+        const isChecked = document.getElementById('noWeight').checked;
+        const input = document.getElementById('weight');
+        if (isChecked) {
+            input.value = "0.10";
+            input.disabled = true;
+        } else {
+            input.value = "0.00";
+            input.disabled = false;
+        }
+        validateWeightAndPhoto();
+    }
+
+    function processPhotoSelection() {
+        const fileInput = document.getElementById('imageFile');
+        const statusText = document.getElementById('uploadStatusText');
+        
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            statusText.innerText = "⏳ กำลังประมวลผลรูปถ่าย: " + file.name;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                photoBase64 = e.target.result.split(',')[1];
+                photoType = file.type;
+                statusText.innerHTML = "✅ แนบรูปสำเร็จแล้ว<br><span style='font-size:12px;color:#143F24; font-weight:bold;'>พร้อมไปต่อ</span>";
+                validateWeightAndPhoto();
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function validateWeightAndPhoto() {
+        const weight = parseFloat(document.getElementById('weight').value) || 0;
+        const hasPhoto = photoBase64 !== "";
+        document.getElementById('toStep4Btn').disabled = !(weight > 0 && hasPhoto);
+    }
+
+    function processCarbonCalculationAndMove() {
+        const weight = parseFloat(document.getElementById('weight').value) || 0;
+        const carbonSaved = weight * currentFactor;
+        const treeCount = Math.max(1, Math.round(carbonSaved / 9.5));
+
+        document.getElementById('finalCarbon').innerText = carbonSaved.toFixed(1);
+        document.getElementById('treeCompareText').innerHTML = `เทียบเท่าคุณช่วยบางกะเจ้า<br>ปลูกต้นไม้เพิ่ม ${treeCount} ต้นแล้ว!`;
+        changeStep(4);
+    }
+
+    function sendDataToGoogleSheet() {
+        const btn = document.getElementById('finalSubmitBtn');
+        const status = document.getElementById('networkStatus');
+        
+        btn.disabled = true;
+        status.innerText = "⏳ กำลังส่งข้อมูล...";
+
+        const formData = new FormData();
+        formData.append("action", "trash");
+        formData.append("lineUserId", globalUserId);
+        formData.append("mainType", selectedMain);
+        formData.append("subType", selectedSub);
+        formData.append("weight", document.getElementById('weight').value);
+        formData.append("carbonAmount", document.getElementById('finalCarbon').innerText);
+        formData.append("imageData", photoBase64);
+        formData.append("imageMimeType", photoType);
+
+        fetch(scriptUrl, {
+            method: "POST",
+            mode: "no-cors",
+            body: formData
+        })
+        .then(() => {
+            status.innerText = "🎉 บันทึกสำเร็จเรียบร้อย!";
+            alert("🎉 บันทึกข้อมูลขยะและรูปถ่ายเข้าคลังบางกะเจ้าเสร็จสมบูรณ์แล้วค่ะ!");
+            
+            photoBase64 = ""; 
+            photoType = "";
+            document.getElementById('weight').value = "0.00";
+            document.getElementById('noWeight').checked = false;
+            document.getElementById('weight').disabled = false;
+            document.getElementById('imageFile').value = "";
+            document.getElementById('uploadStatusText').innerHTML = `ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span>`;
+            
+            changeStep(1);
+            btn.disabled = false;
+            status.innerText = "";
+        })
+        .catch(err => {
+            status.innerText = "❌ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง";
+            btn.disabled = false;
+        });
+    }
+
+    function closeLiffWindow() {
+        if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
+            liff.closeWindow();
+        }
+    }
+</script>
+
+</body>
+</html>
