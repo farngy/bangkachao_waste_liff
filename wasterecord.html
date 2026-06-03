@@ -99,13 +99,12 @@
     <div class="app-header">
         <div style="font-size:20px; color:var(--primary-dark);">☰</div>
         <div class="user-meta">
-            <span id="headerName">somwang</span>
+            <span id="headerName">กำลังโหลดข้อมูล...</span>
             <span class="badge-status">🏅 นักอนุรักษ์มือใหม่</span>
             <div class="avatar">👤</div>
         </div>
     </div>
 
-    <!-- 🌐 หน้าจอที่ 1: เลือกประเภทขยะหลัก (Category Selection) -->
     <div id="step1">
         <h2>เลือกประเภทขยะ</h2>
         <div class="category-grid">
@@ -129,14 +128,12 @@
         <div class="footer-nav"><button class="btn-back" onclick="closeLiffWindow()">ปิดหน้าต่าง</button></div>
     </div>
 
-    <!-- 🌐 หน้าจอที่ 2: เลือกประเภทย่อยพร้อมรูปภาพประกอบชัดเจนสวยงาม -->
     <div id="step2" class="hidden">
         <h2 id="subTitleHeader">ประเภทขยะ</h2>
         <div class="sub-category-list" id="subCategoryContainer"></div>
         <div class="footer-nav"><button class="btn-back" onclick="goBackTo(1)">⬅️ ย้อนกลับ</button></div>
     </div>
 
-    <!-- 🌐 หน้าจอที่ 3: ระบุน้ำหนักและหลักฐานรูปถ่าย (Data Input) -->
     <div id="step3" class="hidden">
         <h2>ระบุน้ำหนักและหลักฐาน</h2>
         <div class="weight-ui-box">
@@ -153,183 +150,4 @@
             </label>
 
             <div class="photo-box" onclick="document.getElementById('cameraFile').click()">
-                <img src="https://cdn-icons-png.flaticon.com/512/685/685655.png" style="width:45px;" alt="กล้อง">
-                <p style="margin:8px 0 0 0; font-weight:800; color:var(--primary-dark);">ถ่ายรูปขยะ</p>
-                <span>(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span>
-                <input type="file" id="cameraFile" class="hidden" accept="image/*" onchange="previewImages(this)">
-            </div>
-            <div class="preview-box" id="imgPreviewWrapper"></div>
-        </div>
-        <div class="footer-nav">
-            <button class="btn-next" onclick="submitToGoogleSheet()">ถัดไป ➡️</button>
-            <button class="btn-back" onclick="goBackTo(2)">ย้อนกลับ</button>
-        </div>
-    </div>
-
-    <!-- 🌐 หน้าจอที่ 4: สรุปผลคาร์บอนเครดิตแลนด์สเคปสวยงาม (Summary & Submission) -->
-    <div id="step4" class="hidden" style="text-align:center;">
-        <h2>สรุปผลคาร์บอน</h2>
-        <p style="font-size:16px; font-weight:700; color:#4a5568; margin:0;">คุณช่วยลดการปล่อยก๊าซเรือนกระจกได้</p>
-        <div class="carbon-num" id="carbonDisplay">0.00</div>
-        <span style="font-size:22px; font-weight:900; color:var(--primary-dark)">kgCO2e</span>
-
-        <div class="tree-badge">
-            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921820.png" style="width:45px">
-            <span>เทียบเท่าคุณช่วยบางกะเจ้า<br><strong style="color:#143F24;" id="treeText">ปลูกต้นไม้เพิ่ม 0 ต้นแล้ว!</strong></span>
-        </div>
-
-        <div class="footer-nav">
-            <button class="btn-next" style="background:#06C755" onclick="closeLiffWindow()">ส่งข้อมูลบันทึกขยะ</button>
-        </div>
-    </div>
-</div>
-
-<!-- 📦 ฟอร์มลับทำหน้าที่ถล่มผ่านบล็อกประตูความปลอดภัยเพื่อหยอดค่าลง Google Sheets ของพี่แฟง -->
-<form id="hiddenForm" method="POST" target="hiddenFrame" style="display:none;">
-    <input type="hidden" name="action" value="saveGarbage">
-    <input type="hidden" name="userId" id="hideUserId">
-    <input type="hidden" name="main_category" id="hideMainCat">
-    <input type="hidden" name="sub_category" id="hideSubCat">
-    <input type="hidden" name="weight_kg" id="hideWeight">
-    <input type="hidden" name="image_url" value="https://learn-do-storage.local/evidence.jpg">
-</form>
-<iframe name="hiddenFrame" style="display:none;"></iframe>
-
-<script>
-    // 🔗 เปลี่ยนแทนค่าพิกัด Web App URL ตัวปัจจุบันของพี่แฟง
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYpashQVDeva0koyTDw89r3lbB5HAPAnpk9dwLfvqdFedGKn6eVtbptJnUGFaN5I0/exec";
-    const LIFF_ID = "2010255862-LZnK22cW"; 
-
-    let globalUserId = "MOCK_USER_ID_123";
-    let selectedMainCat = "";
-    let selectedSubCat = "";
-    let currentWeight = 0.0;
-    let isWeightUnknown = false;
-
-    // คลังรูปภาพประเภทย่อย คัดสรรมาแบบพรีเมียม สวย เข้าใจง่าย เหมาะกับผู้สูงอายุ
-    const subRepository = {
-        "พลาสติก (Plastic)": [
-            { name: "ขวดน้ำพลาสติกใส (PET)", img: "https://cdn-icons-png.flaticon.com/512/3081/3081971.png" },
-            { name: "ขวดน้ำพลาสติกขุ่น (HDPE) (บีทาเก้น, ดีไลท์, แกลลอนน้ำยาล้างจาน)", img: "https://cdn-icons-png.flaticon.com/512/9380/9380993.png" },
-            { name: "ฝาขวดพลาสติก (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/6122/6122240.png" }
-        ],
-        "กระดาษ (Paper)": [
-            { name: "กระดาษลัง", img: "https://cdn-icons-png.flaticon.com/512/2329/2329173.png" },
-            { name: "กระดาษสีขาว/เอกสาร (A4)", img: "https://cdn-icons-png.flaticon.com/512/3388/3388043.png" },
-            { name: "กระดาษนิตยสาร/หนังสือพิมพ์", img: "https://cdn-icons-png.flaticon.com/512/2965/2965873.png" }
-        ],
-        "แก้ว (Glass)": [
-            { name: "ขวดแก้วชนิดเดียวกัน (ครบลัง)", img: "https://cdn-icons-png.flaticon.com/512/3050/3050186.png" },
-            { name: "ขวดแก้วรวม", img: "https://cdn-icons-png.flaticon.com/512/10410/10410065.png" }
-        ],
-        "อลูมิเนียม": [
-            { name: "กระป๋องอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/1996/1996841.png" },
-            { name: "ฝาอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/4616/4616656.png" },
-            { name: "เศษอลูมิเนียมอื่นๆ", img: "https://cdn-icons-png.flaticon.com/512/2723/2723363.png" }
-        ]
-    };
-
-    if (typeof liff !== 'undefined' && LIFF_ID !== "") {
-        liff.init({ liffId: LIFF_ID }).then(async () => {
-            if (!liff.isLoggedIn()) { liff.login(); } else {
-                const p = await liff.getProfile();
-                if (p && p.userId) { 
-                    globalUserId = p.userId;
-                    document.getElementById('headerName').innerText = p.displayName || "อาสาสมัคร";
-                }
-            }
-        }).catch(err => console.error(err));
-    }
-
-    function selectMainCategory(cat) {
-        selectedMainCat = cat;
-        document.getElementById('subTitleHeader').innerText = "ประเภท" + cat.split(" ")[0];
-        const container = document.getElementById('subCategoryContainer');
-        container.innerHTML = "";
-
-        subRepository[cat].forEach(item => {
-            let div = document.createElement('div');
-            div.className = "sub-card";
-            div.onclick = () => selectSubCategory(item.name);
-            div.innerHTML = `<img class="sub-img" src="${item.img}"><span>${item.name}</span>`;
-            container.appendChild(div);
-        });
-        switchStep(1, 2);
-    }
-
-    function selectSubCategory(sub) {
-        selectedSubCat = sub;
-        switchStep(2, 3);
-    }
-
-    function modifyWeight(val) {
-        if(isWeightUnknown) return;
-        currentWeight = Math.max(0, currentWeight + val);
-        document.getElementById('weightText').innerText = currentWeight.toFixed(1);
-    }
-
-    function handleUnknownCheckbox(chk) {
-        isWeightUnknown = chk.checked;
-        const txt = document.getElementById('weightText');
-        if (isWeightUnknown) {
-            txt.innerText = "ไม่ระบุ"; currentWeight = 0;
-        } else {
-            currentWeight = 0.0; txt.innerText = "0.0";
-        }
-    }
-
-    function previewImages(input) {
-        const wrapper = document.getElementById('imgPreviewWrapper');
-        wrapper.innerHTML = "";
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                wrapper.innerHTML = `<img src="${e.target.result}" class="preview-img">`;
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function submitToGoogleSheet() {
-        const form = document.getElementById('hiddenForm');
-        form.action = SCRIPT_URL; // ฝังพิกัดท่อปลายทาง
-        
-        // ผูกแมตช์ค่าลง Form ลับเพื่อเตรียมกดสลักส่ง
-        document.getElementById('hideUserId').value = globalUserId;
-        document.getElementById('hideMainCat').value = selectedMainCat;
-        document.getElementById('hideSubCat').value = selectedSubCat;
-        document.getElementById('hideWeight').value = isWeightUnknown ? "ไม่ทราบน้ำหนัก" : currentWeight;
-
-        // คำสั่งเด็ด: สั่งยิงข้อมูลฝ่าด่านทะลุไปหาชีทวงใหม่ทันที
-        form.submit();
-
-        // ระบุประเมินผลลัพธ์คาร์บอนโชว์หน้าปิดจ๊อบ
-        let ef = 0;
-        if (selectedMainCat === "พลาสติก (Plastic)") ef = 1.0310;
-        else if (selectedMainCat === "กระดาษ (Paper)") ef = 3.5460;
-        else if (selectedMainCat === "แก้ว (Glass)") ef = 0.2760;
-        else if (selectedMainCat === "อลูมิเนียม") ef = 9.1270;
-
-        let carbonSaved = currentWeight * ef;
-        document.getElementById('carbonDisplay').innerText = carbonSaved.toFixed(2);
-        
-        let treeCount = Math.ceil(carbonSaved / 9.5);
-        document.getElementById('treeText').innerText = `ปลูกต้นไม้เพิ่ม ${treeCount || 0} ต้นแล้ว!`;
-
-        switchStep(3, 4);
-    }
-
-    function switchStep(from, to) {
-        document.getElementById('step' + from).classList.add('hidden');
-        document.getElementById('step' + to).classList.remove('hidden');
-    }
-
-    function goBackTo(step) {
-        if(step === 1) switchStep(2, 1);
-        if(step === 2) switchStep(3, 2);
-    }
-
-    function closeLiffWindow() { if (typeof liff !== 'undefined') { liff.closeWindow(); } }
-</script>
-</body>
-</html>
+                <img src="https://cdn-icons-png.
