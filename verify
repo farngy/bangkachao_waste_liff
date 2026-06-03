@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>เจ้าหน้าที่ตรวจบิลขยะ - บางกะเจ้า</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        :root {
+            --primary-dark: #143F24;     /* สีเขียวเข้มพรีเมียม */
+            --primary-green: #2d6a4f;    /* สีเขียวแบรนด์หลัก */
+            --accent-gold: #b3925c;      /* สีทอง luxury */
+            --bg-light: #F4F6F5;         /* สีพื้นหลังกล่อง */
+            --text-main: #2d3748;        /* สีข้อความหลัก */
+            --border-color: #E8ECE9;     /* สีเส้นขอบ */
+        }
+
+        * { touch-action: manipulation; -webkit-text-size-adjust: none; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-main); background-color: #e9ecef; margin: 0; padding: 0;
+            display: flex; justify-content: center; min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 100%; max-width: 450px; background: #FFFFFF; padding: 24px;
+            display: flex; flex-direction: column; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .top-bar {
+            text-align: center; padding-bottom: 12px; border-bottom: 2px solid var(--bg-light);
+            margin-bottom: 20px; font-size: 20px; font-weight: 800; color: var(--primary-dark);
+        }
+
+        /* ❌ กล่องเตือนสิทธิ์พัง (คนนอกแอบสแกน) */
+        .access-denied-box {
+            text-align: center; padding: 40px 10px; margin: auto 0;
+        }
+        .warning-icon { font-size: 56px; color: #e53e3e; margin-bottom: 15px; }
+        .warning-title { font-size: 22px; font-weight: 800; color: #e53e3e; margin-bottom: 10px; }
+        .warning-desc { font-size: 15px; color: #718096; line-height: 1.5; }
+
+        /* 🟢 หน้าจอบิล (ผู้รับซื้อตัวจริงสแกนเข้ามา) */
+        .bill-header {
+            background-color: var(--bg-light); border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 16px; margin-bottom: 20px;
+        }
+        .bill-header h4 { margin: 0 0 6px 0; font-size: 16px; font-weight: 800; color: var(--primary-dark); }
+        .bill-header p { margin: 0; font-size: 13px; color: #718096; font-weight: 600; }
+
+        .items-list-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        
+        .item-row {
+            border: 1px solid var(--border-color); border-radius: 14px; padding: 14px;
+            background: #ffffff; display: flex; justify-content: space-between; align-items: center;
+        }
+        .item-info { display: flex; flex-direction: column; gap: 4px; }
+        .item-title { font-size: 15px; font-weight: 800; color: var(--text-main); }
+        .item-date { font-size: 12px; color: #a0aec0; font-weight: 600; }
+        
+        .item-control-right { text-align: right; display: flex; align-items: center; gap: 10px; }
+        
+        /* ช่องกรอกให้คนซื้อแก้ไขน้ำหนักหน้างานหากชั่งแล้วไม่ตรง */
+        .edit-weight-input {
+            width: 80px; padding: 8px; font-size: 16px; font-weight: 800;
+            color: var(--primary-dark); text-align: center;
+            border: 2px solid #cbd5e0; border-radius: 8px; background: #fff;
+        }
+
+        .btn-verify-submit {
+            background-color: var(--primary-dark); color: white; border: none;
+            width: 100%; padding: 16px; font-size: 18px; font-weight: 800;
+            border-radius: 35px; cursor: pointer; box-shadow: 0 6px 16px rgba(20, 63, 36, 0.15);
+            margin-top: auto;
+        }
+        .btn-verify-submit:disabled { background-color: #cbd5e0; cursor: not-allowed; box-shadow: none; }
+
+        .hidden { display: none !important; }
+        .status-loading { text-align: center; padding: 50px 0; font-weight: bold; color: #a0aec0; }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <div class="top-bar">🌱 ระบบตรวจบิลผู้รับซื้อ</div>
+
+    <div id="loadingView" class="status-loading">
+        ⏳ กำลังตรวจสอบสิทธิ์ผู้รับซื้อขยะเชิงดิจิทัล...
+    </div>
+
+    <div id="deniedView" class="access-denied-box hidden">
+        <div class="warning-icon">🔒</div>
+        <div class="warning-title">ปฏิเสธการเข้าถึงระบบ</div>
+        <div class="warning-desc">
+            ขออภัยค่ะ หน้าต่างตรวจสรุปยอดและยืนยันรับซื้อนี้<br>
+            อนุญาตเฉพาะเจ้าหน้าที่ผู้รับซื้อขยะ<br>
+            ที่ลงทะเบียนถูกต้องกับโครงการคุ้งบางกะเจ้าเท่านั้นค่ะ
+        </div>
+        <br><br>
+        <button type="button" style="background:none; border:none; color:#718096; font-weight:bold; cursor:pointer;" onclick="closeLiffWindow()">✖ ปิดหน้าต่าง</button>
+    </div>
+
+    <div id="grantedView" class="hidden" style="display: flex; flex-direction: column; flex-grow: 1;">
+        <div class="bill-header">
+            <h4 id="citizenName">บิลขยะคุณ: กำลังโหลดชื่อ...</h4>
+            <p id="citizenIdString">รหัสสมาชิก: -</p>
+        </div>
+
+        <h3 style="font-size:16px; font-weight:800; color:var(--primary-dark); margin:0 0 12px 0;">📦 รายการขยะสะสมที่รอการตรวจสอบ</h3>
+        
+        <div class="items-list-container" id="billItemsContainer">
+            </div>
+
+        <button type="button" class="btn-verify-submit" id="submitVerifyBtn" onclick="approveAndVerifyTransaction()">
+            📝 ยืนยันการรับซื้อและปิดยอดบิล
+        </button>
+    </div>
+</div>
+
+<script>
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbzbIa6Ro8gRCLquI2U5iGruFi3lUyFafANlXgvwxtePuvXoCx_Ubv2cjlAVJil1dAnA/exec";
+    
+    // ดึงรหัสพารามิเตอร์ท้ายลิงก์ QR จากชาวบ้านคนขาย
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetCitizenUserId = urlParams.get('userId') || "MOCK_CITIZEN_123";
+    const targetSequenceNo = urlParams.get('regNo') || "0000000";
+
+    let buyerUserId = "MOCK_BUYER_777"; // ไอดีไลน์คนรับซื้อ (คนสแกน)
+    let buyerName = "ร้านรับซื้อบางกอบัว";
+    let pendingRowsCache = []; // คลังเก็บเลขแถวเพื่อส่งไปแสตมป์คำสั่งตัดยอดในชีท
+
+    // รันสิทธิ์ LINE LIFF SDK ดึงโปรไฟล์คนสแกน
+    if (typeof liff !== 'undefined') {
+        liff.init({ liffId: "2010255862-aZKhXa7N" }) // รันภายใต้ท่อแอปตัวเดียวกันสับรางสะดวกกว่า
+            .then(function() {
+                if (liff.isLoggedIn()) {
+                    liff.getProfile().then(function(profile) {
+                        if (profile && profile.userId) {
+                            buyerUserId = profile.userId;
+                            verifyBuyerRoleAndLoadBill(); // ยิงเช็กด่านสิทธิ์คนซื้อทันที
+                        }
+                    });
+                } else {
+                    liff.login();
+                }
+            })
+            .catch(function(err) {
+                console.log(err);
+                showMockGrantedView(); // กรณีเทสบนคอมโชว์ผ่านฉลุยสเตปดีไซน์
+            });
+    } else {
+        showMockGrantedView();
+    }
+
+    // 📡 ยิงท่อตรวจสิทธิ์คนสแกน + โหลดขยะของชาวบ้าน
+    function verifyBuyerRoleAndLoadBill() {
+        fetch(scriptUrl + "?action=getVerifyBill&buyerId=" + buyerUserId + "&citizenId=" + targetCitizenUserId)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('loadingView').classList.add('hidden');
+                
+                if (data.status === "denied") {
+                    // ด่านจับได้: คนสแกนไม่มีชื่ออยู่ใน 20 คนรับซื้อ สั่งล็อกจอดำทันที!
+                    document.getElementById('deniedView').classList.remove('hidden');
+                } else if (data.status === "success") {
+                    // ด่านอนุมัติ: สิทธิ์ผ่าน และดึงรายการขยะขาค้างขึ้นมาโชว์
+                    buyerName = data.buyerName;
+                    document.getElementById('grantedView').classList.remove('hidden');
+                    document.getElementById('citizenName').innerText = "บิลขยะคุณ: " + (data.citizenName || "อาสาสมัครสิ่งแวดล้อม");
+                    document.getElementById('citizenIdString').innerText = "รหัสสมาชิก: NO." + targetSequenceNo;
+
+                    renderBillItems(data.pendingItems);
+                }
+            })
+            .catch(err => {
+                document.getElementById('loadingView').innerText = "❌ ระบบคลาวด์ขัดข้อง กรุณาลองใหม่อีกครั้งค่ะ";
+            });
+    }
+
+    // ลูปวาดรายการขยะในบิลพร้อมช่องให้คีย์แก้ไขน้ำหนักหน้างานได้จริง
+    function renderBillItems(items) {
+        const container = document.getElementById('billItemsContainer');
+        if(!items || items.length === 0) {
+            container.innerHTML = `<div style="text-align:center; color:#718096; padding:30px; font-weight:bold; font-size:15px;">🎉 ยอดบิลเป็นศูนย์!<br>ไม่มีขยะค้างตรวจรับซื้อในระบบแล้วค่ะ</div>`;
+            document.getElementById('submitVerifyBtn').disabled = true;
+            return;
+        }
+
+        container.innerHTML = "";
+        pendingRowsCache = [];
+
+        items.forEach((item, index) => {
+            // บันทึกเลขบรรทัดแถวของ Google Sheet ตัวจริงเก็บไว้ส่งตัดยอด
+            pendingRowsCache.push(item.sheetRowIndex);
+
+            container.innerHTML += `
+                <div class="item-row">
+                    <div class="item-info">
+                        <div class="item-title">${item.subType}</div>
+                        <div class="item-date">📅 คีย์สะสม: ${item.date}</div>
+                    </div>
+                    <div class="item-control-right">
+                        <input type="number" class="edit-weight-input" id="weightRow_${item.sheetRowIndex}" step="0.01" value="${item.weight}">
+                        <span style="font-weight:bold; font-size:14px; color:var(--primary-dark);">กก.</span>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    // 📝 ส่งคำสั่ง Verified ย้อนกลับไปเขียนทับแสตมป์ปิดจ๊อบบิลใน Google Sheet
+    function approveAndVerifyTransaction() {
+        const btn = document.getElementById('submitVerifyBtn');
+        btn.innerText = "⏳ กำลังบันทึกปิดบิลลง Google Sheet...";
+        btn.disabled = true;
+
+        // รวบรวมค่าน้ำหนักล่าสุดจากทุกช่องกรอก (เผื่อคนรับซื้อแก้ไขหน้างาน)
+        const updatedWeightsList = [];
+        pendingRowsCache.forEach(rowIdx => {
+            const val = document.getElementById("weightRow_" + rowIdx).value;
+            updatedWeightsList.push(val);
+        });
+
+        const formData = new FormData();
+        formData.append("action", "verifyBillComplete");
+        formData.append("buyerName", buyerName); // ส่งชื่อคนซื้อไปแสตมป์ช่องคอลัมน์ตรวจสอบ
+        formData.append("rowIndexes", pendingRowsCache.join(",")); // ส่งชุดเลขแถวที่ต้องปิดจ๊อบ เช่น "3,4,7"
+        formData.append("weightsList", updatedWeightsList.join(","));   // ส่งค่าน้ำหนักอัปเดตหน้างาน
+
+        fetch(scriptUrl, { method: "POST", mode: "no-cors", body: formData })
+        .then(() => {
+            alert("🎉 ปิดยอดธุรกรรมรับซื้อขยะสำเร็จเรียบร้อยแล้วค่ะ! ข้อมูลถูกตัดออกจากระบบคลังสะสมเรียบร้อยแล้วค่ะ");
+            closeLiffWindow(); // ดีดหน้าจอมือถือคนซื้อวาร์ปกลับเข้าแชท LINE ทันทีตามสั่ง!
+        })
+        .catch(err => {
+            alert("❌ ระบบขัดข้อง กรุณากดลองใหม่อีกครั้ง");
+            btn.disabled = false;
+            btn.innerText = "📝 ยืนยันการรับซื้อและปิดยอดบิล";
+        });
+    }
+
+    // ฟังก์ชันรันโมเดลทดสอบโครงสร้างบนคอมพิวเตอร์นอกไลน์แชท
+    function showMockGrantedView() {
+        document.getElementById('loadingView').classList.add('hidden');
+        document.getElementById('grantedView').classList.remove('hidden');
+        document.getElementById('citizenName').innerText = "บิลคุณ: วรรณเพ็ญ แซ่เพียร (โหมดทดสอบ)";
+        document.getElementById('citizenIdString').innerText = "รหัสสมาชิก: NO.0000005";
+
+        const mockItems = [
+            { sheetRowIndex: 3, subType: "ขวดน้ำพลาสติกใส (PET)", date: "01 มิ.ย. 2569", weight: "5.50" },
+            { sheetRowIndex: 4, subType: "กระป๋องอลูมิเนียม", date: "24 พ.ค. 2569", weight: "1.20" }
+        ];
+        renderBillItems(mockItems);
+    }
+
+    function closeLiffWindow() {
+        if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
+            liff.closeWindow();
+        }
+    }
+</script>
+
+</body>
+</html>
