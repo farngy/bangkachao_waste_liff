@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>บันทึกขยะดิจิทัล - บางกะเจ้า</title>
+    <!-- เชื่อมต่อ LINE LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         :root {
@@ -55,7 +56,7 @@
             font-weight: 800;
         }
 
-        /* 📱 ปุ่มการ์ดสี่เหลี่ยมตาม UI รูปภาพ */
+        /* 📱 ปุ่มการ์ดสี่เหลี่ยมจัดวางแบบ Grid สมมาตร */
         .card-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -82,8 +83,8 @@
         }
 
         .choice-card img {
-            width: 70px;
-            height: 70px;
+            width: 85px;
+            height: 85px;
             object-fit: contain;
             margin-bottom: 12px;
         }
@@ -95,43 +96,56 @@
             text-align: center;
         }
 
-        /* ⚖️ หน้ากล่องระบุน้ำหนักขยะ */
-        .weight-box {
-            background: var(--bg-light);
-            border: 2px solid var(--primary-dark);
-            border-radius: 14px;
-            padding: 12px;
+        /* ⚖️ แผงควบคุมน้ำหนักแบบ ซ้าย [-] และ ขวา [+] */
+        .weight-control-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn-weight-adjust {
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 16px;
+            box-shadow: 0 4px 10px rgba(20, 63, 36, 0.2);
+            transition: transform 0.1s;
+        }
+        .btn-weight-adjust:active {
+            transform: scale(0.95);
+        }
+
+        .weight-box {
+            flex: 1;
+            background: var(--bg-light);
+            border: 2px solid var(--primary-dark);
+            border-radius: 14px;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 44px;
         }
         .weight-input {
             width: 100%;
             border: none;
             background: transparent;
-            font-size: 38px;
+            font-size: 34px;
             font-weight: 800;
             text-align: center;
             color: var(--primary-dark);
             outline: none;
-        }
-
-        .btn-quick-wrap {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-        .btn-quick {
-            background: #ffffff;
-            border: 1px solid #cbd5e0;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-            cursor: pointer;
-            color: #4a5568;
         }
 
         /* 📸 อัปโหลดรูปสไตล์กรอบเส้นประพรีเมียม */
@@ -204,7 +218,7 @@
             background-color: var(--primary-dark);
             color: white;
             border: none;
-            padding: 12px 35px;
+            padding: 14px 35px;
             font-size: 18px;
             font-weight: 800;
             border-radius: 25px;
@@ -224,23 +238,25 @@
 <div class="phone-container">
     <div class="top-bar">🌱 บัญชีขยะดิจิทัล</div>
 
+    <!-- ================== STEP 1: เลือกประเภทขยะหลัก ================== -->
     <div id="step1">
         <h2>เลือกประเภทขยะ</h2>
         <div class="card-grid">
+            <!-- 🎯 ปรับรูปภาพไอคอนใหม่ตามสเปกหรูหราตรงประเภทจริง -->
             <div class="choice-card" onclick="selectMainType('ขยะพลาสติก')">
-                <img src="https://cdn-icons-png.flaticon.com/512/2666/2666631.png" alt="พลาสติก">
+                <img src="https://i.ibb.co/680L93F/plastic-bottle.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2666/2666631.png'" alt="พลาสติก">
                 <div class="label">พลาสติก</div>
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะกระดาษ')">
-                <img src="https://cdn-icons-png.flaticon.com/512/2541/2541991.png" alt="กระดาษ">
+                <img src="https://i.ibb.co/v4KjSmN/paper-stack.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2855/2855546.png'" alt="กระดาษ">
                 <div class="label">กระดาษ</div>
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะแก้ว')">
-                <img src="https://cdn-icons-png.flaticon.com/512/3100/3100566.png" alt="แก้ว">
+                <img src="https://i.ibb.co/vYm6F66/glass.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3100/3100566.png'" alt="แก้ว">
                 <div class="label">แก้ว</div>
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะอลูมิเนียม')">
-                <img src="https://cdn-icons-png.flaticon.com/512/2653/2653504.png" alt="อลูมิเนียม">
+                <img src="https://i.ibb.co/f4pC0kM/can.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2653/2653504.png'" alt="อลูมิเนียม">
                 <div class="label">อลูมิเนียม</div>
             </div>
         </div>
@@ -249,15 +265,18 @@
         </div>
     </div>
 
+    <!-- ================== STEP 2: เลือกประเภทย่อย ================== -->
     <div id="step2" class="hidden">
         <h2 id="subTypeHeader">ประเภทย่อย</h2>
         <div class="card-grid" id="subTypeContainer">
-            </div>
+            <!-- ปุ่มหมวดย่อยจะเจนที่นี่ -->
+        </div>
         <div class="bottom-nav">
             <button class="btn-back" onclick="changeStep(1)">ย้อนกลับ</button>
         </div>
     </div>
 
+    <!-- ================== STEP 3: ระบุน้ำหนักและหลักฐานรูปถ่าย ================== -->
     <div id="step3" class="hidden">
         <h2>ระบุน้ำหนักและหลักฐาน</h2>
         
@@ -268,16 +287,15 @@
                     <input type="checkbox" id="noWeight" onchange="toggleNoWeight()"> ไม่ทราบน้ำหนัก
                 </label>
             </div>
-            <div class="weight-box">
-                <input type="number" id="weight" class="weight-input" step="0.01" value="0.00" min="0.01" oninput="validateWeightAndPhoto()">
+            
+            <!-- 🎯 ดีไซน์แถวปุ่มปรับบวกลบ ซ้าย-ขวา แบบพรีเมียม (ดักลอจิกไม่ให้ติดลบ) -->
+            <div class="weight-control-row">
+                <button type="button" class="btn-weight-adjust" onclick="stepWeight(-0.5)">−</button>
+                <div class="weight-box">
+                    <input type="number" id="weight" class="weight-input" step="0.01" value="0.00" min="0.00" oninput="validateWeightAndPhoto()">
+                </div>
+                <button type="button" class="btn-weight-adjust" onclick="stepWeight(0.5)">+</button>
             </div>
-        </div>
-
-        <div class="btn-quick-wrap">
-            <button class="btn-quick" onclick="addWeight(1.0)">+1.0</button>
-            <button class="btn-quick" onclick="addWeight(0.5)">+0.5</button>
-            <button class="btn-quick" onclick="addWeight(-0.5)">-0.5</button>
-            <button class="btn-quick" onclick="clearWeight()">ล้างค่า</button>
         </div>
 
         <div style="margin-bottom: 20px;">
@@ -295,6 +313,7 @@
         </div>
     </div>
 
+    <!-- ================== STEP 4: หน้าสรุปผลลัพธ์คาร์บอนฟุตพริ้นท์ ================== -->
     <div id="step4" class="hidden">
         <h2>สรุปผลคาร์บอน</h2>
         <div class="text-center" style="font-weight: bold; font-size: 16px;">คุณช่วยลดการปล่อยก๊าซเรือนกระจกได้</div>
@@ -345,7 +364,6 @@
     var photoBase64 = "";
     var photoType = "";
 
-    // 🎯 อัปเดตผูกตั๋วเข้ากับ LIFF ID ใหม่ของพี่ฝางเรียบร้อยครับ (บรรทัดที่ 187)
     window.onload = function() {
         if (typeof liff !== 'undefined') {
             liff.init({ liffId: "2010255862-aZKhXa7N" })
@@ -400,16 +418,12 @@
         validateWeightAndPhoto();
     }
 
-    function addWeight(val) {
+    // 🎯 ลอจิกกดปรับน้ำหนักแบบ ซ้าย-ขวา (ติดลบไม่ได้ ต่ำสุดกระแทกที่ 0.00)
+    function stepWeight(val) {
         var input = document.getElementById('weight');
         var current = parseFloat(input.value) || 0;
-        current = Math.max(0, current + val);
+        current = Math.max(0, current + val); // ป้องกันการติดลบด้วย Math.max(0, ...)
         input.value = current.toFixed(2);
-        validateWeightAndPhoto();
-    }
-
-    function clearWeight() {
-        document.getElementById('weight').value = "0.00";
         validateWeightAndPhoto();
     }
 
@@ -499,7 +513,7 @@
             status.innerText = "";
         })
         .catch(function(err) {
-            status.innerText = "❌ เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง";
+            status.innerText = "❌ เกิดข้อผิดพลาด กรุณาลองใหมี่อีกครั้ง";
             btn.disabled = false;
         });
     }
