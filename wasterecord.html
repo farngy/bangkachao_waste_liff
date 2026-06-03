@@ -3,93 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧪 หน้าต่างทดสอบระบบส่งข้อมูลด่วน</title>
+    <title>บันทึกข้อมูลขยะ - บัญชีขยะดิจิทัล</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
+        :root {
+            --primary-dark: #143F24;
+            --primary-green: #1b4332;
+            --bg-light: #F4F6F5;
+            --text-main: #2d3748;
+        }
+
         body {
-            font-family: sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-main); background-color: #cbd5e0; margin: 0; padding: 0;
+            display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
         }
-        .test-box {
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 360px;
-            width: 90%;
+
+        .phone-container {
+            width: 100%; max-width: 450px; min-height: 100vh;
+            background: #FFFFFF; box-sizing: border-box; padding: 20px;
+            display: flex; flex-direction: column; position: relative;
         }
-        .btn-danger-test {
-            background-color: #e53e3e;
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            font-size: 24px;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(229, 62, 62, 0.4);
-            width: 100%;
-            margin-top: 20px;
+
+        .app-header {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg-light); padding: 10px 16px; border-radius: 30px; margin-bottom: 25px;
         }
-        .btn-danger-test:active {
-            transform: scale(0.95);
-            background-color: #c53030;
+        .user-meta { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--primary-dark); }
+        .badge-status { background: #319795; color: white; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
+        .avatar { width: 30px; height: 30px; border-radius: 50%; background: #e2e8f0; overflow: hidden; display:flex; align-items:center; justify-content:center; }
+
+        h2 { font-size: 24px; color: var(--primary-dark); text-align: center; font-weight: 800; margin: 0 0 25px 0; }
+
+        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
+        .card-btn {
+            background: #FFFFFF; border: 2px solid #e2e8f0; border-radius: 18px;
+            padding: 24px 12px; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
-        #statusMessage {
-            margin-top: 20px;
-            font-size: 16px;
-            font-weight: bold;
-            color: #4a5568;
+        .card-btn:active { transform: scale(0.96); border-color: var(--primary-dark); background: var(--bg-light); }
+        .card-btn .icon-img { width: 70px; height: 70px; object-fit: contain; }
+        .card-btn span { font-size: 17px; font-weight: 800; color: var(--primary-dark); }
+
+        .sub-category-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
+        .sub-card {
+            background: #FFFFFF; border: 2px solid #e2e8f0; border-radius: 16px;
+            padding: 16px; display: flex; align-items: center; gap: 16px; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
+        .sub-card:active { border-color: var(--primary-dark); background: var(--bg-light); }
+        .sub-card .sub-img { width: 55px; height: 55px; object-fit: contain; }
+        .sub-card span { font-size: 16px; font-weight: 700; color: var(--text-main); text-align: left; line-height: 1.4; }
+
+        .weight-ui-box { text-align: center; }
+        .weight-display { font-size: 45px; font-weight: 900; color: var(--primary-dark); margin: 15px 0; }
+        .counter-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .btn-count {
+            background: var(--primary-dark); color: white; border: none; padding: 12px 14px;
+            font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; min-width: 65px;
+        }
+        .btn-count:active { transform: scale(0.95); }
+        
+        .checkbox-zone { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 17px; font-weight: 700; color: #4a5568; margin-bottom: 30px; cursor: pointer; }
+        .checkbox-zone input { width: 20px; height: 20px; cursor: pointer; }
+
+        .photo-box {
+            border: 2px dashed #cbd5e0; border-radius: 16px; padding: 24px;
+            text-align: center; background: var(--bg-light); cursor: pointer; margin-bottom: 30px;
+        }
+        .photo-box span { display: block; font-size: 14px; color: #718096; margin-top: 6px; font-weight: 600; }
+        .preview-box { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+        .preview-img { width: 80px; height: 80px; object-fit: cover; border-radius: 12px; border: 1px solid #cbd5e0; }
+
+        .footer-nav { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
+        .btn-next { background-color: var(--primary-dark); color: white; border: none; padding: 16px; font-size: 19px; font-weight: 800; border-radius: 30px; cursor: pointer; width: 100%; }
+        .btn-back { background: none; border: none; color: #718096; font-size: 17px; font-weight: 700; padding: 8px; cursor: pointer; }
+
+        .carbon-num { font-size: 75px; font-weight: 900; color: var(--primary-dark); margin: 10px 0; line-height: 1; }
+        .tree-badge { background: var(--bg-light); border: 1px solid #e2e8f0; border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 12px; margin: 25px 0; text-align: left; }
+        .tree-badge span { font-size: 15px; font-weight: 700; color: #4a5568; line-height: 1.4; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="test-box">
-    <h2>🧪 สเต็ปทดสอบท่อส่ง</h2>
-    <p style="color: #718096;">กดปุ่มสีแดงด้านล่าง เพื่อทดลองส่งคำว่า "OK" วิ่งเข้าสู่ตารางสเปรดชีต</p>
-    
-    <button class="btn-danger-test" onclick="sendOkToGoogleSheet()">กดส่ง OK 🚀</button>
-    
-    <div id="statusMessage">สถานะ: รอการกดปุ่ม...</div>
+<div class="phone-container">
+    <div class="app-header">
+        <div style="font-size:20px; color:var(--primary-dark);">☰</div>
+        <div class="user-meta">
+            <span id="headerName">กำลังโหลดข้อมูล...</span>
+            <span class="badge-status">🏅 นักอนุรักษ์มือใหม่</span>
+            <div class="avatar">👤</div>
+        </div>
+    </div>
+
+    <div id="step1">
+        <h2>เลือกประเภทขยะ</h2>
+        <div class="category-grid">
+            <div class="card-btn" onclick="selectMainCategory('พลาสติก (Plastic)')">
+                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/3001/3001669.png" alt="พลาสติก">
+                <span>พลาสติก</span>
+            </div>
+            <div class="card-btn" onclick="selectMainCategory('กระดาษ (Paper)')">
+                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/3143/3143431.png" alt="กระดาษ">
+                <span>กระดาษ</span>
+            </div>
+            <div class="card-btn" onclick="selectMainCategory('แก้ว (Glass)')">
+                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/9180/9180583.png" alt="แก้ว">
+                <span>แก้ว</span>
+            </div>
+            <div class="card-btn" onclick="selectMainCategory('อลูมิเนียม')">
+                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/2666/2666687.png" alt="อลูมิเนียม">
+                <span>อลูมิเนียม</span>
+            </div>
+        </div>
+        <div class="footer-nav"><button class="btn-back" onclick="closeLiffWindow()">ปิดหน้าต่าง</button></div>
+    </div>
+
+    <div id="step2" class="hidden">
+        <h2 id="subTitleHeader">ประเภทขยะ</h2>
+        <div class="sub-category-list" id="subCategoryContainer"></div>
+        <div class="footer-nav"><button class="btn-back" onclick="goBackTo(1)">⬅️ ย้อนกลับ</button></div>
+    </div>
+
+    <div id="step3" class="hidden">
+        <h2>ระบุน้ำหนักและหลักฐาน</h2>
+        <div class="weight-ui-box">
+            <div class="weight-display"><span id="weightText">0.0</span> <span style="font-size:20px; font-weight:700; color:#718096">กก.</span></div>
+            <div class="counter-row">
+                <button class="btn-count" onclick="modifyWeight(-1.0)">-1.0</button>
+                <button class="btn-count" onclick="modifyWeight(-0.5)">-0.5</button>
+                <button class="btn-count" onclick="modifyWeight(0.5)">+0.5</button>
+                <button class="btn-count" onclick="modifyWeight(1.0)">+1.0</button>
+            </div>
+            
+            <label class="checkbox-zone">
+                <input type="checkbox" id="chkUnknown" onchange="handleUnknownCheckbox(this)"> ไม่ทราบน้ำหนักขยะ
+            </label>
+
+            <div class="photo-box" onclick="document.getElementById('cameraFile').click()">
+                <img src="https://cdn-icons-png.flaticon.com/512/685/685655.png" style="width:45px;" alt="กล้อง">
+                <p style="margin:8px 0 0 0; font-weight:800; color:var(--primary-dark);">ถ่ายรูปขยะ</p>
+                <span>(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span>
+                <input type="file" id="cameraFile" class="hidden" accept="image/*" onchange="previewAndPrepareImage(this)">
+            </div>
+            <div class="preview-box" id="imgPreviewWrapper"></div>
+        </div>
+        <div class="footer-nav">
+            <button id="btnSubmit" class="btn-next" onclick="submitToGoogleSheet()">คำนวณและส่งข้อมูล ➡️</button>
+            <button class="btn-back" onclick="goBackTo(2)">ย้อนกลับ</button>
+        </div>
+    </div>
+
+    <div id="step4" class="hidden" style="text-align:center;">
+        <h2>สรุปผลคาร์บอน</h2>
+        <p style="font-size:16px; font-weight:700; color:#4a5568; margin:0;">คุณช่วยลดการปล่อยก๊าซเรือนกระจกได้</p>
+        <div class="carbon-num" id="carbonDisplay">0.00</div>
+        <span style="font-size:22px; font-weight:900; color:var(--primary-dark)">kgCO2e</span>
+
+        <div class="tree-badge">
+            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921820.png" style="width:45px">
+            <span>เทียบเท่าคุณช่วยบางกะเจ้า<br><strong style="color:#143F24;" id="treeText">ปลูกต้นไม้เพิ่ม 0 ต้นแล้ว!</strong></span>
+        </div>
+
+        <div class="footer-nav">
+            <button class="btn-next" style="background:#06C755" onclick="closeLiffWindow()">ปิดหน้าจอบันทึกเรียบร้อย</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    // พิกัดท่อส่ง Google Apps Script ตัวจริงของพี่แฟง
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzv3E2rOc66DikVe3k3ncR1AxFUbQYe3kcu-Q7PT-9ozOjR7aeX6hbcGhV3mVl5VGEJ/exec";
+    const LIFF_ID = "2010255862-aZKhXa7N"; 
 
-    function sendOkToGoogleSheet() {
-        const msgDiv = document.getElementById('statusMessage');
-        msgDiv.innerText = "⏳ กำลังยิงข้อมูลข้ามท่อ...";
-        msgDiv.style.color = "#d69e2e";
+    let globalUserId = "MOCK_USER_ID_FANG";
+    let selectedMainCat = "";
+    let selectedSubCat = "";
+    let currentWeight = 0.0;
+    let isWeightUnknown = false;
+    
+    // ตัวแปรสำหรับเก็บก้อนข้อมูลรูปภาพเตรียมส่งเข้า Google Drive
+    let rawImageData = "";
+    let rawImageName = "";
+    let rawImageMimeType = "";
 
-        // ยิงข้อมูลทดสอบแบบดิบๆ ไม่ต้องพึ่งพาข้อมูลใดๆ ทั้งสิ้น
+    const subRepository = {
+        "พลาสติก (Plastic)": [
+            { name: "ขวดน้ำพลาสติกใส (PET)", img: "https://cdn-icons-png.flaticon.com/512/3081/3081971.png" },
+            { name: "ขวดน้ำพลาสติกขุ่น (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/9380/9380993.png" },
+            { name: "ฝาขวดพลาสติก (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/6122/6122240.png" }
+        ],
+        "กระดาษ (Paper)": [
+            { name: "กระดาษลัง", img: "https://cdn-icons-png.flaticon.com/512/2329/2329173.png" },
+            { name: "กระดาษสีขาว/เอกสาร (A4)", img: "https://cdn-icons-png.flaticon.com/512/3388/3388043.png" },
+            { name: "กระดาษนิตยสาร/หนังสือพิมพ์", img: "https://cdn-icons-png.flaticon.com/512/2965/2965873.png" }
+        ],
+        "แก้ว (Glass)": [
+            { name: "ขวดแก้วชนิดเดียวกัน (ครบลัง)", img: "https://cdn-icons-png.flaticon.com/512/3050/3050186.png" },
+            { name: "ขวดแก้วรวม", img: "https://cdn-icons-png.flaticon.com/512/10410/10410065.png" }
+        ],
+        "อลูมิเนียม": [
+            { name: "กระป๋องอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/1996/1996841.png" },
+            { name: "ฝาอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/4616/4616656.png" },
+            { name: "เศษอลูมิเนียมอื่นๆ", img: "https://cdn-icons-png.flaticon.com/512/2723/2723363.png" }
+        ]
+    };
+
+    if (typeof liff !== 'undefined' && LIFF_ID !== "") {
+        liff.init({ liffId: LIFF_ID }).then(async () => {
+            if (!liff.isLoggedIn()) { liff.login(); } else {
+                const p = await liff.getProfile();
+                if (p && p.userId) { 
+                    globalUserId = p.userId;
+                    document.getElementById('headerName').innerText = p.displayName || "อาสาสมัคร";
+                }
+            }
+        }).catch(err => console.error(err));
+    }
+
+    function selectMainCategory(cat) {
+        selectedMainCat = cat;
+        document.getElementById('subTitleHeader').innerText = "ประเภท" + cat.split(" ")[0];
+        const container = document.getElementById('subCategoryContainer');
+        container.innerHTML = "";
+
+        subRepository[cat].forEach(item => {
+            let div = document.createElement('div');
+            div.className = "sub-card";
+            div.onclick = () => selectSubCategory(item.name);
+            div.innerHTML = `<img class="sub-img" src="${item.img}"><span>${item.name}</span>`;
+            container.appendChild(div);
+        });
+        switchStep(1, 2);
+    }
+
+    function selectSubCategory(sub) {
+        selectedSubCat = sub;
+        switchStep(2, 3);
+    }
+
+    function modifyWeight(val) {
+        if(isWeightUnknown) return;
+        currentWeight = Math.max(0, currentWeight + val);
+        document.getElementById('weightText').innerText = currentWeight.toFixed(1);
+    }
+
+    function handleUnknownCheckbox(chk) {
+        isWeightUnknown = chk.checked;
+        const txt = document.getElementById('weightText');
+        if (isWeightUnknown) {
+            txt.innerText = "ไม่ระบุ"; currentWeight = 0;
+        } else {
+            currentWeight = 0.0; txt.innerText = "0.0";
+        }
+    }
+
+    // 📸 ดักจับรูปภาพ แตกสลักแปลงข้อมูลเป็นฐาน Base64 ความเร็วสูงก่อนยิงเข้ากูเกิลไดร์ฟ
+    function previewAndPrepareImage(input) {
+        const wrapper = document.getElementById('imgPreviewWrapper');
+        wrapper.innerHTML = "";
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            rawImageName = file.name;
+            rawImageMimeType = file.type;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                wrapper.innerHTML = `<img src="${e.target.result}" class="preview-img">`;
+                // แยกเอาแต่เนื้อข้อมูล Base64 ล้วน ๆ ตัดหัว Header แท็กทิ้ง
+                rawImageData = e.target.result.split(',')[1];
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function submitToGoogleSheet() {
+        const btn = document.getElementById('btnSubmit');
+        btn.innerText = "⏳ กำลังบันทึกข้อมูลและอัพโหลดรูป...";
+        btn.disabled = true;
+
+        // 🧮 1. คำนวณคาร์บอนเครดิต ณ หน้าบ้าน
+        let ef = 0;
+        if (selectedMainCat === "พลาสติก (Plastic)") ef = 1.0310;
+        else if (selectedMainCat === "กระดาษ (Paper)") ef = 3.5460;
+        else if (selectedMainCat === "แก้ว (Glass)") ef = 0.2760;
+        else if (selectedMainCat === "อลูมิเนียม") ef = 9.1270;
+
+        let carbonSaved = currentWeight * ef;
+        
+        // ✈️ 2. แพ็คกลุ่มก้อนข้อมูลส่งผ่านทาง URL ทะลวงกำแพงบล็อก
         const payload = new URLSearchParams();
         payload.append("action", "saveGarbage");
-        payload.append("userId", "OK"); // บังคับเขียนลงคอลัมน์ A ว่า OK 
+        payload.append("userId", globalUserId);
+        payload.append("main_category", selectedMainCat);
+        payload.append("sub_category", selectedSubCat);
+        payload.append("weight_kg", isWeightUnknown ? "ไม่ทราบน้ำหนัก" : currentWeight.toFixed(1));
+        payload.append("carbon_saved", carbonSaved.toFixed(4));
+        
+        // แนบไฟล์รูปภาพส่งคู่ขนานไปด้วย
+        if(rawImageData !== "") {
+            payload.append("imageData", rawImageData);
+            payload.append("imageName", rawImageName);
+            payload.append("imageMimeType", rawImageMimeType);
+        }
 
         fetch(SCRIPT_URL, {
             method: "POST",
             body: payload,
             headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
-        .then(res => {
-            msgDiv.innerText = "✅ ส่งคำว่า OK สำเร็จแล้ว! พี่แฟงเปิดดูในชีตได้เลย!";
-            msgDiv.style.color = "#38a169";
+        .then(res => res.json())
+        .then(data => {
+            console.log("ส่งสำเร็จ:", data);
+            // แสดงผลคาร์บอนที่หน้าจอสรุปผล (Step 4)
+            document.getElementById('carbonDisplay').innerText = carbonSaved.toFixed(2);
+            let treeCount = Math.ceil(carbonSaved / 9.5);
+            document.getElementById('treeText').innerText = `ปลูกต้นไม้เพิ่ม ${treeCount || 0} ต้นแล้ว!`;
+            switchStep(3, 4);
         })
         .catch(err => {
-            msgDiv.innerText = "❌ เกิดข้อผิดพลาด: " + err.toString();
-            msgDiv.style.color = "#e53e3e";
+            alert("เกิดปัญหาในการส่งข้อมูล กรุณาลองใหม่อีกครั้ง");
             console.error(err);
+            btn.innerText = "คำนวณและส่งข้อมูล ➡️";
+            btn.disabled = false;
         });
     }
-</script>
 
+    function switchStep(from, to) {
+        document.getElementById('step' + from).classList.add('hidden');
+        document.getElementById('step' + to).classList.remove('hidden');
+    }
+
+    function goBackTo(step) {
+        if(step === 1) switchStep(2, 1);
+        if(step === 2) switchStep(3, 2);
+    }
+
+    function closeLiffWindow() { if (typeof liff !== 'undefined') { liff.closeWindow(); } }
+</script>
 </body>
 </html>
