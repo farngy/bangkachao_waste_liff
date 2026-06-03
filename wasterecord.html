@@ -317,7 +317,7 @@
 
 <script>
     const scriptUrl = "https://script.google.com/macros/s/AKfycbzbIa6Ro8gRCLquI2U5iGruFi3lUyFafANlXgvwxtePuvXoCx_Ubv2cjlAVJil1dAnA/exec";
-    let globalUserId = "MOCK_USER_TRASH_123";
+    let globalUserId = ""; // ตั้งเป็นค่าว่างไว้เพื่อให้สแตมป์ค่าจริงเมื่อดึงสำเร็จ
 
     const subTypeData = {
         "ขยะพลาสติก": [
@@ -345,16 +345,20 @@
     var photoBase64 = "";
     var photoType = "";
 
+    // 🎯 แก้ไขลอจิกดึงข้อมูลโปรไฟล์ LINE บรรทัดที่ 185 (เปลี่ยนตัวพิมพ์ใหญ่ p.userId)
     if (typeof liff !== 'undefined') {
         liff.init({ liffId: "2010255862-LZnK22cW" }).then(() => {
             if (liff.isLoggedIn()) {
                 liff.getProfile().then(p => {
-                    if(p.userId) {
-                        globalUserId = p.userId;
+                    if(p.userId) { 
+                        globalUserId = p.userId; // สแกนเจอและล็อกค่า ID พาสปอร์ตไลน์ของอาสาสมัครสำเร็จ
                     }
-                });
+                }).catch(err => console.log("Profile Error:", err));
+            } else {
+                // หากเปิดทดสอบบนเบราว์เซอร์ปกติที่ไม่มีการล็อกอินไลน์ ให้ fallback เป็นระบบทดสอบป้องกันตัวแปรว่าง
+                globalUserId = "WEB_TEST_USER_TRASH";
             }
-        }).catch(err => console.log(err));
+        }).catch(err => console.log("LIFF Error:", err));
     }
 
     function changeStep(stepNum) {
@@ -434,7 +438,6 @@
         }
     }
 
-    // 🎯 ปรับปรุงลอจิก: แค่มีน้ำหนัก > 0 ก็ยอมให้กดถัดไปได้เลย ไม่บังคับรูปภาพแล้วครับ
     function validateWeightAndPhoto() {
         const weight = parseFloat(document.getElementById('weight').value) || 0;
         document.getElementById('toStep4Btn').disabled = !(weight > 0);
@@ -459,12 +462,12 @@
 
         const formData = new FormData();
         formData.append("action", "trash");
-        formData.append("userId", globalUserId); // 🎯 แก้ชื่อจาก lineUserId เป็น userId ให้ตรงกับหลังบ้าน ตัว ID จะได้บันทึกลงชีทครับ
+        formData.append("userId", globalUserId); 
         formData.append("mainType", selectedMain);
         formData.append("subType", selectedSub);
         formData.append("weight", document.getElementById('weight').value);
         formData.append("carbonAmount", document.getElementById('finalCarbon').innerText);
-        formData.append("imageData", photoBase64); // หากไม่มีรูป ค่านี้จะเป็นค่าว่าง ส่งไปหลังบ้านก็จะไม่ติดขัดครับ
+        formData.append("imageData", photoBase64); 
         formData.append("imageMimeType", photoType);
 
         fetch(scriptUrl, {
@@ -476,31 +479,10 @@
             status.innerText = "🎉 บันทึกสำเร็จเรียบร้อย!";
             alert("🎉 บันทึกข้อมูลขยะเข้าคลังบางกะเจ้าเสร็จสมบูรณ์แล้วค่ะ!");
             
-            // ล้างค่าฟอร์มกลับสู่สถานะเริ่มต้น
             photoBase64 = ""; 
             photoType = "";
             document.getElementById('weight').value = "0.00";
             document.getElementById('noWeight').checked = false;
             document.getElementById('weight').disabled = false;
             document.getElementById('imageFile').value = "";
-            document.getElementById('uploadStatusText').innerHTML = `ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก / ไม่แนบก็ได้)</span>`;
-            
-            changeStep(1);
-            btn.disabled = false;
-            status.innerText = "";
-        })
-        .catch(err => {
-            status.innerText = "❌ เกิดข้อผิดพลาด กรุณาลองใหมี่อีกครั้ง";
-            btn.disabled = false;
-        });
-    }
-
-    function closeLiffWindow() {
-        if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-            liff.closeWindow();
-        }
-    }
-</script>
-
-</body>
-</html>
+            document.getElementById('uploadStatusText').innerHTML =
