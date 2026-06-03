@@ -5,18 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🧪 สเต็ปที่ 1: เทสส่งรูปเข้ากูเกิลไดร์ฟ</title>
     <style>
-        body { font-family: sans-serif; background-color: #f7fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .box { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 90%; }
-        .btn { background-color: #3182ce; color: white; border: none; padding: 18px; font-size: 18px; font-weight: bold; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 20px; box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3); }
-        .btn:active { transform: scale(0.97); }
-        #result { margin-top: 20px; font-size: 15px; font-weight: bold; color: #4a5568; word-break: break-all; text-align: left; background: #edf2f7; padding: 12px; border-radius: 10px; display: none; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #f7fafc; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0; 
+        }
+        .box { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            text-align: center; 
+            max-width: 400px; 
+            width: 90%; 
+        }
+        .btn { 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 18px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            border-radius: 50px; 
+            cursor: pointer; 
+            width: 100%; 
+            margin-top: 20px; 
+            transition: background 0.2s;
+        }
+        .btn:active { 
+            transform: scale(0.97); 
+        }
+        #result { 
+            margin-top: 20px; 
+            font-size: 15px; 
+            font-weight: bold; 
+            color: #4a5568; 
+            word-break: break-all; 
+            text-align: left; 
+            background: #edf2f7; 
+            padding: 12px; 
+            border-radius: 10px; 
+            display: none; 
+        }
     </style>
 </head>
 <body>
 
 <div class="box">
     <h2>🧪 เทสอัปโหลดรูปภาพเข้า Drive</h2>
-    <p style="color: #718096; font-size: 14px;">ระบบจะจำลองส่งรูปภาพสี่เหลี่ยมสีเขียวขนาดเล็ก ยิงตรงไปเซฟในโฟลเดอร์ Google Drive ของพี่แฟงเพื่อทดสอบระบบสิทธิ์</p>
+    <p style="color: #718096; font-size: 14px; line-height: 1.5;">
+        ระบบจะจำลองส่งรูปภาพสี่เหลี่ยมสีเขียวขนาดเล็ก ยิงตรงจาก GitHub ไปเซฟในโฟลเดอร์ Google Drive ของพี่แฟงเพื่อทดสอบระบบสิทธิ์โดยตรงจ้า
+    </p>
     
     <button class="btn" onclick="testUploadImage()">🚀 สั่งยิงรูปภาพเข้าไดร์ฟ</button>
     
@@ -24,42 +68,14 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzv3E2rOc66DikVe3k3ncR1AxFUbQYe3kcu-Q7PT-9ozOjR7aeX6hbcGhV3mVl5VGEJ/exec";
+    // 🔗 ฝัง URL เว็บแอปตัวใหม่ของพี่แฟงให้เรียบร้อยแล้วครับ
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwNZdYOHFKbk8luJp1j6Dz1o4iK4Qa4YVPyevPv1raPGDVMIGhiiXeUZu6XJ_jN1v5u/exec";
 
     function testUploadImage() {
         const resDiv = document.getElementById('result');
         resDiv.style.display = "block";
-        resDiv.innerText = "⏳ กำลังสตรีมข้อมูลภาพยิงเข้ากูเกิลไดร์ฟ...";
+        resDiv.innerText = "⏳ กำลังยิงข้อมูลรูปภาพไปกูเกิลไดร์ฟ...";
         resDiv.style.color = "#dd6b20";
 
-        // 🖼️ ข้อมูลรูปภาพปลอม (รูปบล็อกสี่เหลี่ยมสีเขียวขนาดเล็กจิ๋ว แปลงเป็นก้อน Base64 เรียบร้อยแล้ว)
-        const mockBase64Image = "iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5gMDCg0XNh76QwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLm0rAAAALklEQVRo3u3XQREAAAiEQK1/aWvshw0kcJuZOfwAAAAAAAAAAAAAAAAAAAAA4NoCYbICMe767gIAAAAASUVORK5CYII=";
-
-        const formData = new FormData();
-        formData.append("action", "saveGarbage"); // จำลองเป็นคำสั่งเก็บขยะ
-        formData.append("imageData", mockBase64Image);
-        formData.append("imageName", "fang_test_success.jpg");
-        formData.append("imageMimeType", "image/jpeg");
-
-        fetch(SCRIPT_URL, {
-            method: "POST",
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.status === "success") {
-                resDiv.innerHTML = `<span style="color: #2f855a;">${data.message}</span><br><br><a href="${data.url}" target="_blank" style="color:#3182ce;">คลิกเปิดดูรูปที่เซฟใน Drive 🔗</a>`;
-            } else {
-                resDiv.innerText = "❌ เกิดปัญหาที่ฝั่งกูเกิล: " + data.message;
-                resDiv.style.color = "#c53030";
-            }
-        })
-        .catch(err => {
-            resDiv.innerText = "❌ ส่งข้อมูลไม่สำเร็จ: " + err.toString();
-            resDiv.style.color = "#c53030";
-        });
-    }
-</script>
-
-</body>
-</html>
+        // ก้อนข้อมูลรูปสี่เหลี่ยมสีเขียวจำลองขนาดเล็กมาก (แปลงเป็น Base64 ล่วงหน้า)
+        const mockBase64Image = "iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAA
