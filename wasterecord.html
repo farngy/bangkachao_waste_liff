@@ -3,331 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>บันทึกข้อมูลขยะ - บัญชีขยะดิจิทัล</title>
-    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <title>🧪 สเต็ปที่ 1: เทสส่งรูปเข้ากูเกิลไดร์ฟ</title>
     <style>
-        :root {
-            --primary-dark: #143F24;
-            --primary-green: #1b4332;
-            --bg-light: #F4F6F5;
-            --text-main: #2d3748;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: var(--text-main); background-color: #cbd5e0; margin: 0; padding: 0;
-            display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;
-        }
-
-        .phone-container {
-            width: 100%; max-width: 450px; min-height: 100vh;
-            background: #FFFFFF; box-sizing: border-box; padding: 20px;
-            display: flex; flex-direction: column; position: relative;
-        }
-
-        .app-header {
-            display: flex; align-items: center; justify-content: space-between;
-            background: var(--bg-light); padding: 10px 16px; border-radius: 30px; margin-bottom: 25px;
-        }
-        .user-meta { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; color: var(--primary-dark); }
-        .badge-status { background: #319795; color: white; font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: bold; }
-        .avatar { width: 30px; height: 30px; border-radius: 50%; background: #e2e8f0; overflow: hidden; display:flex; align-items:center; justify-content:center; }
-
-        h2 { font-size: 24px; color: var(--primary-dark); text-align: center; font-weight: 800; margin: 0 0 25px 0; }
-
-        .category-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 30px; }
-        .card-btn {
-            background: #FFFFFF; border: 2px solid #e2e8f0; border-radius: 18px;
-            padding: 24px 12px; display: flex; flex-direction: column; align-items: center;
-            justify-content: center; gap: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-        .card-btn:active { transform: scale(0.96); border-color: var(--primary-dark); background: var(--bg-light); }
-        .card-btn .icon-img { width: 70px; height: 70px; object-fit: contain; }
-        .card-btn span { font-size: 17px; font-weight: 800; color: var(--primary-dark); }
-
-        .sub-category-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
-        .sub-card {
-            background: #FFFFFF; border: 2px solid #e2e8f0; border-radius: 16px;
-            padding: 16px; display: flex; align-items: center; gap: 16px; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-        }
-        .sub-card:active { border-color: var(--primary-dark); background: var(--bg-light); }
-        .sub-card .sub-img { width: 55px; height: 55px; object-fit: contain; }
-        .sub-card span { font-size: 16px; font-weight: 700; color: var(--text-main); text-align: left; line-height: 1.4; }
-
-        .weight-ui-box { text-align: center; }
-        .weight-display { font-size: 45px; font-weight: 900; color: var(--primary-dark); margin: 15px 0; }
-        .counter-row { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
-        .btn-count {
-            background: var(--primary-dark); color: white; border: none; padding: 12px 14px;
-            font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; min-width: 65px;
-        }
-        .btn-count:active { transform: scale(0.95); }
-        
-        .checkbox-zone { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 17px; font-weight: 700; color: #4a5568; margin-bottom: 30px; cursor: pointer; }
-        .checkbox-zone input { width: 20px; height: 20px; cursor: pointer; }
-
-        .photo-box {
-            border: 2px dashed #cbd5e0; border-radius: 16px; padding: 24px;
-            text-align: center; background: var(--bg-light); cursor: pointer; margin-bottom: 30px;
-        }
-        .photo-box span { display: block; font-size: 14px; color: #718096; margin-top: 6px; font-weight: 600; }
-        .preview-box { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
-        .preview-img { width: 80px; height: 80px; object-fit: cover; border-radius: 12px; border: 1px solid #cbd5e0; }
-
-        .footer-nav { margin-top: auto; display: flex; flex-direction: column; gap: 12px; }
-        .btn-next { background-color: var(--primary-dark); color: white; border: none; padding: 16px; font-size: 19px; font-weight: 800; border-radius: 30px; cursor: pointer; width: 100%; }
-        .btn-back { background: none; border: none; color: #718096; font-size: 17px; font-weight: 700; padding: 8px; cursor: pointer; }
-
-        .carbon-num { font-size: 75px; font-weight: 900; color: var(--primary-dark); margin: 10px 0; line-height: 1; }
-        .tree-badge { background: var(--bg-light); border: 1px solid #e2e8f0; border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 12px; margin: 25px 0; text-align: left; }
-        .tree-badge span { font-size: 15px; font-weight: 700; color: #4a5568; line-height: 1.4; }
-
-        .hidden { display: none !important; }
+        body { font-family: sans-serif; background-color: #f7fafc; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .box { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); text-align: center; max-width: 400px; width: 90%; }
+        .btn { background-color: #3182ce; color: white; border: none; padding: 18px; font-size: 18px; font-weight: bold; border-radius: 50px; cursor: pointer; width: 100%; margin-top: 20px; box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3); }
+        .btn:active { transform: scale(0.97); }
+        #result { margin-top: 20px; font-size: 15px; font-weight: bold; color: #4a5568; word-break: break-all; text-align: left; background: #edf2f7; padding: 12px; border-radius: 10px; display: none; }
     </style>
 </head>
 <body>
 
-<div class="phone-container">
-    <div class="app-header">
-        <div style="font-size:20px; color:var(--primary-dark);">☰</div>
-        <div class="user-meta">
-            <span id="headerName">กำลังโหลดข้อมูล...</span>
-            <span class="badge-status">🏅 นักอนุรักษ์มือใหม่</span>
-            <div class="avatar">👤</div>
-        </div>
-    </div>
-
-    <div id="step1">
-        <h2>เลือกประเภทขยะ</h2>
-        <div class="category-grid">
-            <div class="card-btn" onclick="selectMainCategory('พลาสติก (Plastic)')">
-                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/3001/3001669.png" alt="พลาสติก">
-                <span>พลาสติก</span>
-            </div>
-            <div class="card-btn" onclick="selectMainCategory('กระดาษ (Paper)')">
-                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/3143/3143431.png" alt="กระดาษ">
-                <span>กระดาษ</span>
-            </div>
-            <div class="card-btn" onclick="selectMainCategory('แก้ว (Glass)')">
-                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/9180/9180583.png" alt="แก้ว">
-                <span>แก้ว</span>
-            </div>
-            <div class="card-btn" onclick="selectMainCategory('อลูมิเนียม')">
-                <img class="icon-img" src="https://cdn-icons-png.flaticon.com/512/2666/2666687.png" alt="อลูมิเนียม">
-                <span>อลูมิเนียม</span>
-            </div>
-        </div>
-        <div class="footer-nav"><button class="btn-back" onclick="closeLiffWindow()">ปิดหน้าต่าง</button></div>
-    </div>
-
-    <div id="step2" class="hidden">
-        <h2 id="subTitleHeader">ประเภทขยะ</h2>
-        <div class="sub-category-list" id="subCategoryContainer"></div>
-        <div class="footer-nav"><button class="btn-back" onclick="goBackTo(1)">⬅️ ย้อนกลับ</button></div>
-    </div>
-
-    <div id="step3" class="hidden">
-        <h2>ระบุน้ำหนักและหลักฐาน</h2>
-        <div class="weight-ui-box">
-            <div class="weight-display"><span id="weightText">0.0</span> <span style="font-size:20px; font-weight:700; color:#718096">กก.</span></div>
-            <div class="counter-row">
-                <button class="btn-count" onclick="modifyWeight(-1.0)">-1.0</button>
-                <button class="btn-count" onclick="modifyWeight(-0.5)">-0.5</button>
-                <button class="btn-count" onclick="modifyWeight(0.5)">+0.5</button>
-                <button class="btn-count" onclick="modifyWeight(1.0)">+1.0</button>
-            </div>
-            
-            <label class="checkbox-zone">
-                <input type="checkbox" id="chkUnknown" onchange="handleUnknownCheckbox(this)"> ไม่ทราบน้ำหนักขยะ
-            </label>
-
-            <div class="photo-box" onclick="document.getElementById('cameraFile').click()">
-                <img src="https://cdn-icons-png.flaticon.com/512/685/685655.png" style="width:45px;" alt="กล้อง">
-                <p style="margin:8px 0 0 0; font-weight:800; color:var(--primary-dark);">ถ่ายรูปขยะ</p>
-                <span>(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก)</span>
-                <input type="file" id="cameraFile" class="hidden" accept="image/*" onchange="previewAndPrepareImage(this)">
-            </div>
-            <div class="preview-box" id="imgPreviewWrapper"></div>
-        </div>
-        <div class="footer-nav">
-            <button id="btnSubmit" class="btn-next" onclick="submitToGoogleSheet()">คำนวณและส่งข้อมูล ➡️</button>
-            <button class="btn-back" onclick="goBackTo(2)">ย้อนกลับ</button>
-        </div>
-    </div>
-
-    <div id="step4" class="hidden" style="text-align:center;">
-        <h2>สรุปผลคาร์บอน</h2>
-        <p style="font-size:16px; font-weight:700; color:#4a5568; margin:0;">คุณช่วยลดการปล่อยก๊าซเรือนกระจกได้</p>
-        <div class="carbon-num" id="carbonDisplay">0.00</div>
-        <span style="font-size:22px; font-weight:900; color:var(--primary-dark)">kgCO2e</span>
-
-        <div class="tree-badge">
-            <img src="https://cdn-icons-png.flaticon.com/512/2921/2921820.png" style="width:45px">
-            <span>เทียบเท่าคุณช่วยบางกะเจ้า<br><strong style="color:#143F24;" id="treeText">ปลูกต้นไม้เพิ่ม 0 ต้นแล้ว!</strong></span>
-        </div>
-
-        <div class="footer-nav">
-            <button class="btn-next" style="background:#06C755" onclick="closeLiffWindow()">ปิดหน้าจอบันทึกเรียบร้อย</button>
-        </div>
-    </div>
+<div class="box">
+    <h2>🧪 เทสอัปโหลดรูปภาพเข้า Drive</h2>
+    <p style="color: #718096; font-size: 14px;">ระบบจะจำลองส่งรูปภาพสี่เหลี่ยมสีเขียวขนาดเล็ก ยิงตรงไปเซฟในโฟลเดอร์ Google Drive ของพี่แฟงเพื่อทดสอบระบบสิทธิ์</p>
+    
+    <button class="btn" onclick="testUploadImage()">🚀 สั่งยิงรูปภาพเข้าไดร์ฟ</button>
+    
+    <div id="result">กำลังเตรียมส่ง...</div>
 </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzv3E2rOc66DikVe3k3ncR1AxFUbQYe3kcu-Q7PT-9ozOjR7aeX6hbcGhV3mVl5VGEJ/exec";
-    const LIFF_ID = "2010255862-aZKhXa7N"; 
 
-    let globalUserId = "MOCK_USER_ID_FANG";
-    let selectedMainCat = "";
-    let selectedSubCat = "";
-    let currentWeight = 0.0;
-    let isWeightUnknown = false;
-    
-    let rawImageData = "";
-    let rawImageName = "";
-    let rawImageMimeType = "";
+    function testUploadImage() {
+        const resDiv = document.getElementById('result');
+        resDiv.style.display = "block";
+        resDiv.innerText = "⏳ กำลังสตรีมข้อมูลภาพยิงเข้ากูเกิลไดร์ฟ...";
+        resDiv.style.color = "#dd6b20";
 
-    const subRepository = {
-        "พลาสติก (Plastic)": [
-            { name: "ขวดน้ำพลาสติกใส (PET)", img: "https://cdn-icons-png.flaticon.com/512/3081/3081971.png" },
-            { name: "ขวดน้ำพลาสติกขุ่น (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/9380/9380993.png" },
-            { name: "ฝาขวดพลาสติก (HDPE)", img: "https://cdn-icons-png.flaticon.com/512/6122/6122240.png" }
-        ],
-        "กระดาษ (Paper)": [
-            { name: "กระดาษลัง", img: "https://cdn-icons-png.flaticon.com/512/2329/2329173.png" },
-            { name: "กระดาษสีขาว/เอกสาร (A4)", img: "https://cdn-icons-png.flaticon.com/512/3388/3388043.png" },
-            { name: "กระดาษนิตยสาร/หนังสือพิมพ์", img: "https://cdn-icons-png.flaticon.com/512/2965/2965873.png" }
-        ],
-        "แก้ว (Glass)": [
-            { name: "ขวดแก้วชนิดเดียวกัน (ครบลัง)", img: "https://cdn-icons-png.flaticon.com/512/3050/3050186.png" },
-            { name: "ขวดแก้วรวม", img: "https://cdn-icons-png.flaticon.com/512/10410/10410065.png" }
-        ],
-        "อลูมิเนียม": [
-            { name: "กระป๋องอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/1996/1996841.png" },
-            { name: "ฝาอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/4616/4616656.png" },
-            { name: "เศษอลูมิเนียมอื่นๆ", img: "https://cdn-icons-png.flaticon.com/512/2723/2723363.png" }
-        ]
-    };
+        // 🖼️ ข้อมูลรูปภาพปลอม (รูปบล็อกสี่เหลี่ยมสีเขียวขนาดเล็กจิ๋ว แปลงเป็นก้อน Base64 เรียบร้อยแล้ว)
+        const mockBase64Image = "iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5gMDCg0XNh76QwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLm0rAAAALklEQVRo3u3XQREAAAiEQK1/aWvshw0kcJuZOfwAAAAAAAAAAAAAAAAAAAAA4NoCYbICMe767gIAAAAASUVORK5CYII=";
 
-    if (typeof liff !== 'undefined' && LIFF_ID !== "") {
-        liff.init({ liffId: LIFF_ID }).then(async () => {
-            if (!liff.isLoggedIn()) { liff.login(); } else {
-                const p = await liff.getProfile();
-                if (p && p.userId) { 
-                    globalUserId = p.userId;
-                    document.getElementById('headerName').innerText = p.displayName || "อาสาสมัคร";
-                }
-            }
-        }).catch(err => console.error(err));
-    }
-
-    function selectMainCategory(cat) {
-        selectedMainCat = cat;
-        document.getElementById('subTitleHeader').innerText = "ประเภท" + cat.split(" ")[0];
-        const container = document.getElementById('subCategoryContainer');
-        container.innerHTML = "";
-
-        subRepository[cat].forEach(item => {
-            let div = document.createElement('div');
-            div.className = "sub-card";
-            div.onclick = () => selectSubCategory(item.name);
-            div.innerHTML = `<img class="sub-img" src="${item.img}"><span>${item.name}</span>`;
-            container.appendChild(div);
-        });
-        switchStep(1, 2);
-    }
-
-    function selectSubCategory(sub) {
-        selectedSubCat = sub;
-        switchStep(2, 3);
-    }
-
-    function modifyWeight(val) {
-        if(isWeightUnknown) return;
-        currentWeight = Math.max(0, currentWeight + val);
-        document.getElementById('weightText').innerText = currentWeight.toFixed(1);
-    }
-
-    function handleUnknownCheckbox(chk) {
-        isWeightUnknown = chk.checked;
-        const txt = document.getElementById('weightText');
-        if (isWeightUnknown) {
-            txt.innerText = "ไม่ระบุ"; currentWeight = 0;
-        } else {
-            currentWeight = 0.0; txt.innerText = "0.0";
-        }
-    }
-
-    // 📸 ย่อและบีบอัดรูปภาพทันทีฝั่งหน้าบ้านก่อนส่งเพื่อประหยัดสเปซกูเกิลไดรฟ์
-    function previewAndPrepareImage(input) {
-        const wrapper = document.getElementById('imgPreviewWrapper');
-        wrapper.innerHTML = "";
-        
-        if (input.files && input.files[0]) {
-            const file = input.files[0];
-            rawImageName = file.name;
-            rawImageMimeType = "image/jpeg"; // บังคับเซฟเป็น Jpeg เพื่อลดขนาดไฟล์ได้ดียิ่งขึ้น
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    // 📏 บีบรูปภาพให้ล็อกความกว้างสูงสุด 1024px และบีบคุณภาพเหลือ 70%
-                    const compressedBase64 = resizeAndCompressImage(img, 1024, 0.7);
-                    wrapper.innerHTML = `<img src="${compressedBase64}" class="preview-img">`;
-                    rawImageData = compressedBase64.split(',')[1];
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function resizeAndCompressImage(img, maxSide, quality) {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-            if (width > maxSide) { height *= maxSide / width; width = maxSide; }
-        } else {
-            if (height > maxSide) { width *= maxSide / height; height = maxSide; }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, width, height);
-        return canvas.toDataURL('image/jpeg', quality);
-    }
-
-    function submitToGoogleSheet() {
-        const btn = document.getElementById('btnSubmit');
-        btn.innerText = "⏳ กำลังบันทึกข้อมูลและอัพโหลดรูป...";
-        btn.disabled = true;
-
-        let ef = 0;
-        if (selectedMainCat === "พลาสติก (Plastic)") ef = 1.0310;
-        else if (selectedMainCat === "กระดาษ (Paper)") ef = 3.5460;
-        else if (selectedMainCat === "แก้ว (Glass)") ef = 0.2760;
-        else if (selectedMainCat === "อลูมิเนียม") ef = 9.1270;
-
-        let carbonSaved = currentWeight * ef;
-        
-        // ✈️ ยิงส่งข้อมูลผ่านสถาปัตยกรรม FormData ปลอดภัยไร้ปัญหา Payload เกิน
         const formData = new FormData();
-        formData.append("action", "saveGarbage");
-        formData.append("userId", globalUserId);
-        formData.append("main_category", selectedMainCat);
-        formData.append("sub_category", selectedSubCat);
-        formData.append("weight_kg", isWeightUnknown ? "ไม่ทราบน้ำหนัก" : currentWeight.toFixed(1));
-        formData.append("carbon_saved", carbonSaved.toFixed(4));
-        
-        if(rawImageData !== "") {
-            formData.append("imageData", rawImageData);
-            formData.append("imageName", rawImageName);
-            formData.append("imageMimeType", rawImageMimeType);
-        }
+        formData.append("action", "saveGarbage"); // จำลองเป็นคำสั่งเก็บขยะ
+        formData.append("imageData", mockBase64Image);
+        formData.append("imageName", "fang_test_success.jpg");
+        formData.append("imageMimeType", "image/jpeg");
 
         fetch(SCRIPT_URL, {
             method: "POST",
@@ -335,33 +47,19 @@
         })
         .then(res => res.json())
         .then(data => {
-            console.log("ส่งสำเร็จ:", data);
-            document.getElementById('carbonDisplay').innerText = carbonSaved.toFixed(2);
-            let treeCount = Math.ceil(carbonSaved / 9.5);
-            document.getElementById('treeText').innerText = `ปลูกต้นไม้เพิ่ม ${treeCount || 0} ต้นแล้ว!`;
-            switchStep(3, 4);
+            if (data.status === "success") {
+                resDiv.innerHTML = `<span style="color: #2f855a;">${data.message}</span><br><br><a href="${data.url}" target="_blank" style="color:#3182ce;">คลิกเปิดดูรูปที่เซฟใน Drive 🔗</a>`;
+            } else {
+                resDiv.innerText = "❌ เกิดปัญหาที่ฝั่งกูเกิล: " + data.message;
+                resDiv.style.color = "#c53030";
+            }
         })
         .catch(err => {
-            console.error(err);
-            // เพื่อตัดปัญหาเรื่องเบราว์เซอร์แจ้ง CORS หลอก ให้ระบบปิดงานข้ามสเต็ปโชว์คาร์บอนเครดิตให้ผู้ใช้ได้เลยทันที
-            document.getElementById('carbonDisplay').innerText = carbonSaved.toFixed(2);
-            let treeCount = Math.ceil(carbonSaved / 9.5);
-            document.getElementById('treeText').innerText = `ปลูกต้นไม้เพิ่ม ${treeCount || 0} ต้นแล้ว!`;
-            switchStep(3, 4);
+            resDiv.innerText = "❌ ส่งข้อมูลไม่สำเร็จ: " + err.toString();
+            resDiv.style.color = "#c53030";
         });
     }
-
-    function switchStep(from, to) {
-        document.getElementById('step' + from).classList.add('hidden');
-        document.getElementById('step' + to).classList.remove('hidden');
-    }
-
-    function goBackTo(step) {
-        if(step === 1) switchStep(2, 1);
-        if(step === 2) switchStep(3, 2);
-    }
-
-    function closeLiffWindow() { if (typeof liff !== 'undefined') { liff.closeWindow(); } }
 </script>
+
 </body>
 </html>
