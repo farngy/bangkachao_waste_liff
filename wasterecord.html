@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-color=1.0, user-scalable=no">
     <title>บันทึกขยะดิจิทัล - บางกะเจ้า</title>
     <!-- เชื่อมต่อ LINE LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
@@ -14,6 +14,12 @@
             --border-color: #E8ECE9;     /* สีเส้นขอบ */
         }
 
+        /* สั่งห้ามซูมเมื่อกดเบิ้ล (Double-tap to zoom) ทั้งหน้าเว็บ */
+        * {
+            touch-action: manipulation;
+            -webkit-text-size-adjust: none;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: var(--text-main);
@@ -23,6 +29,7 @@
             display: flex;
             justify-content: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .phone-container {
@@ -76,6 +83,8 @@
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
             transition: all 0.2s ease-in-out;
+            user-select: none;
+            -webkit-user-select: none;
         }
         .choice-card:hover {
             border-color: var(--primary-dark);
@@ -83,10 +92,11 @@
         }
 
         .choice-card img {
-            width: 85px;
-            height: 85px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
             margin-bottom: 12px;
+            pointer-events: none;
         }
 
         .choice-card .label {
@@ -121,6 +131,8 @@
             justify-content: center;
             box-shadow: 0 4px 10px rgba(20, 63, 36, 0.2);
             transition: transform 0.1s;
+            user-select: none;
+            -webkit-user-select: none;
         }
         .btn-weight-adjust:active {
             transform: scale(0.95);
@@ -231,6 +243,54 @@
         .hidden { display: none !important; }
         .text-center { text-align: center; }
         .form-label { display: block; font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
+
+        /* 🌟 📥 3. คลัง CSS สำหรับหน้าต่าง Pop-up สรุปงานแบบพรีเมียม */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-box {
+            background: #FFFFFF;
+            width: 85%;
+            max-width: 360px;
+            border-radius: 24px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-box { transform: scale(1); }
+
+        .modal-circle {
+            width: 80px; height: 80px;
+            background: #E6FFFA;
+            border: 3px solid #319795;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px auto;
+        }
+        .modal-circle span { font-size: 44px; color: #319795; font-weight: bold; }
+        .modal-title { font-size: 22px; font-weight: 800; color: var(--primary-dark); margin-bottom: 10px; }
+        .modal-desc { font-size: 15px; color: #4a5568; line-height: 1.5; margin-bottom: 25px; }
+        
+        .btn-modal-close {
+            background-color: #06C755; /* สีเขียวไอคอนไลน์ของแท้ */
+            color: white; border: none;
+            width: 100%; padding: 14px;
+            font-size: 18px; font-weight: 800;
+            border-radius: 28px; cursor: pointer;
+            box-shadow: 0 6px 16px rgba(6, 199, 85, 0.25);
+        }
     </style>
 </head>
 <body>
@@ -242,21 +302,20 @@
     <div id="step1">
         <h2>เลือกประเภทขยะ</h2>
         <div class="card-grid">
-            <!-- 🎯 ปรับรูปภาพไอคอนใหม่ตามสเปกหรูหราตรงประเภทจริง -->
             <div class="choice-card" onclick="selectMainType('ขยะพลาสติก')">
-                <img src="https://i.ibb.co/680L93F/plastic-bottle.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2666/2666631.png'" alt="พลาสติก">
+                <img src="https://cdn-icons-png.flaticon.com/512/4080/4080032.png" alt="พลาสติก">
                 <div class="label">พลาสติก</div>
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะกระดาษ')">
-                <img src="https://i.ibb.co/v4KjSmN/paper-stack.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2855/2855546.png'" alt="กระดาษ">
+                <img src="https://cdn-icons-png.flaticon.com/512/3145/3145827.png" alt="กระดาษ">
                 <div class="label">กระดาษ</div>
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะแก้ว')">
-                <img src="https://i.ibb.co/vYm6F66/glass.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3100/3100566.png'" alt="แก้ว">
+                <img src="https://cdn-icons-png.flaticon.com/512/3100/3100566.png" alt="แก้ว">
                 <div class="label">แก้ว</div>
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะอลูมิเนียม')">
-                <img src="https://i.ibb.co/f4pC0kM/can.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2653/2653504.png'" alt="อลูมิเนียม">
+                <img src="https://cdn-icons-png.flaticon.com/512/2653/2653504.png" alt="อลูมิเนียม">
                 <div class="label">อลูมิเนียม</div>
             </div>
         </div>
@@ -288,7 +347,6 @@
                 </label>
             </div>
             
-            <!-- 🎯 ดีไซน์แถวปุ่มปรับบวกลบ ซ้าย-ขวา แบบพรีเมียม (ดักลอจิกไม่ให้ติดลบ) -->
             <div class="weight-control-row">
                 <button type="button" class="btn-weight-adjust" onclick="stepWeight(-0.5)">−</button>
                 <div class="weight-box">
@@ -331,6 +389,22 @@
         <div class="text-center" id="networkStatus" style="margin-top: 15px; font-weight: bold; color: var(--primary-dark); font-size: 14px;"></div>
         <br>
         <button class="btn-back" onclick="changeStep(3)">ย้อนกลับ</button>
+    </div>
+</div>
+
+<!-- 🌟 📥 4. โครงสร้างหน้าต่างแจ้งเตือน Modal Pop-up สำเร็จรูปแบบพรีเมียม -->
+<div class="modal-overlay" id="successModal">
+    <div class="modal-box">
+        <div class="modal-circle">
+            <span>✓</span>
+        </div>
+        <div class="modal-title">บันทึกข้อมูลสำเร็จ!</div>
+        <div class="modal-desc">
+            ระบบทำการลงบัญชีฐานข้อมูลดิจิทัล<br>และคำนวณคาร์บอนฟุตพริ้นท์เรียบร้อยแล้วค่ะ
+        </div>
+        <button type="button" class="btn-modal-close" onclick="closeLiffWindow()">
+            💬 ปิดหน้าต่างเพื่อกลับเข้า LINE
+        </button>
     </div>
 </div>
 
@@ -418,11 +492,10 @@
         validateWeightAndPhoto();
     }
 
-    // 🎯 ลอจิกกดปรับน้ำหนักแบบ ซ้าย-ขวา (ติดลบไม่ได้ ต่ำสุดกระแทกที่ 0.00)
     function stepWeight(val) {
         var input = document.getElementById('weight');
         var current = parseFloat(input.value) || 0;
-        current = Math.max(0, current + val); // ป้องกันการติดลบด้วย Math.max(0, ...)
+        current = Math.max(0, current + val); 
         input.value = current.toFixed(2);
         validateWeightAndPhoto();
     }
@@ -497,20 +570,20 @@
             body: formData
         })
         .then(function() {
-            status.innerText = "🎉 บันทึกสำเร็จเรียบร้อย!";
-            alert("🎉 บันทึกข้อมูลขยะเข้าคลังบางกะเจ้าเสร็จสมบูรณ์แล้วค่ะ!");
-            
-            photoBase64 = ""; 
-            photoType = "";
+            status.innerText = "";
+            btn.disabled = false;
+
+            // 🌟 📥 เปิดหน้าต่าง Pop-up แสดงความสำเร็จแบบพรีเมียมแทนกล่อง Alert เชยๆ
+            document.getElementById('successModal').classList.add('active');
+
+            // รีเซ็ตล้างค่าฟอร์มภายในเบื้องหลังเพื่อเตรียมความพร้อม
+            photoBase64 = ""; photoType = "";
             document.getElementById('weight').value = "0.00";
             document.getElementById('noWeight').checked = false;
             document.getElementById('weight').disabled = false;
             document.getElementById('imageFile').value = "";
             document.getElementById('uploadStatusText').innerHTML = `ถ่ายรูปขยะ<br><span style="font-size:12px; font-weight:normal; color:#a0aec0;">(กรุณาถ่ายรูปขยะพร้อมตัวเลขน้ำหนัก / ไม่แนบก็ได้)</span>`;
-            
             changeStep(1);
-            btn.disabled = false;
-            status.innerText = "";
         })
         .catch(function(err) {
             status.innerText = "❌ เกิดข้อผิดพลาด กรุณาลองใหมี่อีกครั้ง";
@@ -518,9 +591,12 @@
         });
     }
 
+    // ฟังก์ชันเคลียร์หน้าจอ ดีดหน้าต่างแอป LIFF ปิดตัวรวดเร็วกลับเข้า LINE แชท
     function closeLiffWindow() {
+        // ทำการซ่อน Pop-up เผื่อระบบรันบนเว็บเทสทั่วไป
+        document.getElementById('successModal').classList.remove('active');
         if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-            liff.closeWindow();
+            liff.closeWindow(); // สั่งดีดปิดหน้าต่าง LIFF บนไลน์มือถือทันที
         }
     }
 </script>
