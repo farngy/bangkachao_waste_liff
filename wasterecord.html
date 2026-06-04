@@ -37,7 +37,7 @@
             max-width: 450px;
             background: #FFFFFF;
             box-sizing: border-box;
-            padding: 24px;
+            padding: 24px 24px 10px 24px; /* ปรับลดพื้นที่ขอบล่างให้สมดุลและกระชับขึ้น */
             display: flex;
             flex-direction: column;
             position: relative;
@@ -68,7 +68,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
-            margin-bottom: 40px;
+            margin-bottom: 20px; /* ปรับลดจาก 40px เพื่อขยับปุ่มด้านล่างขึ้นมา ไม่ให้หลุดขอบหน้าจอ */
         }
 
         .choice-card {
@@ -225,7 +225,7 @@
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
-            padding-top: 20px;
+            padding-top: 10px; /* ปรับลดพื้นที่ดันแถวปุ่มเพื่อความกระชับ */
         }
         .btn-back {
             font-size: 18px;
@@ -326,7 +326,7 @@
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะแก้ว')">
                 <div class="img-wrapper">
-                    <img src="https://github.com/farngy/bangkachao_waste_liff/blob/main/3.%20%E0%B8%82%E0%B8%A2%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A0%E0%B8%97%E0%B8%82%E0%B8%A7%E0%B8%94%E0%B9%81%E0%B8%81%E0%B9%89%E0%B8%A7.png?raw=true" alt="แก้ว">
+                    <img src="https://github.com/farngy/bangkachao_waste_liff/blob/main/3.%20%E0%B8%82%E0%B8%A2%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A0%E0%B8%97%E0%B8%82%E0%B8%A7%E0%B8%94%E0%B9%81%E0%B8%81%E0%B9%89%E0%B8%A2%E0%B8%B5.png?raw=true" alt="แก้ว">
                 </div>
                 <div class="label">แก้ว</div>
             </div>
@@ -437,8 +437,9 @@
             { name: "ฝาขวดพลาสติก (HDPE)", img: "https://github.com/farngy/bangkachao_waste_liff/blob/main/1.3%20%E0%B8%9D%E0%B8%B2%E0%B8%82%E0%B8%A7%E0%B8%94%20HDPE.png?raw=true", factor: 1.95 }
         ],
         "ขยะกระดาษ": [
-            { name: "กระดาษลัง/กล่องเก่า", img: "https://cdn-icons-png.flaticon.com/512/2855/2855546.png", factor: 1.12 },
-            { name: "สมุด/กระดาษขาวดำ", img: "https://cdn-icons-png.flaticon.com/512/2324/2324623.png", factor: 0.98 }
+            { name: "กระดาษลัง", img: "https://cdn-icons-png.flaticon.com/512/2855/2855546.png", factor: 1.12 },
+            { name: "กระดาษสีขาว/เอกสาร (A4)", img: "https://cdn-icons-png.flaticon.com/512/2324/2324623.png", factor: 0.98 },
+            { name: "กระดาษนิตยสาร/หนังสือพิมพ์", img: "https://cdn-icons-png.flaticon.com/512/2324/2324623.png", factor: 0.98 }
         ],
         "ขยะแก้ว": [
             { name: "ขวดแก้วใส/แก้วน้ำ", img: "https://cdn-icons-png.flaticon.com/512/3100/3100566.png", factor: 0.28 },
