@@ -37,7 +37,7 @@
             max-width: 450px;
             background: #FFFFFF;
             box-sizing: border-box;
-            padding: 24px 24px 10px 24px; /* ปรับลดพื้นที่ขอบล่างให้สมดุลและกระชับขึ้น */
+            padding: 24px 24px 10px 24px; 
             display: flex;
             flex-direction: column;
             position: relative;
@@ -63,12 +63,13 @@
             font-weight: 800;
         }
 
-        /* 📱 ปุ่มการ์ดสี่เหลี่ยมดีไซน์ใหม่ จัดวางแบบ Grid สมมาตร */
+        /* 📱 ปุ่มการ์ดสี่เหลี่ยม จัดวางแบบ Grid สมมาตร */
         .card-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
-            margin-bottom: 20px; /* ปรับลดจาก 40px เพื่อขยับปุ่มด้านล่างขึ้นมา ไม่ให้หลุดขอบหน้าจอ */
+            margin-bottom: 20px; 
+            align-items: stretch; /* บังคับให้การ์ดในแถวเดียวกันสูงเท่ากันเสมอ */
         }
 
         .choice-card {
@@ -77,12 +78,13 @@
             border-radius: 12px;
             display: flex;
             flex-direction: column;
+            height: 100%; /* ดึงความสูงให้เต็มกริด */
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
             transition: all 0.2s ease-in-out;
             user-select: none;
             -webkit-user-select: none;
-            overflow: hidden; /* เพื่อให้ภาพเต็มกรอบด้านบน */
+            overflow: hidden; 
             position: relative;
         }
         .choice-card:hover {
@@ -93,13 +95,14 @@
         .choice-card .img-wrapper {
             display: block;
             width: 100%;
-            height: 160px; /* กำหนดความสูงของพื้นที่ภาพ */
+            height: 160px; 
             overflow: hidden;
+            flex-shrink: 0; /* ป้องกันไม่ให้พื้นที่รูปภาพหดตัว */
         }
         .choice-card img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* ทำให้ภาพเต็มกรอบแบบไม่เสียสัดส่วน */
+            object-fit: cover; 
             display: block;
             pointer-events: none;
         }
@@ -107,13 +110,17 @@
         .choice-card .label {
             font-size: 16px;
             font-weight: 700;
-            color: white; /* ตัวหนังสือขาว */
+            color: white; 
             text-align: center;
             padding: 14px 16px;
-            background-color: var(--primary-dark); /* ไฮไลท์เขียวเข้ม */
+            background-color: var(--primary-dark); 
             width: 100%;
             box-sizing: border-box;
             border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1; /* ดันและขยายแถบสีเขียวให้ถมพื้นที่ขอบขาวด้านล่างจนเต็ม 100% */
         }
 
         /* ⚖️ แผงควบคุมน้ำหนักแบบ ซ้าย [-] และ ขวา [+] */
@@ -225,7 +232,7 @@
             justify-content: space-between;
             align-items: center;
             margin-top: auto;
-            padding-top: 10px; /* ปรับลดพื้นที่ดันแถวปุ่มเพื่อความกระชับ */
+            padding-top: 10px; 
         }
         .btn-back {
             font-size: 18px;
@@ -254,7 +261,7 @@
         .text-center { text-align: center; }
         .form-label { display: block; font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; }
 
-        /* 🌟 📥 3. คลัง CSS สำหรับหน้าต่าง Pop-up สรุปงานแบบพรีเมียม */
+        /* 🌟 📥 หน้าต่าง Pop-up สรุปงานแบบพรีเมียม */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -294,7 +301,7 @@
         .modal-desc { font-size: 15px; color: #4a5568; line-height: 1.5; margin-bottom: 25px; }
         
         .btn-modal-close {
-            background-color: #06C755; /* สีเขียวไอคอนไลน์ของแท้ */
+            background-color: #06C755; 
             color: white; border: none;
             width: 100%; padding: 14px;
             font-size: 18px; font-weight: 800;
@@ -410,7 +417,7 @@
     </div>
 </div>
 
-<!-- 🌟 📥 4. โครงสร้างหน้าต่างแจ้งเตือน Modal Pop-up สำเร็จรูปแบบพรีเมียม -->
+<!-- 🌟 📥 โครงสร้างหน้าต่างแจ้งเตือน Modal Pop-up สำเร็จรูปแบบพรีเมียม -->
 <div class="modal-overlay" id="successModal">
     <div class="modal-box">
         <div class="modal-circle">
@@ -442,12 +449,13 @@
             { name: "กระดาษนิตยสาร/หนังสือพิมพ์", img: "https://cdn-icons-png.flaticon.com/512/2324/2324623.png", factor: 0.98 }
         ],
         "ขยะแก้ว": [
-            { name: "ขวดแก้วใส/แก้วน้ำ", img: "https://cdn-icons-png.flaticon.com/512/3100/3100566.png", factor: 0.28 },
-            { name: "เศษกระจก/ขวดแก้วสี", img: "https://cdn-icons-png.flaticon.com/512/2157/2157077.png", factor: 0.20 }
+            { name: "ขวดแก้วชนิดเดียวกัน (ครบลัง)", img: "https://cdn-icons-png.flaticon.com/512/3100/3100566.png", factor: 0.28 },
+            { name: "ขวดแก้วรวม", img: "https://cdn-icons-png.flaticon.com/512/2157/2157077.png", factor: 0.20 }
         ],
         "ขยะอลูมิเนียม": [
             { name: "กระป๋องอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/2653/2653504.png", factor: 9.10 },
-            { name: "เศษเหล็ก/โลหะอื่นๆ", img: "https://cdn-icons-png.flaticon.com/512/2525/2525700.png", factor: 3.50 }
+            { name: "ฝาอลูมิเนียม", img: "https://cdn-icons-png.flaticon.com/512/2525/2525700.png", factor: 3.50 },
+            { name: "เศษอลูมิเนียมอื่นๆ", img: "https://cdn-icons-png.flaticon.com/512/2525/2525700.png", factor: 3.50 }
         ]
     };
 
@@ -594,7 +602,7 @@
             status.innerText = "";
             btn.disabled = false;
 
-            // 🌟 📥 เปิดหน้าต่าง Pop-up แสดงความสำเร็จแบบพรีเมียมแทนกล่อง Alert เชยๆ
+            // เปิดหน้าต่าง Pop-up แสดงความสำเร็จ
             document.getElementById('successModal').classList.add('active');
 
             // รีเซ็ตล้างค่าฟอร์มภายในเบื้องหลังเพื่อเตรียมความพร้อม
@@ -614,10 +622,9 @@
 
     // ฟังก์ชันเคลียร์หน้าจอ ดีดหน้าต่างแอป LIFF ปิดตัวรวดเร็วกลับเข้า LINE แชท
     function closeLiffWindow() {
-        // ทำการซ่อน Pop-up เผื่อระบบรันบนเว็บเทสทั่วไป
         document.getElementById('successModal').classList.remove('active');
         if (typeof liff !== 'undefined' && liff.isLoggedIn()) {
-            liff.closeWindow(); // สั่งดีดปิดหน้าต่าง LIFF บนไลน์มือถือทันที
+            liff.closeWindow(); 
         }
     }
 </script>
