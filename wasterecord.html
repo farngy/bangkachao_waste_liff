@@ -63,7 +63,7 @@
             font-weight: 800;
         }
 
-        /* 📱 ปุ่มการ์ดสี่เหลี่ยมจัดวางแบบ Grid สมมาตร */
+        /* 📱 ปุ่มการ์ดสี่เหลี่ยมดีไซน์ใหม่ จัดวางแบบ Grid สมมาตร */
         .card-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -75,35 +75,45 @@
             background: #ffffff;
             border: 2px solid var(--border-color);
             border-radius: 12px;
-            padding: 20px 16px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.02);
             transition: all 0.2s ease-in-out;
             user-select: none;
             -webkit-user-select: none;
+            overflow: hidden; /* เพื่อให้ภาพเต็มกรอบด้านบน */
+            position: relative;
         }
         .choice-card:hover {
             border-color: var(--primary-dark);
             transform: translateY(-2px);
         }
 
+        .choice-card .img-wrapper {
+            display: block;
+            width: 100%;
+            height: 160px; /* กำหนดความสูงของพื้นที่ภาพ */
+            overflow: hidden;
+        }
         .choice-card img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            margin-bottom: 12px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* ทำให้ภาพเต็มกรอบแบบไม่เสียสัดส่วน */
+            display: block;
             pointer-events: none;
         }
 
         .choice-card .label {
             font-size: 16px;
             font-weight: 700;
-            color: var(--text-main);
+            color: white; /* ตัวหนังสือขาว */
             text-align: center;
+            padding: 14px 16px;
+            background-color: var(--primary-dark); /* ไฮไลท์เขียวเข้ม */
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 1px solid var(--border-color);
         }
 
         /* ⚖️ แผงควบคุมน้ำหนักแบบ ซ้าย [-] และ ขวา [+] */
@@ -303,19 +313,27 @@
         <h2>เลือกประเภทขยะ</h2>
         <div class="card-grid">
             <div class="choice-card" onclick="selectMainType('ขยะพลาสติก')">
-                <img src="https://github.com/farngy/bangkachao_waste_liff/blob/main/1.%20%E0%B8%82%E0%B8%A2%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A0%E0%B8%97%E0%B8%82%E0%B8%A7%E0%B8%94%E0%B8%9E%E0%B8%A5%E0%B8%B2%E0%B8%AA%E0%B8%95%E0%B8%B4%E0%B8%81.png?raw=true" alt="พลาสติก">
+                <div class="img-wrapper">
+                    <img src="https://img.freepik.com/free-photo/arrangement-with-plastic-containers-white-background_23-2148890117.jpg" alt="พลาสติก">
+                </div>
                 <div class="label">พลาสติก</div>
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะกระดาษ')">
-                <img src="https://github.com/farngy/bangkachao_waste_liff/blob/main/2.%20%E0%B8%82%E0%B8%A2%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A0%E0%B8%97%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B8%94%E0%B8%B2%E0%B8%A9.png?raw=true" alt="กระดาษ">
+                <div class="img-wrapper">
+                    <img src="https://img.freepik.com/free-photo/folded-cardboard-boxes-warehouse-shipping-logistics-concept_1217-2178.jpg" alt="กระดาษ">
+                </div>
                 <div class="label">กระดาษ</div>
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะแก้ว')">
-                <img src="https://github.com/farngy/bangkachao_waste_liff/blob/main/3.%20%E0%B8%82%E0%B8%A2%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A0%E0%B8%97%E0%B8%82%E0%B8%A7%E0%B8%94%E0%B9%81%E0%B8%81%E0%B9%89%E0%B8%A7.png?raw=true" alt="แก้ว">
+                <div class="img-wrapper">
+                    <img src="https://img.freepik.com/free-photo/different-plastic-bottles-white-background_23-2148890209.jpg" alt="แก้ว">
+                </div>
                 <div class="label">แก้ว</div>
             </div>
             <div class="choice-card" onclick="selectMainType('ขยะอลูมิเนียม')">
-                <img src="https://github.com/farngy/bangkachao_waste_liff/blob/main/4.%20%E0%B8%82%E0%B8%A2%E0%B8%B0%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A0%E0%B8%97%E0%B8%AD%E0%B8%A5%E0%B8%B9%E0%B8%A1%E0%B8%B4%E0%B9%80%E0%B8%99%E0%B8%B5%E0%B8%A2%E0%B8%A1.png?raw=true" alt="อลูมิเนียม">
+                <div class="img-wrapper">
+                    <img src="https://img.freepik.com/free-photo/empty-aluminum-drink-cans-packaging-white-background_23-2148890204.jpg" alt="อลูมิเนียม">
+                </div>
                 <div class="label">อลูมิเนียม</div>
             </div>
         </div>
@@ -477,7 +495,9 @@
         subTypeData[mainName].forEach(function(sub) {
             container.innerHTML += `
                 <div class="choice-card" onclick="selectSubType('${sub.name}', ${sub.factor})">
-                    <img src="${sub.img}">
+                    <div class="img-wrapper">
+                        <img src="${sub.img}">
+                    </div>
                     <div class="label">${sub.name}</div>
                 </div>
             `;
